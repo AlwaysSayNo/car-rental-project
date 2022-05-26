@@ -20,6 +20,15 @@ public enum CarStatus {
      */
     NOT_RENTED,
     /**
+     * The car isn`t in the public domain. Intermediate stage between RENTED and NOT_RENTED
+     * <ul>
+     *     <li>Cannot be rented by another user</li>
+     *     <li>Can be modified/deleted by admin</li>
+     *     <li>Status can be changed by admin to ON_HOLD</li>
+     * </ul>
+     */
+    ON_PROCESSING,
+    /**
      * The car isn`t in the public domain.
      * <ul>
      *     <li>Cannot be rented by another user</li>

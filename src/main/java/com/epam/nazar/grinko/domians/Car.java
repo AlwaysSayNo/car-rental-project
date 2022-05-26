@@ -22,6 +22,7 @@ public class Car {
     private String number;
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "car_brands_id")
     private CarBrand brand;
 
     @Column(name = "name", nullable = false)
