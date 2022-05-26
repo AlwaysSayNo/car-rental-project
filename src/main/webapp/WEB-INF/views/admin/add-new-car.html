@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New car</title>
+    <style>
+        html {
+            font-size: 10px;
+        }
+
+        body {
+            font-size: 1.6em;
+            margin: 0;
+        }
+
+        form {
+            padding: 10px;
+            margin: 0 auto;
+            width: 350px;
+            border: 3px solid #000000;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0 auto 10px auto;
+            padding: 0;
+        }
+
+        form > div {
+            background-color: #cccccc;
+            border-radius: 5px;
+            padding: 3px;
+            display: grid;
+            grid-template-columns: 1fr 200px;
+            align-items: baseline;
+        }
+
+        form > div > span {
+            grid-column-start: 2;
+        }
+
+        select {
+            width: max-content;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 180px;
+        }
+
+        input[type="checkbox"] {
+            position: relative;
+            top: 2px;
+        }
+
+        form > div + div {
+            margin-top: 20px;
+        }
+
+        .add-button {
+            width: 90px;
+            grid-column-start: 2;
+        }
+
+        input:invalid,
+        select:invalid {
+            border-color: #900;
+            background-color: #FDD;
+        }
+
+        input:focus:invalid {
+            outline: none;
+        }
+
+        .error {
+            width: 188px;
+            padding: 0;
+
+            font-size: 80%;
+            color: white;
+            background-color: #900;
+            border-radius: 0 0 5px 5px;
+
+            box-sizing: border-box;
+        }
+
+        .error.active {
+            padding: 0.3em;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<form action="#" novalidate>
+    <h1>New car form</h1>
+    <div id="car-brand">
+        <label for="select-car-brand">Select car brand</label>
+        <select name="select-car-brand" id="select-car-brand">
+            <option value="BMW">BMW</option>
+            <option value="Audi">Audi</option>
+            <option value="Volvo">Volvo</option>
+        </select>
+        <div>
+            <input id="check-new-car-brand" onchange="toggleFork('car-brand')" type="checkbox">
+            <label for="check-new-car-brand">add new brand</label>
+        </div>
+        <input id="new-car-brand" type="text" disabled required>
+        <span class="error" aria-live="polite"></span>
+    </div>
+    <div>
+        <label for="car-name">Enter car name</label>
+        <input id="car-name" type="text" required>
+        <span class="error" aria-live="polite"></span>
+    </div>
+    <div>
+        <label for="car-number">Enter car number</label>
+        <input id="car-number" type="text" required>
+        <span class="error" aria-live="polite"></span>
+    </div>
+    <div>
+        <label for="select-car-segment">Select car segment</label>
+        <select name="select-car-segment" id="select-car-segment">
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+        </select>
+        <span class="error" aria-live="polite"></span>
+    </div>
+    <div id="car-color">
+        <label for="select-color">Select color</label>
+        <select name="select-color" id="select-color">
+            <option value="YELLOW">YELLOW</option>
+            <option value="BLACK">BLACK</option>
+            <option value="WHITE">WHITE</option>
+        </select>
+        <div>
+            <input id="check-new-car-color" onchange="toggleFork('car-color')" type="checkbox">
+            <label for="check-new-car-color">add new color</label>
+        </div>
+        <input id="add-new-car-color" type="text" disabled required>
+        <span class="error" aria-live="polite"></span>
+    </div>
+    <div>
+        <label for="price-per-day">Enter price per day</label>
+        <input id="price-per-day" type="number" min="1" max="100000" required>
+        <span class="error" aria-live="polite"></span>
+    </div>
+    <div>
+        <button class="add-button" type="submit">Add car</button>
+        <span class="error" aria-live="polite"></span>
+    </div>
+</form>
+
+</body>
+</html>
+<script>
+
+    const toggleFork = (id) => {
+        const textField = document.querySelectorAll("#" + id + ' input[type="text"]')[0];
+        textField.disabled = !textField.disabled;
+        const selector = document.querySelectorAll("#" + id + " select")[0];
+        selector.disabled = !selector.disabled;
+    }
+
+    const form  = document.getElementsByTagName('form')[0];
+    const newCarBrandField = document.getElementById('new-car-brand');
+    const carName = document.getElementById('car-name');
+    const carNumber = document.getElementById('car-number');
+    carNumber.setAttribute("pattern", "\\p{Upper}{2} \\d{4} \\p{Upper}{2}");
+    const newCarColor = document.getElementById('add-new-car-color');
+    const carPricePerDay = document.getElementById('price-per-day');
+    carPricePerDay.setAttribute("pattern", "\\d{1,6}");
+
+    const elementsArr = [newCarBrandField, carName, carNumber, newCarColor, carPricePerDay];
+
+    elementsArr.forEach(element => element.addEventListener('input', function (event) {
+            if (element.validity.valid) clearError(element);
+            else showErrorMessage(element, getErrorMessage(element));
+        })
+    );
+
+    form.addEventListener('submit', function (event) {
+        let hasException = false;
+        for(let i = 0; i < elementsArr.length; ++i){
+            let element = elementsArr[i];
+            console.log('Element: ' + element.id);
+            console.log('Disabled: ' + element.disabled);
+            console.log('Valid: ' + element.validity.valid);
+            if(!element.disabled && !element.validity.valid) {
+                hasException = true;
+                let message = getErrorMessage(element);
+                showErrorMessage(element, message);
+            }
+            else{
+                clearError(element);
+            }
+        }
+        if(hasException) event.preventDefault();
+    });
+
+    getErrorMessage = (element) => {
+        let message;
+        if(element.validity.valueMissing) {
+            message = 'This field is required';
+        }
+        else if(element.validity.typeMismatch) {
+            message = 'This field must match its type: ' + element.type;
+        }
+        else if(element.validity.patternMismatch) {
+            message = 'This field must match its pattern: ' + element.pattern;
+        }
+        else if(element.validity.rangeUnderflow || element.validity.rangeOverflow) {
+            message = 'Incorrect range: min ' + element.min + ', max ' + element.max;
+        }
+        return message;
+    }
+
+    showErrorMessage = (element, message) => {
+        let errorSpan = element.nextElementSibling;
+        errorSpan.textContent = message;
+        errorSpan.className = 'error active';
+    }
+
+    clearError = (element) => {
+        let errorSpan = element.nextElementSibling;
+        errorSpan.textContent = '';
+        errorSpan.className = 'error';
+    }
+
+</script>
