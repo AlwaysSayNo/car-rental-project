@@ -35,6 +35,6 @@ public enum CarStatus {
      *     <li>Can be modified/deleted by admin</li>
      * </ul>
      */
-    OM_HOLD
+    ON_HOLD
 
 }

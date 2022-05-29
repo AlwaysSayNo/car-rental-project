@@ -76,7 +76,7 @@
         <img class="car-img" width="100" height="100" src="https://img.lovepik.com/free-png/20210926/lovepik-car-icon-png-image_401486754_wh1200.png" alt="Car icon">
         <div class="car-information">
             <div th:text="#{car.info.brand}">Brand:</div>
-            <div th:text="${car.brand.brand}">BMW</div>
+            <div th:text="${car.brand.value}">BMW</div>
             <div th:text="#{car.info.name}">Name:</div>
             <div th:text="${car.name}">X6</div>
             <div th:text="#{car.info.segment}">Segment:</div>
@@ -84,7 +84,7 @@
             <div th:text="#{car.info.number}">Car number:</div>
             <div th:text="${car.number}">AA 1111 BC</div>
             <div th:text="#{car.info.color}">Color:</div>
-            <div th:text="${car.color.color}">Black</div>
+            <div th:text="${car.color.value}">Black</div>
             <div th:text="#{car.info.price.per.day}">Price per day:</div>
             <div th:text="${car.pricePerDay}" class="price">1200</div>
         </div>

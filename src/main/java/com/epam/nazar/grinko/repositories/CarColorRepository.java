@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CarColorRepository extends JpaRepository<CarColor, Long> {
 
-    boolean existsCarColorByColor(String color);
+    boolean existsCarColorByValue(String value);
 
-    CarColor getCarColorByColor(String color);
+    CarColor getCarColorByValue(String value);
 
 }

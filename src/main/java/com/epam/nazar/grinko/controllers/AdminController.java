@@ -4,6 +4,7 @@ import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.CarBrand;
 import com.epam.nazar.grinko.domians.CarColor;
 import com.epam.nazar.grinko.domians.helpers.CarSegment;
+import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.dto.CarDto;
 import com.epam.nazar.grinko.services.CarBrandService;
 import com.epam.nazar.grinko.services.CarColorService;
@@ -13,10 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/car-rental-service/admin")
@@ -37,7 +36,6 @@ public class AdminController {
     @GetMapping("/cars/new")
     public String showCarCreationForm(Model model, CarDto carDto){
         model.addAttribute("carDto", carDto);
-        //model.addAttribute("carNumberAlreadyExistsError", false);
         return "admin/add-new-car";
     }
 
@@ -51,11 +49,11 @@ public class AdminController {
         }
 
         if(!carColorService.carColorExists(carDto.getColor())) {
-            CarColor color = new CarColor().setColor(carDto.getColor());
+            CarColor color = new CarColor().setValue(carDto.getColor());
             carColorService.addNewColor(color);
         }
         if(!carBrandService.carBrandExists(carDto.getBrand())){
-            CarBrand brand = new CarBrand().setBrand(carDto.getBrand());
+            CarBrand brand = new CarBrand().setValue(carDto.getBrand());
             carBrandService.addNewBrand(brand);
         }
 
@@ -72,11 +70,9 @@ public class AdminController {
 
     @GetMapping("cars/{id}/edit")
     public String editCarWithId(Model model, @PathVariable long id){
-        Optional<Car> carOptional = carService.getCarById(id);
-        if(!carOptional.isPresent()) return "errors/404";
 
-        model.addAttribute("car", carOptional.get());
-        return "";
+        model.addAttribute("carDto", new CarDto());
+        return "admin/add-new-car";
     }
 
     @ModelAttribute("brands")
@@ -92,5 +88,10 @@ public class AdminController {
     @ModelAttribute("segments")
     private List<CarSegment> addSegmentsAttribute(){
         return Arrays.asList(CarSegment.values());
+    }
+
+    @ModelAttribute("statuses")
+    private List<CarStatus> addStatusesAttribute(){
+        return Arrays.asList(CarStatus.NOT_RENTED, CarStatus.ON_HOLD);
     }
 }

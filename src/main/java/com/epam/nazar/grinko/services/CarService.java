@@ -56,4 +56,13 @@ public class CarService {
                 .setNumber(carDto.getNumber())
                 .setPricePerDay(carDto.getPricePerDay());
     }
+
+    public CarDto convertCarToCarDto(Car car){
+        return new CarDto().setBrand(car.getBrand().getValue())
+                .setName(car.getName())
+                .setNumber(car.getNumber())
+                .setSegment(car.getSegment().name())
+                .setColor(car.getColor().getValue())
+                .setPricePerDay(car.getPricePerDay());
+    }
 }

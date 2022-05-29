@@ -19,7 +19,7 @@ public class CarBrand {
     private long id;
 
     @Column(name = "brand", nullable = false, unique = true)
-    private String brand;
+    private String value;
 
     @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER)
     private Collection<Car> cars;

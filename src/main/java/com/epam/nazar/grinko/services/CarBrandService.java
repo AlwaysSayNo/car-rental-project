@@ -15,7 +15,7 @@ public class CarBrandService {
     private final CarBrandRepository carBrandRepository;
 
     public CarBrand getBrand(String brand) {
-        return carBrandRepository.getCarBrandByBrand(brand);
+        return carBrandRepository.getCarBrandByValue(brand);
     }
 
     public void addNewBrand(CarBrand newBrand){
@@ -27,7 +27,7 @@ public class CarBrandService {
     }
 
     public boolean carBrandExists(String brand) {
-        return carBrandRepository.existsCarBrandByBrand(brand);
+        return carBrandRepository.existsCarBrandByValue(brand);
     }
 
 }

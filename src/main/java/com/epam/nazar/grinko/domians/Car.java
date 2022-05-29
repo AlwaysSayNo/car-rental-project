@@ -20,9 +20,6 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "number", nullable = false, unique = true)
-    private String number;
-
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "car_brands_id")
     private CarBrand brand;
@@ -30,16 +27,19 @@ public class Car {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "number", nullable = false, unique = true)
+    private String number;
+
+    @Column(name = "segment", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CarSegment segment;
+
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "car_color_id")
     private CarColor color;
 
     @Column(name = "price_per_day", nullable = false)
     private Long pricePerDay;
-
-    @Column(name = "segment", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private CarSegment segment;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

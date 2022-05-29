@@ -98,7 +98,7 @@
     <div id="car-brand">
         <label for="select-car-brand" th:text="#{car.brand.select}">Select car brand</label>
         <select th:field="*{brand}" name="select-car-brand" id="select-car-brand">
-            <option th:each="currBrand : ${brands}" th:text="${currBrand.brand}" th:value="${currBrand.brand}" value="BMW">BMW</option>
+            <option th:each="currBrand : ${brands}" th:text="${currBrand.value}" th:value="${currBrand.value}" value="BMW">BMW</option>
         </select>
         <div>
             <input id="check-new-car-brand" onchange="toggleFork('car-brand')" type="checkbox">
@@ -120,14 +120,14 @@
     <div>
         <label for="select-car-segment" th:text="#{car.segment.select}">Select car segment</label>
         <select th:field="*{segment}" name="select-car-segment" id="select-car-segment">
-            <option th:each="currSegment : ${segments}" th:text="${currSegment.toString()}" th:value="${currSegment.toString()}" value="A"></option>
+            <option th:each="currSegment : ${segments}" th:text="${currSegment.name()}" th:value="${currSegment.name()}" value="A"></option>
         </select>
         <span class="error" aria-live="polite"></span>
     </div>
     <div id="car-color">
         <label for="select-color" th:text="#{car.color.select}">Select car color</label>
         <select th:field="*{color}" name="select-color" id="select-color">
-            <option th:each="currColor : ${colors}" th:text="${currColor.color}" th:value="${currColor.color}" value="BLACK">BLACK</option>
+            <option th:each="currColor : ${colors}" th:text="${currColor.value}" th:value="${currColor.value}" value="BLACK">BLACK</option>
         </select>
         <div>
             <input id="check-new-car-color" onchange="toggleFork('car-color')" type="checkbox">
@@ -139,6 +139,13 @@
     <div>
         <label for="price-per-day" th:text="#{car.price.per.day.enter}">Enter price per day</label>
         <input id="price-per-day" th:field="*{pricePerDay}" th:min="#{car.price.per.day.min}" th:max="#{car.price.per.day.max}" placeholder="0" type="number" required>
+        <span class="error" aria-live="polite"></span>
+    </div>
+    <div>
+        <label for="select-car-status" th:text="#{car.status.select}">Select car status</label>
+        <select th:field="*{status}" name="select-car-status" id="select-car-status">
+            <option th:each="currStatus : ${statuses}" th:text="${currStatus.name()}" th:value="${currStatus.name()}" value="A"></option>
+        </select>
         <span class="error" aria-live="polite"></span>
     </div>
     <div>
@@ -176,7 +183,6 @@
             showErrorMessage(carNumber, getErrorMessage(carNumber));
         }
     });
-
 
 
     elementsArr.forEach(element => element.addEventListener('input', function (event) {

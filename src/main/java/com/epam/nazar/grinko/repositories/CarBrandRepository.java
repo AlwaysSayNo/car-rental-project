@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CarBrandRepository extends JpaRepository<CarBrand, Long> {
 
-    boolean existsCarBrandByBrand(String brand);
+    boolean existsCarBrandByValue(String value);
 
-    CarBrand getCarBrandByBrand(String brand);
+    CarBrand getCarBrandByValue(String value);
 }

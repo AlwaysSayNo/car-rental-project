@@ -19,7 +19,7 @@ public class CarColor {
     private long id;
 
     @Column(name = "color", nullable = false, unique = true)
-    private String color;
+    private String value;
 
     @OneToMany(mappedBy = "color", fetch = FetchType.EAGER)
     private Collection<Car> cars;

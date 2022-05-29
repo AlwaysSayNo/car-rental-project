@@ -14,7 +14,7 @@ public class CarColorService {
     private final CarColorRepository carColorRepository;
 
     public CarColor getColor(String color) {
-        return carColorRepository.getCarColorByColor(color);
+        return carColorRepository.getCarColorByValue(color);
     }
 
     public void addNewColor(CarColor newColor){
@@ -26,7 +26,7 @@ public class CarColorService {
     }
 
     public boolean carColorExists(String color) {
-        return carColorRepository.existsCarColorByColor(color);
+        return carColorRepository.existsCarColorByValue(color);
     }
 
 }
