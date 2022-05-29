@@ -2,9 +2,10 @@ package com.epam.nazar.grinko.domians;
 
 import com.epam.nazar.grinko.domians.helpers.CarSegment;
 import com.epam.nazar.grinko.domians.helpers.CarStatus;
-import com.epam.nazar.grinko.domians.helpers.Color;
+import com.epam.nazar.grinko.domians.CarColor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "cars")
+@Accessors(chain = true)
 public class Car {
 
     @Id
@@ -28,9 +30,9 @@ public class Car {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "color", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Color color;
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "car_color_id")
+    private CarColor color;
 
     @Column(name = "price_per_day", nullable = false)
     private Long pricePerDay;

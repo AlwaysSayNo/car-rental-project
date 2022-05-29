@@ -1,21 +1,25 @@
 package com.epam.nazar.grinko.services;
 
 import com.epam.nazar.grinko.domians.Car;
+import com.epam.nazar.grinko.domians.CarBrand;
+import com.epam.nazar.grinko.domians.CarColor;
+import com.epam.nazar.grinko.domians.helpers.CarSegment;
+import com.epam.nazar.grinko.domians.helpers.CarStatus;
+import com.epam.nazar.grinko.dto.CarDto;
 import com.epam.nazar.grinko.repositories.CarRepository;
-import org.springframework.dao.DataAccessException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class CarService {
 
     private final CarRepository carRepository;
-
-    public CarService(CarRepository carRepository) {
-        this.carRepository = carRepository;
-    }
+    private final CarBrandService carBrandService;
+    private final CarColorService carColorService;
 
     public List<Car> getAllCars(){
         return carRepository.findAll();
@@ -25,25 +29,31 @@ public class CarService {
         return carRepository.findById(id);
     }
 
-    public boolean addNewCar(Car newCar){
-        try{
-            carRepository.save(newCar);
-        } catch (DataAccessException exception){
-          return false;
-        }
-        return true;
+    public void addNewCar(Car newCar){
+        carRepository.save(newCar);
     }
 
-    public boolean deleteCarById(long id) {
-        try{
-            carRepository.deleteById(id);
-        } catch (DataAccessException exception){
-            return false;
-        }
-        return true;
+    public void deleteCarById(long id) {
+        carRepository.deleteById(id);
     }
 
     public boolean existsCarByNumber(String number){
         return carRepository.existsByNumber(number);
+    }
+
+    // Конвертировать в dto в car можно в том случае, если все поля из бд уже существуют в базе данных
+    public Car convertCarDtoToCar(CarDto carDto){
+        CarBrand brand = carBrandService.getBrand(carDto.getBrand());
+        CarColor color = carColorService.getColor(carDto.getColor());
+        CarSegment segment = CarSegment.valueOf(carDto.getSegment());
+        CarStatus status = CarStatus.NOT_RENTED;
+
+        return new Car().setBrand(brand)
+                .setColor(color)
+                .setSegment(segment)
+                .setStatus(status)
+                .setName(carDto.getName())
+                .setNumber(carDto.getNumber())
+                .setPricePerDay(carDto.getPricePerDay());
     }
 }

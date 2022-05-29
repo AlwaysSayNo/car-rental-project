@@ -10,17 +10,17 @@ import java.util.Collection;
 @Getter
 @Setter
 @Entity
-@Table(name = "car_brands")
+@Table(name = "car_color")
 @Accessors(chain = true)
-public class CarBrand {
+public class CarColor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "brand", nullable = false, unique = true)
-    private String brand;
+    @Column(name = "color", nullable = false, unique = true)
+    private String color;
 
-    @OneToMany(mappedBy = "brand", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "color", fetch = FetchType.EAGER)
     private Collection<Car> cars;
 }
