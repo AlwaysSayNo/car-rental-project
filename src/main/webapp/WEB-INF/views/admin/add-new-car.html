@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>New car</title>
@@ -93,62 +93,56 @@
 </head>
 <body>
 
-<form action="#" novalidate>
-    <h1>New car form</h1>
+<form th:method="POST" th:action="@{/car-rental-service/admin/cars/new}" th:object="${carDto}" action="/show-cars.html" novalidate>
+    <h1 th:text="#{new.car.form}">New car form</h1>
     <div id="car-brand">
-        <label for="select-car-brand">Select car brand</label>
-        <select name="select-car-brand" id="select-car-brand">
-            <option value="BMW">BMW</option>
-            <option value="Audi">Audi</option>
-            <option value="Volvo">Volvo</option>
+        <label for="select-car-brand" th:text="#{car.brand.select}">Select car brand</label>
+        <select th:field="*{brand}" name="select-car-brand" id="select-car-brand">
+            <option th:each="currBrand : ${brands}" th:text="${currBrand.brand}" th:value="${currBrand.brand}" value="BMW">BMW</option>
         </select>
         <div>
             <input id="check-new-car-brand" onchange="toggleFork('car-brand')" type="checkbox">
-            <label for="check-new-car-brand">add new brand</label>
+            <label for="check-new-car-brand" th:text="#{car.brand.add.new}">add new brand</label>
         </div>
-        <input id="new-car-brand" type="text" disabled required>
+        <input id="new-car-brand" th:field="*{brand}" type="text" disabled required>
         <span class="error" aria-live="polite"></span>
     </div>
     <div>
-        <label for="car-name">Enter car name</label>
-        <input id="car-name" type="text" required>
+        <label for="car-name" th:text="#{car.name.enter}">Enter car name</label>
+        <input id="car-name" th:field="*{name}" type="text" required>
         <span class="error" aria-live="polite"></span>
     </div>
     <div>
-        <label for="car-number">Enter car number</label>
-        <input id="car-number" type="text" required>
+        <label for="car-number" th:text="#{car.number.enter}">Enter car number</label>
+        <input id="car-number" th:field="*{number}" type="text" required>
         <span class="error" aria-live="polite"></span>
     </div>
     <div>
-        <label for="select-car-segment">Select car segment</label>
-        <select name="select-car-segment" id="select-car-segment">
-            <option value="A">A</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
+        <label for="select-car-segment" th:text="#{car.segment.select}">Select car segment</label>
+        <select th:field="*{segment}" name="select-car-segment" id="select-car-segment">
+            <option th:each="currSegment : ${segments}" th:text="${currSegment.toString()}" th:value="${currSegment.toString()}" value="A"></option>
         </select>
         <span class="error" aria-live="polite"></span>
     </div>
     <div id="car-color">
-        <label for="select-color">Select color</label>
-        <select name="select-color" id="select-color">
-            <option value="YELLOW">YELLOW</option>
-            <option value="BLACK">BLACK</option>
-            <option value="WHITE">WHITE</option>
+        <label for="select-color" th:text="#{car.color.select}">Select car color</label>
+        <select th:field="*{color}" name="select-color" id="select-color">
+            <option th:each="currColor : ${colors}" th:text="${currColor.color}" th:value="${currColor.color}" value="BLACK">BLACK</option>
         </select>
         <div>
             <input id="check-new-car-color" onchange="toggleFork('car-color')" type="checkbox">
-            <label for="check-new-car-color">add new color</label>
+            <label for="check-new-car-color" th:text="#{car.color.enter.new}">add new car color</label>
         </div>
-        <input id="add-new-car-color" type="text" disabled required>
+        <input id="add-new-car-color" th:field="*{color}" type="text" disabled required>
         <span class="error" aria-live="polite"></span>
     </div>
     <div>
-        <label for="price-per-day">Enter price per day</label>
-        <input id="price-per-day" type="number" min="1" max="100000" required>
+        <label for="price-per-day" th:text="#{car.price.per.day.enter}">Enter price per day</label>
+        <input id="price-per-day" th:field="*{pricePerDay}" th:min="#{car.price.per.day.min}" th:max="#{car.price.per.day.max}" placeholder="0" type="number" required>
         <span class="error" aria-live="polite"></span>
     </div>
     <div>
-        <button class="add-button" type="submit">Add car</button>
+        <button class="add-button" th:text="#{button.add.car}" type="submit">Add car</button>
         <span class="error" aria-live="polite"></span>
     </div>
 </form>
@@ -168,12 +162,22 @@
     const newCarBrandField = document.getElementById('new-car-brand');
     const carName = document.getElementById('car-name');
     const carNumber = document.getElementById('car-number');
-    carNumber.setAttribute("pattern", "\\p{Upper}{2} \\d{4} \\p{Upper}{2}");
     const newCarColor = document.getElementById('add-new-car-color');
     const carPricePerDay = document.getElementById('price-per-day');
-    carPricePerDay.setAttribute("pattern", "\\d{1,6}");
+
+    carNumberAlreadyExistsError = "[[${carNumberAlreadyExistsError}]]" === "true";
+
+    carNumber.setAttribute("pattern", "[[#{car.number.regexp}]]" /*"\p{Upper}{2} \d{4} \p{Upper}{2}"*/);
 
     const elementsArr = [newCarBrandField, carName, carNumber, newCarColor, carPricePerDay];
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+            if(carNumberAlreadyExistsError === true){
+            showErrorMessage(carNumber, getErrorMessage(carNumber));
+        }
+    });
+
+
 
     elementsArr.forEach(element => element.addEventListener('input', function (event) {
             if (element.validity.valid) clearError(element);
@@ -185,9 +189,6 @@
         let hasException = false;
         for(let i = 0; i < elementsArr.length; ++i){
             let element = elementsArr[i];
-            console.log('Element: ' + element.id);
-            console.log('Disabled: ' + element.disabled);
-            console.log('Valid: ' + element.validity.valid);
             if(!element.disabled && !element.validity.valid) {
                 hasException = true;
                 let message = getErrorMessage(element);
@@ -202,17 +203,21 @@
 
     getErrorMessage = (element) => {
         let message;
-        if(element.validity.valueMissing) {
-            message = 'This field is required';
+        if(element === carNumber && carNumberAlreadyExistsError){
+            message = "[[#{error.car.number.already.exists}]]" /*Car with such number already exists*/
+            carNumberAlreadyExistsError = false;
+        }
+        else if(element.validity.valueMissing) {
+            message = "[[#{error.required}]]" /*'This field is required'*/;
         }
         else if(element.validity.typeMismatch) {
-            message = 'This field must match its type: ' + element.type;
+            message = "[[#{error.incorrect.type}]]" /*'This field must match its type: ' + element.type*/;
         }
         else if(element.validity.patternMismatch) {
-            message = 'This field must match its pattern: ' + element.pattern;
+            message = "[[#{error.incorrect.pattern}]]" /*'This field must match its pattern: ' + element.pattern*/;
         }
         else if(element.validity.rangeUnderflow || element.validity.rangeOverflow) {
-            message = 'Incorrect range: min ' + element.min + ', max ' + element.max;
+            message = "[[#{error.incorrect.range}]]" /*'Incorrect range: min ' + element.min + ', max ' + element.max*/;
         }
         return message;
     }
