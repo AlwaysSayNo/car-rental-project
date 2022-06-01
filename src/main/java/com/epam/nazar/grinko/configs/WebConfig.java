@@ -1,12 +1,14 @@
 package com.epam.nazar.grinko.configs;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.filter.reactive.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
@@ -15,6 +17,8 @@ import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import java.util.Locale;
 
 @Configuration
@@ -32,9 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
     // configures access to static resources (like css, js-scripts, images, ...)
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/images/**").addResourceLocations("/statics/images/**");
-        registry.addResourceHandler("/css/**").addResourceLocations("/statics/css/**");
-        registry.addResourceHandler("/js/**").addResourceLocations("/statics/js/**");
+        registry.addResourceHandler("/statics/**").addResourceLocations("/statics/");
     }
 
     // configures access to non-static resources (like path`s prefix, suffix, encoding, ...)
@@ -96,7 +98,6 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
     }
-
 
     @Bean
     public CookieLocaleResolver webLocaleResolver(){
