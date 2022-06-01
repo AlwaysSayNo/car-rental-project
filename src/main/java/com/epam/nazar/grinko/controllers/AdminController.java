@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping("/car-rental-service/admin")
+@RequestMapping("car-rental-service/admin")
 @AllArgsConstructor
 public class AdminController {
 
@@ -63,16 +63,35 @@ public class AdminController {
         return "redirect:/car-rental-service/admin/cars";
     }
 
-    @DeleteMapping("cars/{id}/edit")
-    public String deleteCarWithId(@PathVariable long id){
-        return "errors/404";
+    @GetMapping("cars/{id}/edit")
+    public String showCarEditForm(Model model, @PathVariable long id){
+        Car car = carService.getCarById(id);
+        CarDto carDto = carService.convertCarToCarDto(car);
+        model.addAttribute("carDto", carDto);
+        model.addAttribute("carId", id);
+        return "admin/edit-car-by-id";
     }
 
-    @GetMapping("cars/{id}/edit")
-    public String editCarWithId(Model model, @PathVariable long id){
+    @PatchMapping("cars/{id}/edit")
+    public String saveCarChanges(@ModelAttribute("carDto") CarDto carDto, @PathVariable long id, Model model){
+        Car currCar = carService.convertCarDtoToCar(carDto);
+        Car tmp = carService.getCarByNumber(currCar.getNumber());
 
-        model.addAttribute("carDto", new CarDto());
-        return "admin/add-new-car";
+        if(tmp != null && !tmp.getId().equals(id)){
+            model.addAttribute("carNumberAlreadyExistsError", true);
+            model.addAttribute("carId", id);
+            model.addAttribute("carDto", carDto);
+            return "admin/edit-car-by-id";
+        }
+
+        carService.updateCarById(currCar, id);
+        return "redirect:/car-rental-service/admin/cars";
+    }
+
+    @DeleteMapping("cars/{id}/edit")
+    public String deleteCar(Model model, @PathVariable long id){
+        carService.deleteCarById(id);
+        return "redirect:/car-rental-service/admin/cars";
     }
 
     @ModelAttribute("brands")

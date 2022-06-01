@@ -1,0 +1,106 @@
+form {
+    padding: 10px;
+    margin: 0 auto;
+    width: 350px;
+    border: 3px solid #000000;
+}
+
+h1 {
+    margin: 0 auto 10px auto;
+    padding: 0;
+}
+
+.center-block{
+    text-align: center;
+}
+
+#go-back-link {
+    color: #000000;
+    text-decoration: underline dashed;
+    font-weight: bold;
+}
+
+#go-back-link:before {
+    content: "←";
+}
+
+
+fieldset {
+    padding: 0;
+    border: none;
+    width: 100%;
+}
+
+fieldset > div {
+    background-color: #cccccc;
+    border-radius: 5px;
+    padding: 3px;
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    align-items: baseline;
+}
+
+fieldset > div > span {
+    grid-column-start: 2;
+}
+
+select {
+    width: max-content;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 180px;
+}
+
+input[type="checkbox"] {
+    position: relative;
+    top: 2px;
+}
+
+fieldset > div + div {
+    margin-top: 20px;
+}
+input:invalid,
+select:invalid {
+    border-color: #900;
+    background-color: #FDD;
+}
+
+input:focus:invalid {
+    outline: none;
+}
+
+.error {
+    width: 188px;
+    padding: 0;
+
+    font-size: 80%;
+    color: white;
+    background-color: #900;
+    border-radius: 0 0 5px 5px;
+
+    box-sizing: border-box;
+}
+
+.error.active {
+    padding: 0.3em;
+}
+
+.link-hr {
+    height: 1px;
+    background-color: #000000;
+    border: 1px solid #000000;
+    border-radius: 3px;
+}
+
+.button {
+    width: 90px;
+}
+
+.button-set {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}

@@ -25,8 +25,12 @@ public class CarService {
         return carRepository.findAll();
     }
 
-    public Optional<Car> getCarById(long id){
-        return carRepository.findById(id);
+    public Car getCarById(long id){
+        return carRepository.getById(id);
+    }
+
+    public Car getCarByNumber(String number){
+        return carRepository.getByNumber(number);
     }
 
     public void addNewCar(Car newCar){
@@ -36,6 +40,12 @@ public class CarService {
     public void deleteCarById(long id) {
         carRepository.deleteById(id);
     }
+
+    public void updateCarById(Car car, long id){
+        carRepository.updateCarById(car.getNumber(), car.getBrand(), car.getName(),
+                car.getColor(), car.getPricePerDay(), car.getSegment(), car.getStatus(), id);
+    }
+
 
     public boolean existsCarByNumber(String number){
         return carRepository.existsByNumber(number);

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>New car</title>
+    <title>Edit car</title>
     <link rel="stylesheet" th:href="@{/statics/css/admin/car-form.css}">
     <style>
         html {
@@ -18,19 +18,23 @@
             margin-top: 16px;
         }
 
-        .add-button {
-            background-color: #0d910d;
+        #edit-button {
+            background-color: #6161e3;
+        }
+
+        #delete-button {
+            background-color: #ab3535;
         }
     </style>
 </head>
 <body>
 
-<form th:method="POST" th:action="@{/car-rental-service/admin/cars/new}" th:object="${carDto}" action="/show-cars.html" novalidate>
+<form th:method="patch" th:action="@{/car-rental-service/admin/cars/{id}/edit(id=${carId})}" th:object="${carDto}" action="/edit-car-by-id.html" novalidate>
     <div class="center-block">
-        <h1 th:text="#{new.car.form}">New car form</h1>
+        <h1 th:text="#{new.car.form}">Edit car form</h1>
     </div>
     <div class="link-box">
-        <a id="go-back-link" th:href="@{/car-rental-service/admin/cars/}" href="/show-cars.html">Go back</a>
+        <a id="go-back-link" th:href="@{/car-rental-service/admin/cars/}" th:text="#{go.back}" href="/show-cars.html">Go back</a>
         <hr class="link-hr"/>
     </div>
     <fieldset>
@@ -90,14 +94,13 @@
     </fieldset>
     <div class="center-block">
         <div class="button-set">
-            <button class="button add-button" th:text="#{button.add}" type="submit">Add</button>
+            <button class="button" id="edit-button" th:text="#{button.edit}" type="submit">Edit</button>
+            <button class="button" id="delete-button" th:with="url=@{/car-rental-service/admin/cars/{id}/edit(id=${carId})}" th:attr="onclick=|sendDelete('${url}')|"  th:text="#{button.delete}" type="button">Delete</button>
         </div>
     </div>
 </form>
-
 </body>
 </html>
-
 <script>
     const toggleFork = (id) => {
         const textField = document.querySelectorAll("#" + id + ' input[type="text"]')[0];
@@ -105,6 +108,8 @@
         const selector = document.querySelectorAll("#" + id + " select")[0];
         selector.disabled = !selector.disabled;
     }
+
+    // form
 
     const form  = document.getElementsByTagName('form')[0];
     const newCarBrandField = document.getElementById('new-car-brand');
@@ -146,7 +151,6 @@
         }
     });
 
-
     elementsArr.forEach(element => element.addEventListener('input', function (event) {
             if (element.validity.valid) clearError(element);
             else showErrorMessage(element, getErrorMessage(element));
@@ -179,5 +183,18 @@
         let errorSpan = element.nextElementSibling;
         errorSpan.textContent = '';
         errorSpan.className = 'error';
+    }
+
+    // delete button
+
+    function sendDelete(url) {
+        const xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("DELETE", url, true);
+        xmlHttp.onload = function () {
+            let responseURL = xmlHttp.responseURL;
+            console.log("Redirecting to:", responseURL);
+            window.location.replace(responseURL);
+        };
+        xmlHttp.send();
     }
 </script>
