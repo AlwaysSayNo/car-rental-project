@@ -1,7 +1,7 @@
 package com.epam.nazar.grinko.domians;
 
 import com.epam.nazar.grinko.domians.helpers.UserStatus;
-import com.epam.nazar.grinko.securities.Permission;
+import com.epam.nazar.grinko.securities.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,7 +36,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
-    @Column(name = "permission", nullable = false)
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Permission permission;
+    private UserRole role;
 }
