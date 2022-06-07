@@ -55,13 +55,11 @@ public class CarService {
     public Car convertCarDtoToCar(CarDto carDto){
         CarBrand brand = carBrandService.getBrand(carDto.getBrand());
         CarColor color = carColorService.getColor(carDto.getColor());
-        CarSegment segment = CarSegment.valueOf(carDto.getSegment());
-        CarStatus status = CarStatus.NOT_RENTED;
 
         return new Car().setBrand(brand)
                 .setColor(color)
-                .setSegment(segment)
-                .setStatus(status)
+                .setSegment(carDto.getSegment())
+                .setStatus(carDto.getStatus())
                 .setName(carDto.getName())
                 .setNumber(carDto.getNumber())
                 .setPricePerDay(carDto.getPricePerDay());
@@ -71,7 +69,8 @@ public class CarService {
         return new CarDto().setBrand(car.getBrand().getValue())
                 .setName(car.getName())
                 .setNumber(car.getNumber())
-                .setSegment(car.getSegment().name())
+                .setSegment(car.getSegment())
+                .setStatus(car.getStatus())
                 .setColor(car.getColor().getValue())
                 .setPricePerDay(car.getPricePerDay());
     }

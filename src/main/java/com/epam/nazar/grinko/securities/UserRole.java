@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 
 public enum UserRole {
 
-    USER,
-    MANAGER,
-    ADMIN;
+    ROLE_USER,
+    ROLE_MANAGER,
+    ROLE_ADMIN;
 
     public Set<SimpleGrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(name());

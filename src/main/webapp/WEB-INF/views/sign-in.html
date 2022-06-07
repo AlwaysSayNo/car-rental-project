@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        html {
+            font-size: 10px;
+        }
+
+        body {
+            font-size: 1.6em;
+            margin: 0;
+        }
+
+        h1 {
+            margin: 0 auto 10px auto;
+            padding: 0;
+        }
+
+        .center-block{
+            text-align: center;
+        }
+
+        #sign-in-button {
+            background-color: #0d910d;
+        }
+    </style>
+</head>
+<body>
+<body>
+
+<form th:method="POST" th:action="@{/car-rental-service/sign-in}" th:object="${requestDto}" action="/sign-in.html" novalidate>
+    <div class="center-block">
+        <h1 th:text="#{new.car.form}">Sign in</h1>
+    </div>
+    <div class="link-box">
+        <a id="go-back-link" th:href="@{/car-rental-service/}" href="/index.html">Go back</a>
+        <hr class="link-hr"/>
+    </div>
+    <fieldset>
+        <div>
+            <label for="email" th:text="#{user.email.enter}">Enter email</label>
+            <input id="email" th:field="*{email}" type="email" required>
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <div>
+            <label for="car-number" th:text="#{car.number.enter}">Enter password</label>
+            <input id="car-number" th:field="*{password}" type="password" required>
+            <span class="error" aria-live="polite"></span>
+        </div>
+    </fieldset>
+    <div class="center-block">
+        <div class="button-set">
+            <button id="sign-in-button" class="button" th:text="#{button.sign.in}" type="submit">Sign in</button>
+        </div>
+    </div>
+</form>
+
+</body>
+</body>
+</html>

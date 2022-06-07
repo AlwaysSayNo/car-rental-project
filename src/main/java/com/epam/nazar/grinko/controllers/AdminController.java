@@ -89,7 +89,7 @@ public class AdminController {
     }
 
     @DeleteMapping("cars/{id}/edit")
-    public String deleteCar(Model model, @PathVariable long id){
+    public String deleteCar(@PathVariable long id){
         carService.deleteCarById(id);
         return "redirect:/car-rental-service/admin/cars";
     }

@@ -24,11 +24,13 @@ public class JwtTokenFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
+        System.out.println("Request token: " + token);
         try {
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 if (authentication != null) {
                     // Устанавливает принципала в контекст нового принципала.
+                    System.out.println("Set authentication: " + authentication.getName());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
