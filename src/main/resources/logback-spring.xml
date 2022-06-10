@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STANDARD_OUTPUT" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>%gray(%d{yyyy-MM-dd}) | %gray(%d{HH:mm:ss.SSS}) | %highlight(%5level) | %gray(%-15.15thread)  | %boldMagenta(%-45.45logger{45}) | %m%n</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="com.epam.nazar.grinko" level="INFO" />
+    <root level="INFO">
+        <appender-ref ref="STANDARD_OUTPUT" />
+    </root>
+</configuration>
