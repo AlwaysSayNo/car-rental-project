@@ -42,23 +42,20 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<?> authenticate(@ModelAttribute("requestDto") AuthenticationRequestDto requestDto) {
-        Map<Object, Object> response = new HashMap<>();
+    public String authenticate(@ModelAttribute("requestDto") AuthenticationRequestDto requestDto,
+                                          HttpServletResponse response,
+                               Model model) {
         try {
             User user = authenticationService.authenticateUser(requestDto);
             String token = jwtTokenProvider.createToken(requestDto.getEmail(), user.getRole().name());
-            response.put("email", requestDto.getEmail());
-            response.put("token", token);
-            System.out.println("Token: " + token);
-            return ResponseEntity.status(HttpStatus.TEMPORARY_REDIRECT)
-                    .location(URI.create("/car-rental-service/" + user.getRole().name().toLowerCase(Locale.ROOT) + "/profile"))
-                    .body(response);
-            //return ResponseEntity.ok().body(response);
+            response.addCookie(jwtTokenProvider.createCookie(token));
+            String role = user.getRole().name().toLowerCase(Locale.ROOT)
+                    .replace("role_", "");
+            String url = "/car-rental-service/" + role + "/profile";
+            return "redirect:" + url;
         } catch (AuthenticationException e) {
-            response.put("invalidCredentialsException", true);
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .location(URI.create("/car-rental-service/sign-in"))
-                    .body(response);
+            model.addAttribute("invalidCredentialsException", true);
+            return "sign-in";
         }
     }
 

@@ -1,5 +1,6 @@
 package com.epam.nazar.grinko.securities.jwt;
 
+import com.epam.nazar.grinko.utils.Utility;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,14 +8,18 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 @Component
 @PropertySource("classpath:META-INF/my-application.properties")
@@ -24,7 +29,7 @@ public class JwtTokenProvider {
 
     @Value("${jwt.secret.key}")
     private String secretKey;
-    @Value("${jwt.header}")
+    @Value("${jwt.cookie.name}")
     private String authorizationHeader;
     @Value("${jwt.expiration}")
     private long validityInMilliseconds;
@@ -52,6 +57,13 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public Cookie createCookie(String token){
+        Cookie tokenCookie = new Cookie(authorizationHeader, token);
+        int maxAge = (int) (new Date().getTime() - getExpiration(token).getTime());
+        tokenCookie.setMaxAge(maxAge);
+        return tokenCookie;
+    }
+
     // Проверяем токен на валидность формату JWT
     // Если токен валидный, то проверяем не истек ли его срок.
     public boolean validateToken(String token) {
@@ -73,8 +85,18 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
+    public Date getExpiration(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getExpiration();
+    }
+
     // Достает из хедера токен с заголовком authorizationHeader.
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader(authorizationHeader);
+        String cookieValue;
+        try {
+            cookieValue = Objects.requireNonNull(Utility.getCookie(request, authorizationHeader)).getValue();
+        } catch (NullPointerException ignored) {
+            cookieValue = null;
+        }
+        return cookieValue;
     }
 }
