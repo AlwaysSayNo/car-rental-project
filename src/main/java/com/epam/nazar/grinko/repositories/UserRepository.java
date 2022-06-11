@@ -21,6 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
     List<User> getAllByRole(UserRole role);
+    @Transactional
+    void deleteByIdAndRole(long id, UserRole role);
 
     @Transactional
     @Modifying

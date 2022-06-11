@@ -34,6 +34,14 @@ public class UserService {
         return userRepository.getAllByRole(role);
     }
 
+    public User getUserById(long id){
+        return userRepository.getById(id);
+    }
+
+    public void deleteManagerById(long id){
+        userRepository.deleteByIdAndRole(id, UserRole.ROLE_MANAGER);
+    }
+
     public void addNewUser(User newUser){
         encodePassword(newUser);
         userRepository.save(newUser);
