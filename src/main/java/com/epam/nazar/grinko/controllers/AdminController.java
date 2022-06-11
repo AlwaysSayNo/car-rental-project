@@ -28,13 +28,13 @@ public class AdminController {
 
     // ? pagination
     @GetMapping("/cars")
-    public String showAllCars(Model model){
+    public String showAllCarsPage(Model model){
         model.addAttribute("cars", carService.getAllCars());
         return "admin/show-cars";
     }
 
     @GetMapping("/cars/new")
-    public String showCarCreationForm(Model model, CarDto carDto){
+    public String showCarCreationPage(Model model, CarDto carDto){
         model.addAttribute("carDto", carDto);
         return "admin/add-new-car";
     }
@@ -64,7 +64,7 @@ public class AdminController {
     }
 
     @GetMapping("cars/{id}/edit")
-    public String showCarEditForm(Model model, @PathVariable long id){
+    public String showCarEditPage(Model model, @PathVariable long id){
         Car car = carService.getCarById(id);
         CarDto carDto = carService.convertCarToCarDto(car);
         model.addAttribute("carDto", carDto);
