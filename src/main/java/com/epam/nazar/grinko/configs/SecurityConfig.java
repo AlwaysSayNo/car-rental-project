@@ -2,7 +2,9 @@ package com.epam.nazar.grinko.configs;
 
 
 import com.epam.nazar.grinko.securities.jwt.JwtConfigurer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@ComponentScan("com.epam.nazar.grinko")
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtConfigurer jwtConfigurer;
@@ -29,8 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                //.antMatchers("/car-rental-service/", "/car-rental-service/common/**").permitAll()
-                //.antMatchers("/car-rental-service/sign-in", "/car-rental-service/sign-up").permitAll()
                 .antMatchers("/car-rental-service/*").permitAll()
                 .antMatchers("/car-rental-service/user/**").hasAuthority("ROLE_USER")
                 .antMatchers("/car-rental-service/manager/**").hasAuthority("ROLE_MANAGER")
@@ -41,14 +42,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .apply(jwtConfigurer);
     }
 
-    @Bean
     @Override
+    @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    protected PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
-    }
 }

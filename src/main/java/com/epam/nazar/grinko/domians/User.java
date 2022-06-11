@@ -4,6 +4,7 @@ import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.securities.UserRole;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "users")
+@Accessors(chain = true)
 public class User {
 
     @Id

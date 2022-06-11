@@ -32,7 +32,7 @@
 
 <form th:method="POST" th:action="@{/car-rental-service/sign-in}" th:object="${requestDto}" action="/sign-in.html" novalidate>
     <div class="center-block">
-        <h1 th:text="#{new.car.form}">Sign in</h1>
+        <h1 th:text="#{user.sign.in}">Sign in</h1>
     </div>
     <div class="link-box">
         <a id="go-back-link" th:href="@{/car-rental-service/}" href="/index.html">Go back</a>
@@ -52,7 +52,7 @@
     </fieldset>
     <div class="center-block">
         <div class="button-set">
-            <button id="sign-in-button" class="button" th:text="#{button.sign.in}" type="submit">Sign in</button>
+            <button id="sign-in-button" class="button" th:text="#{user.button.sign.in}" type="submit">Sign in</button>
         </div>
     </div>
 </form>

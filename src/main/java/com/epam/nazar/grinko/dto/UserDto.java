@@ -4,9 +4,11 @@ import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.securities.UserRole;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter
 @Setter
+@Accessors(chain = true)
 public class UserDto {
     private String email;
     private String password;

@@ -1,10 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Sign in</title>
+    <title>Sign up</title>
+    <style>
+        html {
+            font-size: 10px;
+        }
+
+        body {
+            font-size: 1.6em;
+            margin: 0;
+        }
+
+        .sign-up {
+            background-color: #0d910d;
+        }
+    </style>
 </head>
 <body>
+<form th:method="POST" th:action="@{/car-rental-service/sign-up}" th:object="${userDto}" action="/sign-up.html" novalidate>
+
+    <div class="center-block">
+        <h1 th:text="#{user.sign.up}">Sign up</h1>
+    </div>
+    <div class="link-box">
+        <a id="go-back-link" th:href="@{/car-rental-service/index}" href="/show-cars.html">Go back</a>
+        <hr class="link-hr"/>
+    </div>
+    <fieldset>
+        <div id="block-user-email">
+            <label for="user-email" th:text="#{user.email.enter}">Enter email</label>
+            <input type="email" th:field="*{email}" name="user-email" id="user-email" required>
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <div id="block-user-password-first">
+            <label for="user-password-first" th:text="#{user.password.first.enter}">Enter password</label>
+            <input type="password" th:field="*{password}" name="user-password-first" id="user-password-first" required>
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <div id="block-user-phone-number">
+            <label for="user-phone-number" th:text="#{user.phone.number.enter}">Enter phone number</label>
+            <input type="text" th:field="*{phoneNumber}" name="user-phone-number" id="user-phone-number" required>
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <div id="block-user-first-name">
+            <label for="user-first-name" th:text="#{user.first.name.enter}">Enter first name</label>
+            <input type="text" th:field="*{firstName}" name="user-first-name" id="user-first-name" required>
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <div id="block-user-last-name">
+            <label for="user-last-name" th:text="#{user.last.name.enter}">Enter last name</label>
+            <input type="text" th:field="*{lastName}" name="user-last-name" id="user-last-name" required>
+            <span class="error" aria-live="polite"></span>
+        </div>
+    </fieldset>
+    <div class="center-block">
+        <div class="button-set">
+            <button class="button sign-up" th:text="#{user.button.sign.up}" type="submit">Sign up</button>
+        </div>
+    </div>
+</form>
 
 </body>
 </html>
+
+<script>
+    const form  = document.getElementsByTagName('form')[0];
+    const email = document.getElementById('user-email');
+    const password = document.getElementById('user-password-first');
+    const phoneNumber = document.getElementById('user-phone-number');
+    const firstName = document.getElementById('user-first-name');
+    const lastName = document.getElementById('user-last-name');
+
+    let userAlreadyExistsError = "[[${userAlreadyExistsError}]]" === "true";
+
+    //email.setAttribute("pattern", "[[#{email.regexp}]]");
+    //phoneNumber.setAttribute("pattern", "[[#{phone.number.regexp}]]");
+
+    getErrorMessage = (element) => {
+        let message;
+        if(element === email && userAlreadyExistsError){
+            message = "[[#{error.user.email.already.exists}]]" /*User with such email already exists*/
+            userAlreadyExistsError = false;
+        }
+        else if(element.validity.valueMissing) {
+            message = "[[#{error.required}]]" /*'This field is required'*/;
+        }
+        else if(element.validity.typeMismatch) {
+            message = "[[#{error.incorrect.type}]]" /*'This field must match its type: ' + element.type*/;
+        }
+        else if(element.validity.patternMismatch) {
+            message = "[[#{error.incorrect.pattern}]]" /*'This field must match its pattern: ' + element.pattern*/;
+        }
+        else if(element.validity.rangeUnderflow || element.validity.rangeOverflow) {
+            message = "[[#{error.incorrect.range}]]" /*'Incorrect range: min ' + element.min + ', max ' + element.max*/;
+        }
+        return message;
+    }
+
+    const elementsArr = [email, password, phoneNumber, firstName, lastName];
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        if(userAlreadyExistsError === true){
+            showErrorMessage(email, getErrorMessage(email));
+        }
+    });
+
+    elementsArr.forEach(element => element.addEventListener('input', function (event) {
+            if (element.validity.valid) clearError(element);
+            else showErrorMessage(element, getErrorMessage(element));
+        })
+    );
+
+    form.addEventListener('submit', function (event) {
+        let hasException = false;
+        for(let i = 0; i < elementsArr.length; ++i){
+            let element = elementsArr[i];
+            if(!element.disabled && !element.validity.valid) {
+                hasException = true;
+                let message = getErrorMessage(element);
+                showErrorMessage(element, message);
+            }
+            else{
+                clearError(element);
+            }
+        }
+        if(hasException) event.preventDefault();
+    });
+
+    showErrorMessage = (element, message) => {
+        let errorSpan = element.nextElementSibling;
+        errorSpan.textContent = message;
+        errorSpan.className = 'error active';
+    }
+
+    clearError = (element) => {
+        let errorSpan = element.nextElementSibling;
+        errorSpan.textContent = '';
+        errorSpan.className = 'error';
+    }
+</script>

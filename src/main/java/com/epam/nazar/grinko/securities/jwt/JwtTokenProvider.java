@@ -1,5 +1,6 @@
 package com.epam.nazar.grinko.securities.jwt;
 
+import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.utils.Utility;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,8 +17,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Base64;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -98,5 +99,16 @@ public class JwtTokenProvider {
             cookieValue = null;
         }
         return cookieValue;
+    }
+
+    public void removeCookieToken(HttpServletResponse response){
+        Cookie cookie = new Cookie(authorizationHeader, "");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+
+    public void setCookieToken(HttpServletResponse response, User user){
+        String token = createToken(user.getEmail(), user.getRole().name());
+        response.addCookie(createCookie(token));
     }
 }

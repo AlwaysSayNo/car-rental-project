@@ -1,5 +1,6 @@
 package com.epam.nazar.grinko.securities.jwt;
 
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -14,23 +15,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@AllArgsConstructor
 public class JwtTokenFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
-
-    public JwtTokenFilter(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
-        System.out.println("Request token: " + token);
         try {
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 if (authentication != null) {
                     // Устанавливает принципала в контекст нового принципала.
-                    System.out.println("Set authentication: " + authentication.getName());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
