@@ -5,12 +5,12 @@ import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.dto.UserDto;
 import com.epam.nazar.grinko.repositories.UserRepository;
 import com.epam.nazar.grinko.securities.UserRole;
-import jdk.jfr.Label;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +23,15 @@ public class UserService {
 
     public Optional<User> getUserByEmail(String email){
         return userRepository.findByEmail(email);
+    }
+
+    public void updateUserById(User user, long id){
+        encodePassword(user);
+        userRepository.updateUserById(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPassword(), user.getRole(), user.getPhoneNumber(), user.getStatus(), id);
+    }
+
+    public List<User> getUsersByRole(UserRole role){
+        return userRepository.getAllByRole(role);
     }
 
     public void addNewUser(User newUser){

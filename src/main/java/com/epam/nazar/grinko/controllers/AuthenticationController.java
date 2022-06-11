@@ -67,7 +67,7 @@ public class AuthenticationController {
                            HttpServletResponse response, Model model) {
         if(userService.existsUserByEmail(userDto.getEmail())){
             model.addAttribute("userAlreadyExistsError", true);
-            model.addAttribute("user", new UserDto());
+            model.addAttribute("userDto", new UserDto());
 
             log.info("SIGN-UP FAILURE: user already exists ({}, {})", userDto.getEmail(), userDto.getPassword());
 
