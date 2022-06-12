@@ -2,6 +2,7 @@ package com.epam.nazar.grinko.utils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Cookie;
+import java.util.Locale;
 
 public class Utility {
     public static Cookie getCookie(HttpServletRequest request, String name) {
@@ -14,6 +15,10 @@ public class Utility {
             }
         }
         return null;
+    }
+
+    public static String getRole(String role){
+        return role.toLowerCase(Locale.ROOT).replace("role_", "");
     }
 
 }
