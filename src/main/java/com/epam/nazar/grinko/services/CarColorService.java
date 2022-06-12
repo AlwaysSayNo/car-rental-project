@@ -29,4 +29,11 @@ public class CarColorService {
         return carColorRepository.existsCarColorByValue(color);
     }
 
+    public void addColorIfExists(String colorName){
+        if(!carColorExists(colorName)) {
+            CarColor color = new CarColor().setValue(colorName);
+            addNewColor(color);
+        }
+    }
+
 }

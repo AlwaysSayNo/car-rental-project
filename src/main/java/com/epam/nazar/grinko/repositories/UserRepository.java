@@ -17,12 +17,12 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     String UPDATE_USER_BY_ID = "UPDATE User u SET u.email=:email, u.firstName=:firstName, u.lastName=:lastName, u.password=:password, u.role=:role, u.phoneNumber=:phoneNumber, u.status=:status WHERE u.id=:id";
+    String UPDATE_USER_STATUS_BY_ID = "UPDATE User u SET u.status=:status WHERE u.id=:id";
     
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
+    boolean existsByIdAndRole(long id, UserRole role);
     List<User> getAllByRole(UserRole role);
-    @Transactional
-    void deleteByIdAndRole(long id, UserRole role);
 
     @Transactional
     @Modifying
@@ -35,4 +35,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
                        @Param("phoneNumber") String phoneNumber,
                        @Param("status") UserStatus status,
                        @Param("id") long id);
+
+    @Transactional
+    @Modifying
+    @Query(UPDATE_USER_STATUS_BY_ID)
+    void updateUserStatusById(
+                        @Param("status") UserStatus status,
+                        @Param("id") long id);
 }

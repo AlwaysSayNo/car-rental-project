@@ -30,6 +30,10 @@ public class UserService {
         userRepository.updateUserById(user.getEmail(), user.getFirstName(), user.getLastName(), password, user.getRole(), user.getPhoneNumber(), user.getStatus(), id);
     }
 
+    public void updateUserStatusById(UserStatus status, long id){
+        userRepository.updateUserStatusById(status, id);
+    }
+
     public List<User> getUsersByRole(UserRole role){
         return userRepository.getAllByRole(role);
     }
@@ -38,8 +42,8 @@ public class UserService {
         return userRepository.getById(id);
     }
 
-    public void deleteManagerById(long id){
-        userRepository.deleteByIdAndRole(id, UserRole.ROLE_MANAGER);
+    public void deleteById(long id){
+        userRepository.deleteById(id);
     }
 
     public void addNewUser(User newUser){
@@ -51,9 +55,8 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public void setBasicMetaParameters(UserDto userDto){
-        userDto.setStatus(UserStatus.ACTIVE);
-        userDto.setRole(UserRole.ROLE_USER);
+    public boolean existsUserByIdAndRole(long id, UserRole role){
+        return userRepository.existsByIdAndRole(id, role);
     }
 
     public User convertUserDtoToUser(UserDto userDto){

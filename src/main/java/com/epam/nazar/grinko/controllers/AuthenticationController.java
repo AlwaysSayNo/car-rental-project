@@ -1,11 +1,15 @@
 package com.epam.nazar.grinko.controllers;
 
+import com.epam.nazar.grinko.constants.ViewExceptionsConstants;
 import com.epam.nazar.grinko.domians.User;
+import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.dto.AuthenticationRequestDto;
 import com.epam.nazar.grinko.dto.UserDto;
+import com.epam.nazar.grinko.securities.UserRole;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
 import com.epam.nazar.grinko.services.AuthenticationService;
 import com.epam.nazar.grinko.services.UserService;
+import com.epam.nazar.grinko.utils.Utility;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
@@ -19,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 @Controller
-@RequestMapping("car-rental-service")
+@RequestMapping("/car-rental-service")
 @Slf4j
 @AllArgsConstructor
 public class AuthenticationController {
@@ -41,16 +45,12 @@ public class AuthenticationController {
             User user = authenticationService.authenticateUser(requestDto);
             jwtTokenProvider.setCookieToken(response, user);
 
-            String role = user.getRole().name().toLowerCase(Locale.ROOT).replace("role_", "");
+            String role = Utility.getRole(user.getRole().name());
             String url = "/car-rental-service/" + role + "/profile";
-
-            log.info("SIGN-IN SUCCESS: ({}, {}, {})", user.getEmail(), user.getFirstName(), user.getLastName());
 
             return "redirect:" + url;
         } catch (AuthenticationException e) {
-            model.addAttribute("invalidCredentialsException", true);
-
-            log.info("SIGN-IN FAILURE: invalid credentials ({}, {})", requestDto.getEmail(), requestDto.getPassword());
+            model.addAttribute(ViewExceptionsConstants.INVALID_CREDENTIALS_EXCEPTION, true);
 
             return "sign-in";
         }
@@ -63,27 +63,22 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-up")
-    public String register(@ModelAttribute("userDto") UserDto userDto,
-                           HttpServletResponse response, Model model) {
-        if(userService.existsUserByEmail(userDto.getEmail())){
-            model.addAttribute("userAlreadyExistsError", true);
-            model.addAttribute("userDto", new UserDto());
+    public String register(@ModelAttribute("userDto") UserDto userDto, HttpServletResponse response, Model model) {
 
-            log.info("SIGN-UP FAILURE: user already exists ({}, {})", userDto.getEmail(), userDto.getPassword());
+        if(userService.existsUserByEmail(userDto.getEmail())){
+            model.addAttribute(ViewExceptionsConstants.USER_ALREADY_EXISTS_EXCEPTION, true);
+            model.addAttribute("userDto", new UserDto());
 
             return "sign-up";
         }
 
         userDto.setRole(UserRole.ROLE_USER).setStatus(UserStatus.ACTIVE);
-        userService.setBasicMetaParameters(userDto);
         User user = userService.convertUserDtoToUser(userDto);
         userService.addNewUser(user);
 
         jwtTokenProvider.setCookieToken(response, user);
         String role = user.getRole().name().toLowerCase(Locale.ROOT).replace("role_", "");
         String url = "/car-rental-service/" + role + "/profile";
-
-        log.info("SIGN-UP SUCCESS: ({}, {}, {})", user.getEmail(), user.getFirstName(), user.getLastName());
 
         return "redirect:" + url;
     }
@@ -92,9 +87,7 @@ public class AuthenticationController {
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.logout(request, response, null);
-
         jwtTokenProvider.removeCookieToken(response);
-        log.info("SIGN-OUT SUCCESS");
 
         return "redirect:/car-rental-service/sign-in";
     }

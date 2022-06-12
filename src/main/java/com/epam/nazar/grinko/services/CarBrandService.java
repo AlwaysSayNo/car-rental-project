@@ -1,7 +1,6 @@
 package com.epam.nazar.grinko.services;
 
 import com.epam.nazar.grinko.domians.CarBrand;
-import com.epam.nazar.grinko.domians.CarColor;
 import com.epam.nazar.grinko.repositories.CarBrandRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +27,13 @@ public class CarBrandService {
 
     public boolean carBrandExists(String brand) {
         return carBrandRepository.existsCarBrandByValue(brand);
+    }
+
+    public void addBrandIfExists(String brandName){
+        if(!carBrandExists(brandName)){
+            CarBrand brand = new CarBrand().setValue(brandName);
+            addNewBrand(brand);
+        }
     }
 
 }

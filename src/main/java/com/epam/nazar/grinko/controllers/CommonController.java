@@ -1,5 +1,6 @@
 package com.epam.nazar.grinko.controllers;
 
+import com.epam.nazar.grinko.constants.ViewExceptionsConstants;
 import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.dto.UserDto;
 import com.epam.nazar.grinko.securities.jwt.IllegalJwtContentException;
@@ -71,7 +72,7 @@ public class CommonController {
         User currEmailUser = userService.getUserByEmail(userDto.getEmail()).orElseThrow(IllegalJwtContentException::new);
 
         if(!oldEmailUser.getId().equals(currEmailUser.getId())){
-            model.addAttribute("userAlreadyExistsError", true);
+            model.addAttribute(ViewExceptionsConstants.USER_ALREADY_EXISTS_EXCEPTION, true);
             model.addAttribute("userDto", userDto);
 
             //log.info("PROFILE-EDIT FAILURE: user already exists ({}, {})", userDto.getEmail(), userDto.getPassword());

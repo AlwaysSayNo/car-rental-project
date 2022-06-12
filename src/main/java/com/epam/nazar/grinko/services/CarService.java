@@ -29,7 +29,7 @@ public class CarService {
         return carRepository.getById(id);
     }
 
-    public Car getCarByNumber(String number){
+    public Optional<Car> getCarByNumber(String number){
         return carRepository.getByNumber(number);
     }
 
@@ -45,7 +45,6 @@ public class CarService {
         carRepository.updateCarById(car.getNumber(), car.getBrand(), car.getName(),
                 car.getColor(), car.getPricePerDay(), car.getSegment(), car.getStatus(), id);
     }
-
 
     public boolean existsCarByNumber(String number){
         return carRepository.existsByNumber(number);
