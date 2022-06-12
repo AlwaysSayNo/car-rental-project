@@ -3,6 +3,7 @@ package com.epam.nazar.grinko.securities.jwt;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -24,7 +25,12 @@ public class JwtTokenFilter extends GenericFilterBean {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
         try {
             if (token != null && jwtTokenProvider.validateToken(token)) {
-                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                Authentication authentication = null;
+                try{
+                    authentication = jwtTokenProvider.getAuthentication(token);
+                }catch (UsernameNotFoundException e){
+                    jwtTokenProvider.removeCookieToken((HttpServletResponse) servletResponse);
+                }
                 if (authentication != null) {
                     // Устанавливает принципала в контекст нового принципала.
                     SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -32,7 +38,9 @@ public class JwtTokenFilter extends GenericFilterBean {
             }
         } catch (JwtAuthenticationException e) {
             SecurityContextHolder.clearContext();
-            ((HttpServletResponse) servletResponse).sendError(e.getHttpStatus().value());
+            HttpServletResponse response = (HttpServletResponse) servletResponse;
+            response.sendError(e.getHttpStatus().value());
+
             throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
         filterChain.doFilter(servletRequest, servletResponse);
