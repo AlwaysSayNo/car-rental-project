@@ -26,8 +26,8 @@ public class UserService {
     }
 
     public void updateUserById(User user, long id){
-        encodePassword(user);
-        userRepository.updateUserById(user.getEmail(), user.getFirstName(), user.getLastName(), user.getPassword(), user.getRole(), user.getPhoneNumber(), user.getStatus(), id);
+        String password = encodePassword(user);
+        userRepository.updateUserById(user.getEmail(), user.getFirstName(), user.getLastName(), password, user.getRole(), user.getPhoneNumber(), user.getStatus(), id);
     }
 
     public List<User> getUsersByRole(UserRole role){
@@ -66,9 +66,8 @@ public class UserService {
                 .setRole(userDto.getRole());
     }
 
-    public void encodePassword(User user){
-        String password = passwordEncoder.encode(user.getPassword());
-        user.setPassword(password);
+    public String encodePassword(User user){
+        return passwordEncoder.encode(user.getPassword());
 
     }
 
