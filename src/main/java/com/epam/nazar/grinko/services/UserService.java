@@ -43,7 +43,7 @@ public class UserService {
     }
 
     public void addNewUser(User newUser){
-        encodePassword(newUser);
+        newUser.setPassword(encodePassword(newUser));
         userRepository.save(newUser);
     }
 

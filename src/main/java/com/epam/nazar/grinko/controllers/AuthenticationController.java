@@ -74,6 +74,7 @@ public class AuthenticationController {
             return "sign-up";
         }
 
+        userDto.setRole(UserRole.ROLE_USER).setStatus(UserStatus.ACTIVE);
         userService.setBasicMetaParameters(userDto);
         User user = userService.convertUserDtoToUser(userDto);
         userService.addNewUser(user);
