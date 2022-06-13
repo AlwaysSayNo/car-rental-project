@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.websocket.server.PathParam;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("car-rental-service/admin")
@@ -35,10 +36,17 @@ public class AdminController {
     private final CarBrandService carBrandService;
     private final CarColorService carColorService;
 
+
     // ? pagination
     @GetMapping("/cars")
     public String showAllCarsPage(Model model){
-        model.addAttribute("cars", carService.getAllCars());
+        List<Car> allCars = carService.getAllCars();
+        List<CarDto> allCarDto = allCars.stream().map(carService::convertCarToCarDto).collect(Collectors.toList());
+        List<Long> allId = allCars.stream().map(Car::getId).collect(Collectors.toList());
+
+        model.addAttribute("cars", allCarDto);
+        model.addAttribute("ids", allId);
+
         return "admin/cars/show-cars";
     }
 
@@ -77,7 +85,7 @@ public class AdminController {
         return "admin/cars/edit-car-by-id";
     }
 
-    @PatchMapping("cars/{id}/edit")
+    @PatchMapping("/cars/{id}/edit")
     public String saveCarChanges(@ModelAttribute("carDto") CarDto carDto, @PathVariable long id, Model model){
         Car currCar = carService.convertCarDtoToCar(carDto);
         Car tmp = carService.getCarByNumber(currCar.getNumber()).orElseThrow(NullPointerException::new);
@@ -93,15 +101,24 @@ public class AdminController {
         return "redirect:/car-rental-service/admin/cars";
     }
 
-    @DeleteMapping("cars/{id}/edit")
+    @DeleteMapping("/cars/{id}/edit")
     public String deleteCar(@PathVariable long id){
         carService.deleteCarById(id);
         return "redirect:/car-rental-service/admin/cars";
     }
 
+
+    // ? pagination
     @GetMapping("/managers")
     public String showAllManagers(Model model){
-        model.addAttribute("managers", userService.getUsersByRole(UserRole.ROLE_MANAGER));
+        List<User> allManagers = userService.getUsersByRole(UserRole.ROLE_MANAGER);
+        List<UserDto> allManagersDto = allManagers.stream().map(userService::convertUserToUserDto)
+                .collect(Collectors.toList());
+        List<Long> allId = allManagers.stream().map(User::getId).collect(Collectors.toList());
+
+        model.addAttribute("managers", allManagersDto);
+        model.addAttribute("ids", allId);
+
         return "admin/managers/show-managers";
     }
 
@@ -126,7 +143,7 @@ public class AdminController {
         return "redirect:/car-rental-service/admin/managers";
     }
 
-    @DeleteMapping("managers/{id}")
+    @DeleteMapping("/managers/{id}")
     public String deleteManager(@PathVariable long id){
         if(!userService.existsUserByIdAndRole(id, UserRole.ROLE_MANAGER)){
             throw new IllegalPathVariableException();
@@ -136,7 +153,7 @@ public class AdminController {
         return "redirect:/car-rental-service/admin/managers";
     }
 
-    @PatchMapping("managers/{id}")
+    @PatchMapping("/managers/{id}")
     public String changeManagerStatus(@PathVariable long id, @PathParam("status") String status){
         if(!userService.existsUserByIdAndRole(id, UserRole.ROLE_MANAGER)){
             throw new IllegalPathVariableException();
@@ -144,6 +161,41 @@ public class AdminController {
 
         userService.updateUserStatusById(UserStatus.valueOf(status), id);
         return "redirect:/car-rental-service/admin/managers";
+    }
+
+
+    // ? pagination
+    @GetMapping("/registered-users")
+    public String showAllRegistered(Model model){
+        List<User> allRegistered = userService.getUsersByRole(UserRole.ROLE_USER);
+        List<UserDto> allRegisteredDto = allRegistered.stream().map(userService::convertUserToUserDto)
+                .collect(Collectors.toList());
+        List<Long> allId = allRegistered.stream().map(User::getId).collect(Collectors.toList());
+
+        model.addAttribute("registeredUsers", allRegisteredDto);
+        model.addAttribute("ids", allId);
+
+        return "admin/users/show-users";
+    }
+
+    @DeleteMapping("/registered-users/{id}")
+    public String deleteUser(@PathVariable long id){
+        if(!userService.existsUserByIdAndRole(id, UserRole.ROLE_USER)){
+            throw new IllegalPathVariableException();
+        }
+
+        userService.deleteById(id);
+        return "redirect:/car-rental-service/admin/registered-users";
+    }
+
+    @PatchMapping("/registered-users/{id}")
+    public String changeUserStatus(@PathVariable long id, @PathParam("status") String status){
+        if(!userService.existsUserByIdAndRole(id, UserRole.ROLE_USER)){
+            throw new IllegalPathVariableException();
+        }
+
+        userService.updateUserStatusById(UserStatus.valueOf(status), id);
+        return "redirect:/car-rental-service/admin/registered-users";
     }
 
     @ModelAttribute("brands")

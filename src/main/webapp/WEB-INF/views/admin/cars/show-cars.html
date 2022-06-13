@@ -72,11 +72,11 @@
 </head>
 <body>
 <div class="cars-container">
-    <div class="car" th:each="car : ${cars}">
+    <div class="car" th:each="car, iterStat : ${cars}">
         <img class="car-img" width="100" height="100" src="https://img.lovepik.com/free-png/20210926/lovepik-car-icon-png-image_401486754_wh1200.png" alt="Car icon">
         <div class="car-information">
             <div th:text="#{car.info.brand}">Brand:</div>
-            <div th:text="${car.brand.value}">BMW</div>
+            <div th:text="${car.brand}">BMW</div>
             <div th:text="#{car.info.name}">Name:</div>
             <div th:text="${car.name}">X6</div>
             <div th:text="#{car.info.segment}">Segment:</div>
@@ -84,13 +84,13 @@
             <div th:text="#{car.info.number}">Car number:</div>
             <div th:text="${car.number}">AA 1111 BC</div>
             <div th:text="#{car.info.color}">Color:</div>
-            <div th:text="${car.color.value}">Black</div>
+            <div th:text="${car.color}">Black</div>
             <div th:text="#{car.info.price.per.day}">Price per day:</div>
             <div th:text="${car.pricePerDay}" class="price">1200</div>
         </div>
         <div class="right">
             <div>NOT_RENTED</div>
-            <a th:text="#{edit.car}" th:href="@{/car-rental-service/admin/cars/{id}/edit(id=${car.getId()})}" href="/edit-car-by-id.html">Edit car</a>
+            <a th:text="#{edit.car}" th:href="@{/car-rental-service/admin/cars/{id}/edit(id=${ids.get(iterStat.index)})}" href="/edit-car-by-id.html">Edit car</a>
         </div>
     </div>
 </div>
