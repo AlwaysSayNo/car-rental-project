@@ -97,7 +97,7 @@ public class AdminController {
             return "admin/cars/edit-car-by-id";
         }
 
-        carService.updateCarById(currCar, id);
+        carService.updateCarById(id, currCar);
         return "redirect:/car-rental-service/admin/cars";
     }
 
