@@ -10,6 +10,7 @@ import com.epam.nazar.grinko.repositories.CarRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,10 @@ public class CarService {
 
     public List<Car> getAllCars(){
         return carRepository.findAll();
+    }
+
+    public List<Car> getCarsWithStatus(CarStatus... statuses){
+        return carRepository.findAllByStatusIsIn(Arrays.asList(statuses));
     }
 
     public Car getCarById(long id){
@@ -41,9 +46,13 @@ public class CarService {
         carRepository.deleteById(id);
     }
 
-    public void updateCarById(Car car, long id){
+    public void updateCarById(long id, Car car){
         carRepository.updateCarById(car.getNumber(), car.getBrand(), car.getName(),
                 car.getColor(), car.getPricePerDay(), car.getSegment(), car.getStatus(), id);
+    }
+
+    public void updateCarStatusById(long id, CarStatus status){
+        carRepository.updateCarStatusById(status, id);
     }
 
     public boolean existsCarByNumber(String number){
