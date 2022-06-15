@@ -59,6 +59,10 @@ public class UserService {
         return userRepository.existsByIdAndRole(id, role);
     }
 
+    public Optional<Long> getUserIdByEmail(String email){
+        return userRepository.getIdByEmail(email);
+    }
+
     public User convertUserDtoToUser(UserDto userDto){
         return new User().setEmail(userDto.getEmail())
                 .setPassword(userDto.getPassword())
@@ -77,7 +81,7 @@ public class UserService {
     public UserDto convertUserToUserDto(User user){
         return new UserDto().setEmail(user.getEmail())
                 .setPassword(user.getPassword())
-                .setPassword(user.getPhoneNumber())
+                .setPhoneNumber(user.getPhoneNumber())
                 .setFirstName(user.getFirstName())
                 .setLastName(user.getLastName())
                 .setStatus(user.getStatus())

@@ -18,6 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     String UPDATE_USER_BY_ID = "UPDATE User u SET u.email=:email, u.firstName=:firstName, u.lastName=:lastName, u.password=:password, u.role=:role, u.phoneNumber=:phoneNumber, u.status=:status WHERE u.id=:id";
     String UPDATE_USER_STATUS_BY_ID = "UPDATE User u SET u.status=:status WHERE u.id=:id";
+    String SELECT_USER_ID_BY_EMAIL = "SELECT u.id FROM User u WHERE u.email=:email";
     
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
@@ -42,4 +43,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void updateUserStatusById(
                         @Param("status") UserStatus status,
                         @Param("id") long id);
+
+    @Transactional
+    @Query(SELECT_USER_ID_BY_EMAIL)
+    Optional<Long> getIdByEmail(@Param("email") String email);
 }
