@@ -1,13 +1,21 @@
-# CARS
+# COLORS
 INSERT INTO car_color (color) VALUE ('BLACK');
 INSERT INTO car_color (color) VALUE ('WHITE');
 INSERT INTO car_color (color) VALUE ('YELLOW');
+INSERT INTO car_color (color) VALUE ('RED');
 
+# BRANDS
 INSERT INTO car_brands (brand) VALUE ('BMW');
 INSERT INTO car_brands (brand) VALUE ('Audi');
+INSERT INTO car_brands (brand) VALUE ('Ford');
+INSERT INTO car_brands (brand) VALUE ('Hyundai');
 
-INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('AA 1111 AA', 1, 'A6', 1, 120, 'A', 'NOT_RENTED');
-INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('BB 1111 AC', 2, 'Q7', 2, 100, 'A', 'RENTED');
+# BRANDS
+INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('AA 1111 AA', 1, 'X6', 1, 600, 'S', 'NOT_RENTED');
+INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('BB 1111 BB', 2, 'A6', 2, 450, 'E', 'NOT_RENTED');
+INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('EE 1111 EE', 3, 'Taurus', 2, 400, 'E', 'NOT_RENTED');
+INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('CC 1111 CC', 4, 'Aura', 3, 200, 'B', 'NOT_RENTED');
+INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('DD 1111 DD', 4, 'i30', 4, 300, 'C', 'NOT_RENTED');
 
 # USERS (password=user)
 INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('user1@gmail.com', 'User', 'One', '$2a$12$yvdjbqbVG7XU3zMYR5jGvetqy6dn8IfAEYs7m6UKYoZGG/HRzFYMa', '+380 50 111 11 11', 'ROLE_USER', 'ACTIVE');
@@ -19,3 +27,12 @@ INSERT INTO users (email, first_name, last_name, password, phone_number, role, s
 
 # ADMIN (password=admin)
 INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('admin1@gmail.com', 'Admin', 'One', '$2a$12$5neMW8gaSLKtF0ywADDFP.G/fIhVBP98SGb2H97yLnEMWC9LM48mO', '+380 66 111 11 11', 'ROLE_ADMIN', 'ACTIVE');
+
+# ORDER
+#INSERT INTO orders (user_id, car_id, status) VALUE (1, 2, 'IN_USE');
+
+# PAYMENT DETAILS
+#INSERT INTO payment_details(passport_number, first_name, last_name, date_of_birth) VALUE ('000000000', 'User', 'One', '2000-01-01');
+
+# BILL
+#INSERT INTO bills (order_id, payment_details_id, start_date, expiration_date, car_price, with_driver, driver_price, total_price, status) VALUE (1, 1, '2022-02-11', '2022-02-12', 100, false, 0, 100, 'PAID');
