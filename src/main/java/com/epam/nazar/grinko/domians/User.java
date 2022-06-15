@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Getter
 @Setter
@@ -41,4 +42,9 @@ public class User {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Collection<Order> orders;
+
 }

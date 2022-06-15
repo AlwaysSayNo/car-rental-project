@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Getter
 @Setter
@@ -44,5 +45,9 @@ public class Car {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private CarStatus status;
+
+
+    @OneToMany(mappedBy = "car", fetch = FetchType.EAGER)
+    private Collection<Order> orders;
 
 }
