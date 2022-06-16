@@ -1,16 +1,13 @@
 package com.epam.nazar.grinko.services;
 
-import com.epam.nazar.grinko.domians.Bill;
 import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.Order;
 import com.epam.nazar.grinko.domians.User;
-import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import com.epam.nazar.grinko.dto.OrderDto;
 import com.epam.nazar.grinko.repositories.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.expression.Lists;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +20,21 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final UserService userService;
     private final CarService carService;
+
+    public void addOrder(Order order){
+        carService.updateCarStatusById(order.getCar().getId(), order.getCar().getStatus());
+        orderRepository.save(order);
+    }
+
+    public List<Order> getAllOrdersByUserIdAndStatus(long id, OrderStatus... status){
+        return orderRepository.findAllByUser_IdAndStatusIsIn(id, Arrays.asList(status));
+    }
+
+
+    public Optional<Order> getOrderWithStatus(Long userId, Long carId, OrderStatus status){
+        return orderRepository.getByUserIdAndCarIdAndStatus(userId, carId, status);
+    }
+
 
     public Order convertOrderDtoToOrder(OrderDto orderDto){
         Long carId = carService.getCarByNumber(orderDto.getCar().getNumber())
@@ -44,12 +56,4 @@ public class OrderService {
                 .setStatus(order.getStatus());
     }
 
-    public void addOrder(Order order){
-        carService.updateCarStatusById(order.getCar().getId(), order.getCar().getStatus());
-        orderRepository.save(order);
-    }
-
-    public List<Order> getAllOrdersByUserIdAndStatus(long id, OrderStatus... status){
-        return orderRepository.findAllByUser_IdAndStatusIsIn(id, Arrays.asList(status));
-    }
 }
