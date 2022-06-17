@@ -24,7 +24,7 @@ public class PaymentDetails {
     private Set<Bill> bills;
 
     @OneToMany(mappedBy = "paymentDetails", fetch = FetchType.EAGER)
-    private Set<Cancellation> cancellations;
+    private Set<Breakdown> breakdowns;
 
     @Column(name = "passport_number", length = 9)
     private String passportNumber;

@@ -24,8 +24,4 @@ public class Cancellation {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_details_id")
-    private PaymentDetails paymentDetails;
-
 }
