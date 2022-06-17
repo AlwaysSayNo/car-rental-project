@@ -115,7 +115,8 @@ public class RegisteredUserController {
         ).orElseThrow(IllegalJwtContentException::new);
 
         List<Order> orders = orderService.getAllByUserIdAndStatus(
-                id, OrderStatus.IN_USE, OrderStatus.REPAIR_PAYMENT);
+                id, OrderStatus.IN_USE, OrderStatus.REPAIR_PAYMENT
+        );
 
         List<OrderDto> ordersDto = orders.stream().map(orderService::mapToDto).collect(Collectors.toList());
         List<Long> ids = orders.stream().map(Order::getId).collect(Collectors.toList());
@@ -130,6 +131,25 @@ public class RegisteredUserController {
     public String showActiveOrderPage(Model model, @PathVariable String id){
 
         return "user/show-active-orders";
+    }
+
+    @GetMapping("/orders-history")
+    public String showHistoryPage(Model model, HttpServletRequest request){
+        Long id = userService.getUserIdByEmail(jwtTokenProvider.getUsername(
+                jwtTokenProvider.resolveToken(request))
+        ).orElseThrow(IllegalJwtContentException::new);
+
+        List<Order> orders = orderService.getAllByUserIdAndStatus(
+                id, OrderStatus.CANCELED, OrderStatus.ENDED_SUCCESSFULLY, OrderStatus.ENDED_WITH_BREAKDOWN
+        );
+
+        List<OrderDto> ordersDto = orders.stream().map(orderService::mapToDto).collect(Collectors.toList());
+        List<Long> ids = orders.stream().map(Order::getId).collect(Collectors.toList());
+
+        model.addAttribute("orders", ordersDto);
+        model.addAttribute("ids", ids);
+
+        return "user/show-orders-history";
     }
 
 }
