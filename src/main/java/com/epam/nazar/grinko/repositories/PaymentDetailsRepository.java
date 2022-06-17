@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PaymentDetailsRepository extends JpaRepository<PaymentDetails, Long> {
+
+    boolean existsByPassportNumber(String passportNumber);
+
 }
