@@ -3,6 +3,7 @@ package com.epam.nazar.grinko.services;
 import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.Order;
 import com.epam.nazar.grinko.domians.User;
+import com.epam.nazar.grinko.domians.helpers.BreakdownStatus;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import com.epam.nazar.grinko.dto.OrderDto;
 import com.epam.nazar.grinko.repositories.OrderRepository;
@@ -54,6 +55,10 @@ public class OrderService {
         return new OrderDto().setCar(carService.convertCarToCarDto(order.getCar()))
                 .setUser(userService.convertUserToUserDto(order.getUser()))
                 .setStatus(order.getStatus());
+    }
+
+    public void updateOrderStatus(OrderStatus status, Long id){
+        orderRepository.updateBreakdownStatusById(status, id);
     }
 
 }

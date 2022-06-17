@@ -39,7 +39,7 @@ public class BillService {
 
     public Bill convertBillDtoToBill(BillDto billDto){
         return new Bill().setOrder(orderService.convertOrderDtoToOrder(billDto.getOrder()))
-                .setPaymentDetails(paymentDetailsService.convertPaymentDetailsDtoToPaymentDetails(billDto.getPaymentDetails()))
+                .setPaymentDetails(paymentDetailsService.mapToObject(billDto.getPaymentDetails()))
                 .setStartDate(billDto.getStartDate())
                 .setExpirationDate(billDto.getExpirationDate())
                 .setCarPrice(billDto.getCarPrice())
