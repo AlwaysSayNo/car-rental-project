@@ -26,10 +26,10 @@ public class AuthenticationService {
     public static UserDetails fromUser(User user) {
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(), user.getPassword(),
-                user.getStatus().equals(UserStatus.ACTIVE),
-                user.getStatus().equals(UserStatus.ACTIVE),
-                user.getStatus().equals(UserStatus.ACTIVE),
-                user.getStatus().equals(UserStatus.ACTIVE),
+                !user.getStatus().equals(UserStatus.BANNED),
+                true,
+                true,
+                !user.getStatus().equals(UserStatus.BANNED),
                 user.getRole().getAuthorities()
         );
     }
