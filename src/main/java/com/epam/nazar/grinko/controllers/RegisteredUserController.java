@@ -34,8 +34,8 @@ public class RegisteredUserController {
 
     @GetMapping("/cars")
     public String showAllCarsPage(Model model){
-        List<Car> allCars = carService.getCarsWithStatus(CarStatus.NOT_RENTED);
-        List<CarDto> allCarDto = allCars.stream().map(carService::convertCarToCarDto).collect(Collectors.toList());
+        List<Car> allCars = carService.getByStatusIn(CarStatus.NOT_RENTED);
+        List<CarDto> allCarDto = allCars.stream().map(carService::mapToDto).collect(Collectors.toList());
         List<Long> allId = allCars.stream().map(Car::getId).collect(Collectors.toList());
 
         model.addAttribute("cars", allCarDto);
@@ -46,7 +46,7 @@ public class RegisteredUserController {
 
     @GetMapping("/cars/{id}/book")
     public String showBookPage(Model model, @PathVariable long id){
-        CarDto carDto = carService.convertCarToCarDto(carService.getCarById(id));
+        CarDto carDto = carService.mapToDto(carService.getById(id));
 
         BillDto billDto = new BillDto();
         billDto.setDriverPrice(billService.getDriverPrice(carDto))
@@ -85,7 +85,7 @@ public class RegisteredUserController {
     public String processPayment(@ModelAttribute("billDto") BillDto billDto,
                                  @ModelAttribute("paymentDetailsDto") PaymentDetailsDto paymentDetailsDto,
                                  Model model, @PathVariable long id){
-        CarDto carDto = carService.convertCarToCarDto(carService.getCarById(id));
+        CarDto carDto = carService.mapToDto(carService.getById(id));
         if(!carDto.getStatus().equals(CarStatus.NOT_RENTED)){
             model.addAttribute(ViewExceptionsConstants.CAR_ALREADY_RENTED_EXCEPTION, true);
 
@@ -93,7 +93,7 @@ public class RegisteredUserController {
         }
         carDto.setStatus(CarStatus.ON_PROCESSING);
 
-        UserDto userDto = userService.convertUserToUserDto(userService.getUserById(id));
+        UserDto userDto = userService.convertUserToUserDto(userService.getById(id));
 
         OrderDto orderDto = new OrderDto().setCar(carDto)
                 .setUser(userDto)
@@ -103,7 +103,7 @@ public class RegisteredUserController {
                 .setPaymentDetails(paymentDetailsDto)
                 .setStatus(BillStatus.PAID);
 
-        billService.addBill(billService.convertBillDtoToBill(billDto));
+        billService.addBill(billService.mapToObject(billDto));
 
         return "redirect:/car-rental-service/user/active-orders";
     }
@@ -114,10 +114,10 @@ public class RegisteredUserController {
                 jwtTokenProvider.resolveToken(request))
         ).orElseThrow(IllegalJwtContentException::new);
 
-        List<Order> orders = orderService.getAllOrdersByUserIdAndStatus(
+        List<Order> orders = orderService.getAllByUserIdAndStatus(
                 id, OrderStatus.IN_USE, OrderStatus.REPAIR_PAYMENT);
 
-        List<OrderDto> ordersDto = orders.stream().map(orderService::convertOrderToOrderDto).collect(Collectors.toList());
+        List<OrderDto> ordersDto = orders.stream().map(orderService::mapToDto).collect(Collectors.toList());
         List<Long> ids = orders.stream().map(Order::getId).collect(Collectors.toList());
 
         model.addAttribute("orders", ordersDto);

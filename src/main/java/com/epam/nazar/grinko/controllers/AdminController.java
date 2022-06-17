@@ -40,8 +40,8 @@ public class AdminController {
     // ? pagination
     @GetMapping("/cars")
     public String showAllCarsPage(Model model){
-        List<Car> allCars = carService.getAllCars();
-        List<CarDto> allCarDto = allCars.stream().map(carService::convertCarToCarDto).collect(Collectors.toList());
+        List<Car> allCars = carService.getAll();
+        List<CarDto> allCarDto = allCars.stream().map(carService::mapToDto).collect(Collectors.toList());
         List<Long> allId = allCars.stream().map(Car::getId).collect(Collectors.toList());
 
         model.addAttribute("cars", allCarDto);
@@ -68,16 +68,16 @@ public class AdminController {
         carColorService.addColorIfExists(carDto.getColor());
         carBrandService.addBrandIfExists((carDto.getBrand()));
 
-        Car car = carService.convertCarDtoToCar(carDto);
-        carService.addNewCar(car);
+        Car car = carService.mapToObject(carDto);
+        carService.save(car);
 
         return "redirect:/car-rental-service/admin/cars";
     }
 
     @GetMapping("/cars/{id}/edit")
     public String showCarEditPage(Model model, @PathVariable long id){
-        Car car = carService.getCarById(id);
-        CarDto carDto = carService.convertCarToCarDto(car);
+        Car car = carService.getById(id);
+        CarDto carDto = carService.mapToDto(car);
 
         model.addAttribute("carDto", carDto);
         model.addAttribute("carId", id);
@@ -87,8 +87,8 @@ public class AdminController {
 
     @PatchMapping("/cars/{id}/edit")
     public String saveCarChanges(@ModelAttribute("carDto") CarDto carDto, @PathVariable long id, Model model){
-        Car currCar = carService.convertCarDtoToCar(carDto);
-        Car tmp = carService.getCarByNumber(currCar.getNumber()).orElseThrow(NullPointerException::new);
+        Car currCar = carService.mapToObject(carDto);
+        Car tmp = carService.getByNumber(currCar.getNumber()).orElseThrow(NullPointerException::new);
 
         if(!tmp.getId().equals(id)){
             model.addAttribute(ViewExceptionsConstants.CAR_NUMBER_ALREADY_EXISTS_EXCEPTION, true);
@@ -103,7 +103,7 @@ public class AdminController {
 
     @DeleteMapping("/cars/{id}/edit")
     public String deleteCar(@PathVariable long id){
-        carService.deleteCarById(id);
+        carService.deleteById(id);
         return "redirect:/car-rental-service/admin/cars";
     }
 
@@ -130,7 +130,7 @@ public class AdminController {
 
     @PostMapping("/managers/new")
     public String createNewManager(@ModelAttribute("userDto") UserDto userDto, Model model){
-        if(userService.existsUserByEmail(userDto.getEmail())){
+        if(userService.existsByEmail(userDto.getEmail())){
             model.addAttribute("userAlreadyExistsError", true);
             model.addAttribute("userDto", new UserDto());
 
@@ -138,14 +138,14 @@ public class AdminController {
         }
 
         userDto.setRole(UserRole.ROLE_MANAGER).setStatus(UserStatus.ACTIVE);
-        userService.addNewUser(userService.convertUserDtoToUser(userDto));
+        userService.save(userService.mapToObject(userDto));
 
         return "redirect:/car-rental-service/admin/managers";
     }
 
     @DeleteMapping("/managers/{id}")
     public String deleteManager(@PathVariable long id){
-        if(!userService.existsUserByIdAndRole(id, UserRole.ROLE_MANAGER)){
+        if(!userService.existsByIdAndRole(id, UserRole.ROLE_MANAGER)){
             throw new IllegalPathVariableException();
         }
 
@@ -155,7 +155,7 @@ public class AdminController {
 
     @PatchMapping("/managers/{id}")
     public String changeManagerStatus(@PathVariable long id, @PathParam("status") String status){
-        if(!userService.existsUserByIdAndRole(id, UserRole.ROLE_MANAGER)){
+        if(!userService.existsByIdAndRole(id, UserRole.ROLE_MANAGER)){
             throw new IllegalPathVariableException();
         }
 
@@ -180,7 +180,7 @@ public class AdminController {
 
     @DeleteMapping("/registered-users/{id}")
     public String deleteUser(@PathVariable long id){
-        if(!userService.existsUserByIdAndRole(id, UserRole.ROLE_USER)){
+        if(!userService.existsByIdAndRole(id, UserRole.ROLE_USER)){
             throw new IllegalPathVariableException();
         }
 
@@ -190,7 +190,7 @@ public class AdminController {
 
     @PatchMapping("/registered-users/{id}")
     public String changeUserStatus(@PathVariable long id, @PathParam("status") String status){
-        if(!userService.existsUserByIdAndRole(id, UserRole.ROLE_USER)){
+        if(!userService.existsByIdAndRole(id, UserRole.ROLE_USER)){
             throw new IllegalPathVariableException();
         }
 
@@ -205,7 +205,7 @@ public class AdminController {
 
     @ModelAttribute("colors")
     private List<CarColor> addColorsAttribute(){
-        return carColorService.getAllCarColors();
+        return carColorService.getAll();
     }
 
     @ModelAttribute("segments")

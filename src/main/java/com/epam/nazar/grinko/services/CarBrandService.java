@@ -17,7 +17,7 @@ public class CarBrandService {
         return carBrandRepository.getCarBrandByValue(brand);
     }
 
-    public void addNewBrand(CarBrand newBrand){
+    public void save(CarBrand newBrand){
         carBrandRepository.save(newBrand);
     }
 
@@ -32,7 +32,7 @@ public class CarBrandService {
     public void addBrandIfExists(String brandName){
         if(!carBrandExists(brandName)){
             CarBrand brand = new CarBrand().setValue(brandName);
-            addNewBrand(brand);
+            save(brand);
         }
     }
 

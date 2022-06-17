@@ -21,7 +21,7 @@ public class UserService {
     @Lazy
     private final PasswordEncoder passwordEncoder;
 
-    public Optional<User> getUserByEmail(String email){
+    public Optional<User> getByEmail(String email){
         return userRepository.findByEmail(email);
     }
 
@@ -38,7 +38,7 @@ public class UserService {
         return userRepository.getAllByRole(role);
     }
 
-    public User getUserById(long id){
+    public User getById(long id){
         return userRepository.getById(id);
     }
 
@@ -46,16 +46,16 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void addNewUser(User newUser){
+    public void save(User newUser){
         newUser.setPassword(encodePassword(newUser));
         userRepository.save(newUser);
     }
 
-    public boolean existsUserByEmail(String email){
+    public boolean existsByEmail(String email){
         return userRepository.existsByEmail(email);
     }
 
-    public boolean existsUserByIdAndRole(long id, UserRole role){
+    public boolean existsByIdAndRole(long id, UserRole role){
         return userRepository.existsByIdAndRole(id, role);
     }
 
@@ -63,7 +63,7 @@ public class UserService {
         return userRepository.getIdByEmail(email);
     }
 
-    public User convertUserDtoToUser(UserDto userDto){
+    public User mapToObject(UserDto userDto){
         return new User().setEmail(userDto.getEmail())
                 .setPassword(userDto.getPassword())
                 .setPhoneNumber(userDto.getPhoneNumber())

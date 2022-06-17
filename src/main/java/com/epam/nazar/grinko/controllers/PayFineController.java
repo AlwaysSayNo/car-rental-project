@@ -32,7 +32,7 @@ public class PayFineController {
     public String showPayFinePage(HttpServletRequest request, Model model,
                                   @PathVariable("id") Long carId){
         Order order = getRepairOrderByFields(request, carId).orElseThrow(IllegalPathVariableException::new);
-        BreakdownDto breakdownDto = breakdownService.convertBreakdownToBreakdownDto(
+        BreakdownDto breakdownDto = breakdownService.mapToDto(
                 breakdownService.getByOrderId(order.getId()).orElseThrow(IllegalPathVariableException::new)
         );
 

@@ -6,16 +6,13 @@ import com.epam.nazar.grinko.dto.UserDto;
 import com.epam.nazar.grinko.securities.jwt.IllegalJwtContentException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
 import com.epam.nazar.grinko.services.UserService;
-import com.epam.nazar.grinko.utils.Utility;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Objects;
 import java.util.Optional;
 
 @Controller
@@ -41,7 +38,7 @@ public class CommonController {
     public String showProfilePage(HttpServletRequest request, Model model,
                                   @PathVariable String role){
         String username = tokenProvider.getUsername(tokenProvider.resolveToken(request));
-        Optional<User> user = userService.getUserByEmail(username);
+        Optional<User> user = userService.getByEmail(username);
         UserDto userDto = userService.convertUserToUserDto(user.orElseThrow(IllegalJwtContentException::new));
 
         model.addAttribute("userDto", userDto);
@@ -54,7 +51,7 @@ public class CommonController {
     public String showEditProfilePage(HttpServletRequest request, Model model,
                                       @PathVariable String role){
         String username = tokenProvider.getUsername(tokenProvider.resolveToken(request));
-        User user = userService.getUserByEmail(username).orElseThrow(IllegalJwtContentException::new);
+        User user = userService.getByEmail(username).orElseThrow(IllegalJwtContentException::new);
 
         UserDto userDto = userService.convertUserToUserDto(user);
 
@@ -68,8 +65,8 @@ public class CommonController {
     @PatchMapping("/{role}/profile/edit")
     public String saveUserChanges(@ModelAttribute UserDto userDto, @ModelAttribute("oldEmail") String oldEmail,
                                   @PathVariable String role, Model model){
-        User oldEmailUser = userService.getUserByEmail(oldEmail).orElseThrow(IllegalJwtContentException::new);
-        User currEmailUser = userService.getUserByEmail(userDto.getEmail()).orElseThrow(IllegalJwtContentException::new);
+        User oldEmailUser = userService.getByEmail(oldEmail).orElseThrow(IllegalJwtContentException::new);
+        User currEmailUser = userService.getByEmail(userDto.getEmail()).orElseThrow(IllegalJwtContentException::new);
 
         if(!oldEmailUser.getId().equals(currEmailUser.getId())){
             model.addAttribute(ViewExceptionsConstants.USER_ALREADY_EXISTS_EXCEPTION, true);
@@ -81,7 +78,7 @@ public class CommonController {
         }
 
         userService.updateUserById(
-                userService.convertUserDtoToUser(userDto), oldEmailUser.getId()
+                userService.mapToObject(userDto), oldEmailUser.getId()
         );
 
         //log.info("PROFILE-EDIT: ({}, {}, {})", userDto.getEmail(), userDto.getFirstName(), userDto.getLastName());

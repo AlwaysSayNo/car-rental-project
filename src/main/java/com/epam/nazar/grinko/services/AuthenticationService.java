@@ -23,7 +23,7 @@ public class AuthenticationService {
         return userRepository.findByEmail(requestDto.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User doesn't exists"));
     }
 
-    public static UserDetails fromUser(User user) {
+    public static UserDetails getUserDetails(User user) {
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(), user.getPassword(),
                 !user.getStatus().equals(UserStatus.BANNED),

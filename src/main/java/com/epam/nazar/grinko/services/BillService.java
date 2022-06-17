@@ -20,25 +20,22 @@ public class BillService {
 
     private final BillRepository billRepository;
     private final OrderService orderService;
-    private final CarService carService;
     private final PaymentDetailsService paymentDetailsService;
 
     public BillService(BillRepository billRepository, OrderService orderService,
-                       PaymentDetailsService paymentDetailsService, CarService carService) {
+                       PaymentDetailsService paymentDetailsService) {
         this.billRepository = billRepository;
         this.orderService = orderService;
         this.paymentDetailsService = paymentDetailsService;
-        this.carService = carService;
     }
 
     public void addBill(Bill bill){
-        orderService.addOrder(bill.getOrder());
+        orderService.save(bill.getOrder());
         billRepository.save(bill);
     }
 
-
-    public Bill convertBillDtoToBill(BillDto billDto){
-        return new Bill().setOrder(orderService.convertOrderDtoToOrder(billDto.getOrder()))
+    public Bill mapToObject(BillDto billDto){
+        return new Bill().setOrder(orderService.mapToObject(billDto.getOrder()))
                 .setPaymentDetails(paymentDetailsService.mapToObject(billDto.getPaymentDetails()))
                 .setStartDate(billDto.getStartDate())
                 .setExpirationDate(billDto.getExpirationDate())

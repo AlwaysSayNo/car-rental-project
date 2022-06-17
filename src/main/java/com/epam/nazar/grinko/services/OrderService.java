@@ -3,7 +3,6 @@ package com.epam.nazar.grinko.services;
 import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.Order;
 import com.epam.nazar.grinko.domians.User;
-import com.epam.nazar.grinko.domians.helpers.BreakdownStatus;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import com.epam.nazar.grinko.dto.OrderDto;
 import com.epam.nazar.grinko.repositories.OrderRepository;
@@ -22,12 +21,12 @@ public class OrderService {
     private final UserService userService;
     private final CarService carService;
 
-    public void addOrder(Order order){
+    public void save(Order order){
         carService.updateCarStatusById(order.getCar().getId(), order.getCar().getStatus());
         orderRepository.save(order);
     }
 
-    public List<Order> getAllOrdersByUserIdAndStatus(long id, OrderStatus... status){
+    public List<Order> getAllByUserIdAndStatus(long id, OrderStatus... status){
         return orderRepository.findAllByUser_IdAndStatusIsIn(id, Arrays.asList(status));
     }
 
@@ -37,22 +36,22 @@ public class OrderService {
     }
 
 
-    public Order convertOrderDtoToOrder(OrderDto orderDto){
-        Long carId = carService.getCarByNumber(orderDto.getCar().getNumber())
+    public Order mapToObject(OrderDto orderDto){
+        Long carId = carService.getByNumber(orderDto.getCar().getNumber())
                 .orElseThrow(NullPointerException::new).getId();
-        Long userId = userService.getUserByEmail(orderDto.getUser().getEmail())
+        Long userId = userService.getByEmail(orderDto.getUser().getEmail())
                 .orElseThrow(NullPointerException::new).getId();
 
-        Car car = carService.convertCarDtoToCar(orderDto.getCar()).setId(carId);
-        User user = userService.convertUserDtoToUser(orderDto.getUser()).setId(userId);
+        Car car = carService.mapToObject(orderDto.getCar()).setId(carId);
+        User user = userService.mapToObject(orderDto.getUser()).setId(userId);
 
         return new Order().setCar(car)
                 .setUser(user)
                 .setStatus(orderDto.getStatus());
     }
 
-    public OrderDto convertOrderToOrderDto(Order order){
-        return new OrderDto().setCar(carService.convertCarToCarDto(order.getCar()))
+    public OrderDto mapToDto(Order order){
+        return new OrderDto().setCar(carService.mapToDto(order.getCar()))
                 .setUser(userService.convertUserToUserDto(order.getUser()))
                 .setStatus(order.getStatus());
     }

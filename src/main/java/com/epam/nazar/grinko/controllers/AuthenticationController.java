@@ -65,7 +65,7 @@ public class AuthenticationController {
     @PostMapping("/sign-up")
     public String register(@ModelAttribute("userDto") UserDto userDto, HttpServletResponse response, Model model) {
 
-        if(userService.existsUserByEmail(userDto.getEmail())){
+        if(userService.existsByEmail(userDto.getEmail())){
             model.addAttribute(ViewExceptionsConstants.USER_ALREADY_EXISTS_EXCEPTION, true);
             model.addAttribute("userDto", new UserDto());
 
@@ -73,8 +73,8 @@ public class AuthenticationController {
         }
 
         userDto.setRole(UserRole.ROLE_USER).setStatus(UserStatus.ACTIVE);
-        User user = userService.convertUserDtoToUser(userDto);
-        userService.addNewUser(user);
+        User user = userService.mapToObject(userDto);
+        userService.save(user);
 
         jwtTokenProvider.setCookieToken(response, user);
         String role = user.getRole().name().toLowerCase(Locale.ROOT).replace("role_", "");

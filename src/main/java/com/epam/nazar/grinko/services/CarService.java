@@ -22,27 +22,27 @@ public class CarService {
     private final CarBrandService carBrandService;
     private final CarColorService carColorService;
 
-    public List<Car> getAllCars(){
+    public List<Car> getAll(){
         return carRepository.findAll();
     }
 
-    public List<Car> getCarsWithStatus(CarStatus... statuses){
+    public List<Car> getByStatusIn(CarStatus... statuses){
         return carRepository.findAllByStatusIsIn(Arrays.asList(statuses));
     }
 
-    public Car getCarById(long id){
+    public Car getById(long id){
         return carRepository.getById(id);
     }
 
-    public Optional<Car> getCarByNumber(String number){
+    public Optional<Car> getByNumber(String number){
         return carRepository.getByNumber(number);
     }
 
-    public void addNewCar(Car newCar){
+    public void save(Car newCar){
         carRepository.save(newCar);
     }
 
-    public void deleteCarById(long id) {
+    public void deleteById(long id) {
         carRepository.deleteById(id);
     }
 
@@ -60,7 +60,7 @@ public class CarService {
     }
 
     // Конвертировать в dto в car можно в том случае, если все поля из бд уже существуют в базе данных
-    public Car convertCarDtoToCar(CarDto carDto){
+    public Car mapToObject(CarDto carDto){
         CarBrand brand = carBrandService.getBrand(carDto.getBrand());
         CarColor color = carColorService.getColor(carDto.getColor());
 
@@ -73,7 +73,7 @@ public class CarService {
                 .setPricePerDay(carDto.getPricePerDay());
     }
 
-    public CarDto convertCarToCarDto(Car car){
+    public CarDto mapToDto(Car car){
         return new CarDto().setBrand(car.getBrand().getValue())
                 .setName(car.getName())
                 .setNumber(car.getNumber())

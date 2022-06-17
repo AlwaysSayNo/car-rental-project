@@ -17,11 +17,11 @@ public class CarColorService {
         return carColorRepository.getCarColorByValue(color);
     }
 
-    public void addNewColor(CarColor newColor){
+    public void save(CarColor newColor){
         carColorRepository.save(newColor);
     }
 
-    public List<CarColor> getAllCarColors(){
+    public List<CarColor> getAll(){
         return carColorRepository.findAll();
     }
 
@@ -32,7 +32,7 @@ public class CarColorService {
     public void addColorIfExists(String colorName){
         if(!carColorExists(colorName)) {
             CarColor color = new CarColor().setValue(colorName);
-            addNewColor(color);
+            save(color);
         }
     }
 
