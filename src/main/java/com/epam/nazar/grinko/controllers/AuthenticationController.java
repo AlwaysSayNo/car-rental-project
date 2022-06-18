@@ -5,7 +5,7 @@ import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.dto.AuthenticationRequestDto;
 import com.epam.nazar.grinko.dto.UserDto;
-import com.epam.nazar.grinko.securities.UserRole;
+import com.epam.nazar.grinko.domians.helpers.UserRole;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
 import com.epam.nazar.grinko.services.AuthenticationService;
 import com.epam.nazar.grinko.services.UserService;

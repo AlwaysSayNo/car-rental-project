@@ -1,4 +1,4 @@
-package com.epam.nazar.grinko.securities;
+package com.epam.nazar.grinko.domians.helpers;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 

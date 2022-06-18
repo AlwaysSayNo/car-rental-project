@@ -1,4 +1,4 @@
-package com.epam.nazar.grinko.securities.jwt;
+package com.epam.nazar.grinko.exceptions;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

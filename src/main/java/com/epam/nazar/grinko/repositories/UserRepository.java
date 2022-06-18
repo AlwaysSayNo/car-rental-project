@@ -2,7 +2,7 @@ package com.epam.nazar.grinko.repositories;
 
 import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.domians.helpers.UserStatus;
-import com.epam.nazar.grinko.securities.UserRole;
+import com.epam.nazar.grinko.domians.helpers.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

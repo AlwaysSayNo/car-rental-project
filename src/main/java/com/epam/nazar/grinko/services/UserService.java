@@ -4,7 +4,7 @@ import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.dto.UserDto;
 import com.epam.nazar.grinko.repositories.UserRepository;
-import com.epam.nazar.grinko.securities.UserRole;
+import com.epam.nazar.grinko.domians.helpers.UserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;

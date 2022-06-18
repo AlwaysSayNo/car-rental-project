@@ -1,4 +1,4 @@
-package com.epam.nazar.grinko.securities.jwt;
+package com.epam.nazar.grinko.exceptions;
 
 import org.springframework.security.core.AuthenticationException;
 

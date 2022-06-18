@@ -1,7 +1,7 @@
 package com.epam.nazar.grinko.domians;
 
 import com.epam.nazar.grinko.domians.helpers.UserStatus;
-import com.epam.nazar.grinko.securities.UserRole;
+import com.epam.nazar.grinko.domians.helpers.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

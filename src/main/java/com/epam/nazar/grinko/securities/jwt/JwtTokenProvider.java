@@ -1,6 +1,7 @@
 package com.epam.nazar.grinko.securities.jwt;
 
 import com.epam.nazar.grinko.domians.User;
+import com.epam.nazar.grinko.exceptions.JwtAuthenticationException;
 import com.epam.nazar.grinko.utils.Utility;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,10 +10,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;

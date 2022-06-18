@@ -3,7 +3,7 @@ package com.epam.nazar.grinko.controllers;
 import com.epam.nazar.grinko.constants.ViewExceptionsConstants;
 import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.dto.UserDto;
-import com.epam.nazar.grinko.securities.jwt.IllegalJwtContentException;
+import com.epam.nazar.grinko.exceptions.IllegalJwtContentException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
 import com.epam.nazar.grinko.services.UserService;
 import lombok.AllArgsConstructor;

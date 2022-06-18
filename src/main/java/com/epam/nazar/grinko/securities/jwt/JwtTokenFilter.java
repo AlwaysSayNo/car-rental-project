@@ -1,5 +1,6 @@
 package com.epam.nazar.grinko.securities.jwt;
 
+import com.epam.nazar.grinko.exceptions.JwtAuthenticationException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

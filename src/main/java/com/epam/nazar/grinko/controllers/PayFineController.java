@@ -5,7 +5,7 @@ import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import com.epam.nazar.grinko.dto.BreakdownDto;
 import com.epam.nazar.grinko.dto.PaymentDetailsDto;
 import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
-import com.epam.nazar.grinko.securities.jwt.IllegalJwtContentException;
+import com.epam.nazar.grinko.exceptions.IllegalJwtContentException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
 import com.epam.nazar.grinko.services.BreakdownService;
 import com.epam.nazar.grinko.services.OrderService;
