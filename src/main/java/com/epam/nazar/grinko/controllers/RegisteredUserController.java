@@ -1,12 +1,14 @@
 package com.epam.nazar.grinko.controllers;
 
 import com.epam.nazar.grinko.constants.ViewExceptionsConstants;
+import com.epam.nazar.grinko.domians.Bill;
 import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.Order;
 import com.epam.nazar.grinko.domians.helpers.BillStatus;
 import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import com.epam.nazar.grinko.dto.*;
+import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
 import com.epam.nazar.grinko.securities.jwt.IllegalJwtContentException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
 import com.epam.nazar.grinko.services.*;
@@ -30,7 +32,9 @@ public class RegisteredUserController {
     private final UserService userService;
     private final OrderService orderService;
     private final BillService billService;
+    private final BreakdownService breakdownService;
     private final JwtTokenProvider jwtTokenProvider;
+    private final CancellationService cancellationService;
 
     @GetMapping("/cars")
     public String showAllCarsPage(Model model){
@@ -128,7 +132,16 @@ public class RegisteredUserController {
     }
 
     @GetMapping("/active-orders/{id}")
-    public String showActiveOrderPage(Model model, @PathVariable String id){
+    public String showActiveOrderPage(Model model, @PathVariable("id") Long orderId){
+        Order order = orderService.getById(orderId).orElseThrow(IllegalPathVariableException::new);
+        Bill bill = order.getBill();
+
+        model.addAttribute("order", orderService.mapToDto(order));
+        model.addAttribute("bill", billService.mapToDto(bill));
+
+        if(order.getStatus().equals(OrderStatus.REPAIR_PAYMENT)){
+            model.addAttribute("breakdown", breakdownService.mapToDto(order.getBreakdown()));
+        }
 
         return "user/show-active-orders";
     }
@@ -150,6 +163,24 @@ public class RegisteredUserController {
         model.addAttribute("ids", ids);
 
         return "user/show-orders-history";
+    }
+
+    @GetMapping("/orders-history/{id}")
+    public String showHistoryOrderPage(Model model, @PathVariable("id") Long orderId){
+        Order order = orderService.getById(orderId).orElseThrow(IllegalPathVariableException::new);
+        Bill bill = order.getBill();
+
+        model.addAttribute("order", orderService.mapToDto(order));
+        model.addAttribute("bill", billService.mapToDto(bill));
+
+        if(order.getStatus().equals(OrderStatus.ENDED_WITH_BREAKDOWN)){
+            model.addAttribute("breakdown", breakdownService.mapToDto(order.getBreakdown()));
+        }
+        else if(order.getStatus().equals(OrderStatus.CANCELED)){
+            model.addAttribute("cancellation", cancellationService.mapToDto(order.getCancellation()));
+        }
+
+        return "user/show-active-orders";
     }
 
 }

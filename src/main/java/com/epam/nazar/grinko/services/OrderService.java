@@ -26,6 +26,10 @@ public class OrderService {
         orderRepository.save(order);
     }
 
+    public Optional<Order> getById(Long id){
+        return orderRepository.findById(id);
+    }
+
     public List<Order> getAllByUserIdAndStatus(long id, OrderStatus... status){
         return orderRepository.findAllByUser_IdAndStatusIsIn(id, Arrays.asList(status));
     }

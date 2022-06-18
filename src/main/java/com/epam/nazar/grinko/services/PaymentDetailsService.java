@@ -22,6 +22,13 @@ public class PaymentDetailsService {
                 .setPassportNumber(paymentDetailsDto.getPassportNumber());
     }
 
+    public PaymentDetailsDto mapToDto(PaymentDetails paymentDetails){
+        return new PaymentDetailsDto().setFirstName(paymentDetails.getFirstName())
+                .setLastName(paymentDetails.getLastName())
+                .setDateOfBirth(paymentDetails.getDateOfBirth())
+                .setPassportNumber(paymentDetails.getPassportNumber());
+    }
+
     public void addBreakdown(PaymentDetails paymentDetails, Breakdown breakdown){
         Set<Breakdown> breakdowns = paymentDetails.getBreakdowns();
         breakdowns.add(breakdown);

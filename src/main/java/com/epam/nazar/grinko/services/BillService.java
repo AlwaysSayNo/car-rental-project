@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @PropertySource("classpath:/META-INF/my-application.properties")
 public class BillService {
@@ -34,6 +36,10 @@ public class BillService {
         billRepository.save(bill);
     }
 
+    public Optional<Bill> getByOrderId(Long orderId){
+        return billRepository.findDistinctByOrderId(orderId);
+    }
+
     public Bill mapToObject(BillDto billDto){
         return new Bill().setOrder(orderService.mapToObject(billDto.getOrder()))
                 .setPaymentDetails(paymentDetailsService.mapToObject(billDto.getPaymentDetails()))
@@ -44,6 +50,18 @@ public class BillService {
                 .setDriverPrice(billDto.getDriverPrice())
                 .setTotalPrice(billDto.getTotalPrice())
                 .setStatus(billDto.getStatus());
+    }
+
+    public BillDto mapToDto(Bill bill){
+        return new BillDto().setOrder(orderService.mapToDto(bill.getOrder()))
+                .setPaymentDetails(paymentDetailsService.mapToDto(bill.getPaymentDetails()))
+                .setStartDate(bill.getStartDate())
+                .setExpirationDate(bill.getExpirationDate())
+                .setCarPrice(bill.getCarPrice())
+                .setWithDriver(bill.getWithDriver())
+                .setDriverPrice(bill.getDriverPrice())
+                .setTotalPrice(bill.getTotalPrice())
+                .setStatus(bill.getStatus());
     }
 
     public long getDriverPrice(CarDto carDto){
