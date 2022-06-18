@@ -30,7 +30,7 @@ public class CarEditController {
     private final CarService carService;
 
     @GetMapping()
-    public String showCarEditPage(@PathVariable("id") long carId, Model model){
+    public String showCarEditPage(@PathVariable("id") Long carId, Model model){
         CarDto carDto = carService.mapToDto(carService.getById(carId));
 
         model.addAttribute("carDto", carDto);

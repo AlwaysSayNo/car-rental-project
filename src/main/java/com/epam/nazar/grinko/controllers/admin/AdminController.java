@@ -1,19 +1,12 @@
 package com.epam.nazar.grinko.controllers.admin;
 
-import com.epam.nazar.grinko.constants.ViewExceptionsConstants;
 import com.epam.nazar.grinko.domians.Car;
-import com.epam.nazar.grinko.domians.CarBrand;
-import com.epam.nazar.grinko.domians.CarColor;
 import com.epam.nazar.grinko.domians.User;
-import com.epam.nazar.grinko.domians.helpers.CarSegment;
-import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.dto.CarDto;
 import com.epam.nazar.grinko.dto.UserDto;
 import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
 import com.epam.nazar.grinko.securities.UserRole;
-import com.epam.nazar.grinko.services.CarBrandService;
-import com.epam.nazar.grinko.services.CarColorService;
 import com.epam.nazar.grinko.services.CarService;
 import com.epam.nazar.grinko.services.UserService;
 import lombok.AllArgsConstructor;
@@ -22,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,9 +25,6 @@ public class AdminController {
 
     private final CarService carService;
     private final UserService userService;
-    private final CarBrandService carBrandService;
-    private final CarColorService carColorService;
-
 
     // ? pagination
     @GetMapping("/cars")
@@ -49,31 +38,6 @@ public class AdminController {
 
         return "admin/cars/show-cars";
     }
-
-    @GetMapping("/cars/new")
-    public String showCarCreationPage(Model model, CarDto carDto){
-        model.addAttribute("carDto", carDto);
-        return "admin/cars/add-new-car";
-    }
-
-    @PostMapping("/cars/new")
-    public String createNewCar(@ModelAttribute("carDto") CarDto carDto, Model model){
-        if(carService.existsCarByNumber(carDto.getNumber())){
-            model.addAttribute(ViewExceptionsConstants.CAR_NUMBER_ALREADY_EXISTS_EXCEPTION, true);
-            model.addAttribute("carDto", new CarDto());
-
-            return "admin/cars/add-new-car";
-        }
-
-        carColorService.addColorIfExists(carDto.getColor());
-        carBrandService.addBrandIfExists((carDto.getBrand()));
-
-        Car car = carService.mapToObject(carDto);
-        carService.save(car);
-
-        return "redirect:/car-rental-service/admin/cars";
-    }
-
 
     // ? pagination
     @GetMapping("/managers")
@@ -165,23 +129,4 @@ public class AdminController {
         return "redirect:/car-rental-service/admin/registered-users";
     }
 
-    @ModelAttribute("brands")
-    private List<CarBrand> addBrandsAttribute(){
-        return carBrandService.getAllCarBrands();
-    }
-
-    @ModelAttribute("colors")
-    private List<CarColor> addColorsAttribute(){
-        return carColorService.getAll();
-    }
-
-    @ModelAttribute("segments")
-    private List<CarSegment> addSegmentsAttribute(){
-        return Arrays.asList(CarSegment.values());
-    }
-
-    @ModelAttribute("statuses")
-    private List<CarStatus> addStatusesAttribute(){
-        return Arrays.asList(CarStatus.NOT_RENTED, CarStatus.ON_HOLD);
-    }
 }
