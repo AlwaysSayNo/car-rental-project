@@ -1,4 +1,4 @@
-package com.epam.nazar.grinko.controllers;
+package com.epam.nazar.grinko.controllers.admin;
 
 import com.epam.nazar.grinko.constants.ViewExceptionsConstants;
 import com.epam.nazar.grinko.domians.Car;
@@ -71,39 +71,6 @@ public class AdminController {
         Car car = carService.mapToObject(carDto);
         carService.save(car);
 
-        return "redirect:/car-rental-service/admin/cars";
-    }
-
-    @GetMapping("/cars/{id}/edit")
-    public String showCarEditPage(Model model, @PathVariable long id){
-        Car car = carService.getById(id);
-        CarDto carDto = carService.mapToDto(car);
-
-        model.addAttribute("carDto", carDto);
-        model.addAttribute("carId", id);
-
-        return "admin/cars/edit-car-by-id";
-    }
-
-    @PatchMapping("/cars/{id}/edit")
-    public String saveCarChanges(@ModelAttribute("carDto") CarDto carDto, @PathVariable long id, Model model){
-        Car currCar = carService.mapToObject(carDto);
-        Car tmp = carService.getByNumber(currCar.getNumber()).orElseThrow(NullPointerException::new);
-
-        if(!tmp.getId().equals(id)){
-            model.addAttribute(ViewExceptionsConstants.CAR_NUMBER_ALREADY_EXISTS_EXCEPTION, true);
-            model.addAttribute("carId", id);
-            model.addAttribute("carDto", carDto);
-            return "admin/cars/edit-car-by-id";
-        }
-
-        carService.updateCarById(id, currCar);
-        return "redirect:/car-rental-service/admin/cars";
-    }
-
-    @DeleteMapping("/cars/{id}/edit")
-    public String deleteCar(@PathVariable long id){
-        carService.deleteById(id);
         return "redirect:/car-rental-service/admin/cars";
     }
 

@@ -51,8 +51,12 @@ public class CarService {
                 car.getColor(), car.getPricePerDay(), car.getSegment(), car.getStatus(), id);
     }
 
-    public void updateCarStatusById(long id, CarStatus status){
+    public void updateCarStatusById(Long id, CarStatus status){
         carRepository.updateCarStatusById(status, id);
+    }
+
+    public boolean existsById(Long id){
+        return carRepository.existsById(id);
     }
 
     public boolean existsCarByNumber(String number){
