@@ -29,7 +29,7 @@
 </head>
 <body>
 
-<form th:method="patch" th:action="@{/car-rental-service/admin/cars/{id}/edit(id=${carId})}" th:object="${carDto}" action="/edit-car-by-id.html" novalidate>
+<form th:method="PUT" th:action="@{/car-rental-service/admin/cars/{id}/edit(id=${carId})}" th:object="${carDto}" action="/edit-car-by-id.html" novalidate>
     <div class="center-block">
         <h1 th:text="#{new.car.form}">Edit car form</h1>
     </div>

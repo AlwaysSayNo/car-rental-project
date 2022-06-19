@@ -39,7 +39,7 @@ public class CarEditController {
         return "admin/cars/edit-car-by-id";
     }
 
-    @PatchMapping()
+    @PutMapping()
     public String saveCarChanges(@PathVariable("id") Long carId, @ModelAttribute("carDto") CarDto carDto,
                                  Model model){
         Car car = carService.mapToObject(carDto);
