@@ -53,27 +53,6 @@ public class AdminController {
         return "admin/managers/show-managers";
     }
 
-    @GetMapping("/manager/new")
-    public String showManagerCreationPage(Model model){
-        model.addAttribute("userDto", new UserDto());
-        return "admin/managers/add-new-manager";
-    }
-
-    @PostMapping("/managers/new")
-    public String createNewManager(@ModelAttribute("userDto") UserDto userDto, Model model){
-        if(userService.existsByEmail(userDto.getEmail())){
-            model.addAttribute("userAlreadyExistsError", true);
-            model.addAttribute("userDto", new UserDto());
-
-            return "redirect:/car-rental-service/admin/managers";
-        }
-
-        userDto.setRole(UserRole.ROLE_MANAGER).setStatus(UserStatus.ACTIVE);
-        userService.save(userService.mapToObject(userDto));
-
-        return "redirect:/car-rental-service/admin/managers";
-    }
-
     @DeleteMapping("/managers/{id}")
     public String deleteManager(@PathVariable long id){
         if(!userService.existsByIdAndRole(id, UserRole.ROLE_MANAGER)){
