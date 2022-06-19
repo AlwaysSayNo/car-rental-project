@@ -53,26 +53,6 @@ public class AdminController {
         return "admin/managers/show-managers";
     }
 
-    @DeleteMapping("/managers/{id}")
-    public String deleteManager(@PathVariable long id){
-        if(!userService.existsByIdAndRole(id, UserRole.ROLE_MANAGER)){
-            throw new IllegalPathVariableException();
-        }
-
-        userService.deleteById(id);
-        return "redirect:/car-rental-service/admin/managers";
-    }
-
-    @PatchMapping("/managers/{id}")
-    public String changeManagerStatus(@PathVariable long id, @PathParam("status") String status){
-        if(!userService.existsByIdAndRole(id, UserRole.ROLE_MANAGER)){
-            throw new IllegalPathVariableException();
-        }
-
-        userService.updateUserStatusById(UserStatus.valueOf(status), id);
-        return "redirect:/car-rental-service/admin/managers";
-    }
-
 
     // ? pagination
     @GetMapping("/registered-users")
