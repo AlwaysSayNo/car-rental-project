@@ -1,4 +1,4 @@
-package com.epam.nazar.grinko.controllers;
+package com.epam.nazar.grinko.controllers.user;
 
 import com.epam.nazar.grinko.constants.ViewExceptionsConstants;
 import com.epam.nazar.grinko.domians.Bill;
@@ -48,69 +48,6 @@ public class RegisteredUserController {
         return "user/show-cars";
     }
 
-    @GetMapping("/cars/{id}/book")
-    public String showBookPage(Model model, @PathVariable long id){
-        CarDto carDto = carService.mapToDto(carService.getById(id));
-
-        BillDto billDto = new BillDto();
-        billDto.setDriverPrice(billService.getDriverPrice(carDto))
-                .setCarPrice(carDto.getPricePerDay());
-
-        model.addAttribute("carDto", carDto);
-        model.addAttribute("billDto", billDto);
-
-        return "user/book-form";
-    }
-
-    @PostMapping("/cars/{id}/book")
-    public String calculateBill(@ModelAttribute("billDto") BillDto billDto, RedirectAttributes redirectAttributes,
-                                @PathVariable long id){
-        if(!billDto.isWithDriver()) billDto.setDriverPrice(0);
-        billDto.setTotalPrice(billService.getTotalPrice(billDto));
-
-        redirectAttributes.addFlashAttribute("billDto", billDto);
-        String url = "/car-rental-service/user/cars/" + id + "/book/payment";
-
-        return "redirect:" + url;
-    }
-
-    @GetMapping("/cars/{id}/book/payment")
-    public String showPaymentRequisitesPage(Model model, @PathVariable long id){
-
-        BillDto billDto = (BillDto) model.getAttribute("billDto");
-
-        model.addAttribute("billDto", billDto);
-        model.addAttribute("paymentDetailsDto", new PaymentDetailsDto());
-
-        return "user/payment-form";
-    }
-
-    @PostMapping("/cars/{id}/book/payment")
-    public String processPayment(@ModelAttribute("billDto") BillDto billDto,
-                                 @ModelAttribute("paymentDetailsDto") PaymentDetailsDto paymentDetailsDto,
-                                 Model model, @PathVariable long id){
-        CarDto carDto = carService.mapToDto(carService.getById(id));
-        if(!carDto.getStatus().equals(CarStatus.NOT_RENTED)){
-            model.addAttribute(ViewExceptionsConstants.CAR_ALREADY_RENTED_EXCEPTION, true);
-
-            return "redirect:/car-rental-service/user/cars";
-        }
-        carDto.setStatus(CarStatus.ON_PROCESSING);
-
-        UserDto userDto = userService.convertUserToUserDto(userService.getById(id));
-
-        OrderDto orderDto = new OrderDto().setCar(carDto)
-                .setUser(userDto)
-                .setStatus(OrderStatus.IN_USE);
-
-        billDto.setOrder(orderDto)
-                .setPaymentDetails(paymentDetailsDto)
-                .setStatus(BillStatus.PAID);
-
-        billService.addBill(billService.mapToObject(billDto));
-
-        return "redirect:/car-rental-service/user/active-orders";
-    }
 
     @GetMapping("/active-orders")
     public String showActiveOrdersPage(Model model, HttpServletRequest request){

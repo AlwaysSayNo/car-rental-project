@@ -1,4 +1,4 @@
-package com.epam.nazar.grinko.controllers;
+package com.epam.nazar.grinko.controllers.user;
 
 import com.epam.nazar.grinko.domians.Order;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
