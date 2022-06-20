@@ -9,6 +9,10 @@ public class JwtAuthenticationException extends AuthenticationException {
 
     private HttpStatus httpStatus;
 
+    public JwtAuthenticationException() {
+        super("");
+    }
+
     public JwtAuthenticationException(String msg) {
         super(msg);
     }

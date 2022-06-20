@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/car-rental-service/user/active-orders/{id}/pay-fine")
+@RequestMapping("/car-rental-service/registered-user/active-orders/{id}/pay-fine")
 @AllArgsConstructor
 public class PayFineController {
 
@@ -41,7 +41,6 @@ public class PayFineController {
 
         return "user/pay-fine-form";
     }
-
 
     @PostMapping()
     public String evaluatePayFine(HttpServletRequest request, @ModelAttribute("paymentDetails") PaymentDetailsDto paymentDetailsDto,

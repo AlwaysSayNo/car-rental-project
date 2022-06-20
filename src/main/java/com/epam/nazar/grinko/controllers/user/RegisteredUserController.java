@@ -1,10 +1,8 @@
 package com.epam.nazar.grinko.controllers.user;
 
-import com.epam.nazar.grinko.constants.ViewExceptionsConstants;
 import com.epam.nazar.grinko.domians.Bill;
 import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.Order;
-import com.epam.nazar.grinko.domians.helpers.BillStatus;
 import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import com.epam.nazar.grinko.dto.*;
@@ -16,14 +14,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("car-rental-service/user")
+@RequestMapping("car-rental-service/registered-user")
 @AllArgsConstructor
 public class RegisteredUserController {
 
@@ -64,21 +61,6 @@ public class RegisteredUserController {
 
         model.addAttribute("orders", ordersDto);
         model.addAttribute("ids", ids);
-
-        return "user/show-active-orders";
-    }
-
-    @GetMapping("/active-orders/{id}")
-    public String showActiveOrderPage(Model model, @PathVariable("id") Long orderId){
-        Order order = orderService.getById(orderId).orElseThrow(IllegalPathVariableException::new);
-        Bill bill = order.getBill();
-
-        model.addAttribute("order", orderService.mapToDto(order));
-        model.addAttribute("bill", billService.mapToDto(bill));
-
-        if(order.getStatus().equals(OrderStatus.REPAIR_PAYMENT)){
-            model.addAttribute("breakdown", breakdownService.mapToDto(order.getBreakdown()));
-        }
 
         return "user/show-active-orders";
     }
