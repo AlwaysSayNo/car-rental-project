@@ -2,10 +2,8 @@ package com.epam.nazar.grinko.controllers.admin;
 
 import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.User;
-import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.dto.CarDto;
 import com.epam.nazar.grinko.dto.UserDto;
-import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
 import com.epam.nazar.grinko.domians.helpers.UserRole;
 import com.epam.nazar.grinko.services.CarService;
 import com.epam.nazar.grinko.services.UserService;
@@ -14,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +40,7 @@ public class AdminController {
     @GetMapping("/managers")
     public String showAllManagers(Model model){
         List<User> allManagers = userService.getUsersByRole(UserRole.ROLE_MANAGER);
-        List<UserDto> allManagersDto = allManagers.stream().map(userService::convertUserToUserDto)
+        List<UserDto> allManagersDto = allManagers.stream().map(userService::mapToDto)
                 .collect(Collectors.toList());
         List<Long> allId = allManagers.stream().map(User::getId).collect(Collectors.toList());
 
@@ -58,7 +55,7 @@ public class AdminController {
     @GetMapping("/registered-users")
     public String showAllRegistered(Model model){
         List<User> allRegistered = userService.getUsersByRole(UserRole.ROLE_USER);
-        List<UserDto> allRegisteredDto = allRegistered.stream().map(userService::convertUserToUserDto)
+        List<UserDto> allRegisteredDto = allRegistered.stream().map(userService::mapToDto)
                 .collect(Collectors.toList());
         List<Long> allId = allRegistered.stream().map(User::getId).collect(Collectors.toList());
 

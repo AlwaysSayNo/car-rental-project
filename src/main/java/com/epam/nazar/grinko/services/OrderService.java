@@ -69,7 +69,7 @@ public class OrderService {
 
     public OrderDto mapToDto(Order order){
         return new OrderDto().setCar(carService.mapToDto(order.getCar()))
-                .setUser(userService.convertUserToUserDto(order.getUser()))
+                .setUser(userService.mapToDto(order.getUser()))
                 .setStatus(order.getStatus());
     }
 

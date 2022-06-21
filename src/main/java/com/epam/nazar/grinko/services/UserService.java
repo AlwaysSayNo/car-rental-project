@@ -78,7 +78,7 @@ public class UserService {
 
     }
 
-    public UserDto convertUserToUserDto(User user){
+    public UserDto mapToDto(User user){
         return new UserDto().setEmail(user.getEmail())
                 .setPassword(user.getPassword())
                 .setPhoneNumber(user.getPhoneNumber())

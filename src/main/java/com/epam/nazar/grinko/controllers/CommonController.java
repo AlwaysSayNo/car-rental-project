@@ -39,7 +39,7 @@ public class CommonController {
                                   @PathVariable String role){
         String username = tokenProvider.getUsername(tokenProvider.resolveToken(request));
         Optional<User> user = userService.getByEmail(username);
-        UserDto userDto = userService.convertUserToUserDto(user.orElseThrow(IllegalJwtContentException::new));
+        UserDto userDto = userService.mapToDto(user.orElseThrow(IllegalJwtContentException::new));
 
         model.addAttribute("userDto", userDto);
         model.addAttribute("role", role);
@@ -53,7 +53,7 @@ public class CommonController {
         String username = tokenProvider.getUsername(tokenProvider.resolveToken(request));
         User user = userService.getByEmail(username).orElseThrow(IllegalJwtContentException::new);
 
-        UserDto userDto = userService.convertUserToUserDto(user);
+        UserDto userDto = userService.mapToDto(user);
 
         model.addAttribute("userDto", userDto);
         model.addAttribute("oldEmail", user.getEmail());

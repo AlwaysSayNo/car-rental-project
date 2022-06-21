@@ -1,6 +1,5 @@
 package com.epam.nazar.grinko.controllers.user;
 
-import com.epam.nazar.grinko.constants.ViewExceptionsConstants;
 import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.domians.helpers.BillStatus;
@@ -72,7 +71,7 @@ public class BookCarController {
         CarDto carDto = carService.mapToDto(carService.getById(carId));
         carDto.setStatus(CarStatus.ON_PROCESSING);
 
-        UserDto userDto = userService.convertUserToUserDto(userService.getById(carId));
+        UserDto userDto = userService.mapToDto(userService.getById(carId));
 
         OrderDto orderDto = new OrderDto().setCar(carDto)
                 .setUser(userDto)
