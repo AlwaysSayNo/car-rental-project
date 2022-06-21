@@ -35,7 +35,7 @@ public class ActiveOrderPageController {
 
     @GetMapping()
     public String showActiveOrderPage(@PathVariable("id") Long orderId, Model model){
-        Order order = orderService.getById(orderId).orElseThrow(IllegalPathVariableException::new);
+        Order order = orderService.getById(orderId);
         Bill bill = order.getBill();
 
         model.addAttribute("order", orderService.mapToDto(order));
@@ -50,7 +50,7 @@ public class ActiveOrderPageController {
 
     @ModelAttribute
     private void checkRequestValidity(@PathVariable("id") Long orderId, HttpServletRequest request){
-        Order order = orderService.getById(orderId).orElseThrow(IllegalPathVariableException::new);
+        Order order = orderService.getById(orderId);
         String email = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
         Long userId = userService.getUserIdByEmail(email).orElseThrow(JwtAuthenticationException::new);
 
