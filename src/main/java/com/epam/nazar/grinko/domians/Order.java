@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -39,5 +41,8 @@ public class Order {
 
     @OneToOne(optional = false, mappedBy = "order")
     private Cancellation cancellation;
+
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    private Collection<ManagerDecision> decisions;
 
 }
