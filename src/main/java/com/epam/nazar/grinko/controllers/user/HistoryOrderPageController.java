@@ -3,13 +3,11 @@ package com.epam.nazar.grinko.controllers.user;
 import com.epam.nazar.grinko.domians.Bill;
 import com.epam.nazar.grinko.domians.Order;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
+import com.epam.nazar.grinko.exceptions.IllegalJwtContentException;
 import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
 import com.epam.nazar.grinko.exceptions.JwtAuthenticationException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
-import com.epam.nazar.grinko.services.BillService;
-import com.epam.nazar.grinko.services.BreakdownService;
-import com.epam.nazar.grinko.services.OrderService;
-import com.epam.nazar.grinko.services.UserService;
+import com.epam.nazar.grinko.services.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,26 +21,31 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping("car-rental-service/registered-user/active-order/{id}")
+@RequestMapping("car-rental-service/registered-user/orders-history/{id}")
 @AllArgsConstructor
-public class ActiveOrderPageController {
+public class HistoryOrderPageController {
 
     private final UserService userService;
     private final OrderService orderService;
     private final BillService billService;
     private final BreakdownService breakdownService;
+    private final CancellationService cancellationService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping()
-    public String showActiveOrderPage(@PathVariable("id") Long orderId, Model model){
+    public String showHistoryOrderPage(@PathVariable("id") Long orderId, Model model){
         Order order = orderService.getById(orderId).orElseThrow(IllegalPathVariableException::new);
         Bill bill = order.getBill();
 
         model.addAttribute("order", orderService.mapToDto(order));
         model.addAttribute("bill", billService.mapToDto(bill));
 
-        if(order.getStatus().equals(OrderStatus.REPAIR_PAYMENT))
+        if(order.getStatus().equals(OrderStatus.ENDED_WITH_BREAKDOWN)){
             model.addAttribute("breakdown", breakdownService.mapToDto(order.getBreakdown()));
+        }
+        else if(order.getStatus().equals(OrderStatus.CANCELED)){
+            model.addAttribute("cancellation", cancellationService.mapToDto(order.getCancellation()));
+        }
 
         return "user/show-active-orders";
     }
@@ -54,8 +57,8 @@ public class ActiveOrderPageController {
         String email = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
         Long userId = userService.getUserIdByEmail(email).orElseThrow(JwtAuthenticationException::new);
 
-        List<OrderStatus> availableStatuses = Arrays.asList(OrderStatus.UNDER_CONSIDERATION,
-                OrderStatus.IN_USE, OrderStatus.REPAIR_PAYMENT);
+        List<OrderStatus> availableStatuses = Arrays.asList(OrderStatus.CANCELED, OrderStatus.ENDED_SUCCESSFULLY,
+                OrderStatus.ENDED_WITH_BREAKDOWN);
 
         if(!order.getUser().getId().equals(userId) || !availableStatuses.contains(order.getStatus()))
             throw new IllegalPathVariableException();

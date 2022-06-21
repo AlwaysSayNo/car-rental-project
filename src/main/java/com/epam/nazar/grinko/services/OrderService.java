@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,9 +37,14 @@ public class OrderService {
 
 
     public Optional<Order> getOrderWithStatus(Long userId, Long carId, OrderStatus status){
-        return orderRepository.getByUserIdAndCarIdAndStatus(userId, carId, status);
+        return orderRepository
+                .getByUserIdAndCarIdAndStatusIn(userId, carId, Collections.singletonList(status));
     }
 
+    public Optional<Order> getOrderWithStatusIn(Long userId, Long carId, OrderStatus... statuses){
+        return orderRepository
+                .getByUserIdAndCarIdAndStatusIn(userId, carId, Arrays.asList(statuses));
+    }
 
     public Order mapToObject(OrderDto orderDto){
         Long carId = carService.getByNumber(orderDto.getCar().getNumber())

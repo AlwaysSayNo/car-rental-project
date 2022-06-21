@@ -24,14 +24,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class RegisteredUserController {
 
-
     private final CarService carService;
     private final UserService userService;
     private final OrderService orderService;
-    private final BillService billService;
-    private final BreakdownService breakdownService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final CancellationService cancellationService;
 
     @GetMapping("/cars")
     public String showAllCarsPage(Model model){
@@ -44,7 +40,6 @@ public class RegisteredUserController {
 
         return "user/show-cars";
     }
-
 
     @GetMapping("/active-orders")
     public String showActiveOrdersPage(Model model, HttpServletRequest request){
@@ -82,24 +77,6 @@ public class RegisteredUserController {
         model.addAttribute("ids", ids);
 
         return "user/show-orders-history";
-    }
-
-    @GetMapping("/orders-history/{id}")
-    public String showHistoryOrderPage(Model model, @PathVariable("id") Long orderId){
-        Order order = orderService.getById(orderId).orElseThrow(IllegalPathVariableException::new);
-        Bill bill = order.getBill();
-
-        model.addAttribute("order", orderService.mapToDto(order));
-        model.addAttribute("bill", billService.mapToDto(bill));
-
-        if(order.getStatus().equals(OrderStatus.ENDED_WITH_BREAKDOWN)){
-            model.addAttribute("breakdown", breakdownService.mapToDto(order.getBreakdown()));
-        }
-        else if(order.getStatus().equals(OrderStatus.CANCELED)){
-            model.addAttribute("cancellation", cancellationService.mapToDto(order.getCancellation()));
-        }
-
-        return "user/show-active-orders";
     }
 
 }
