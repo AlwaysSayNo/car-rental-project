@@ -21,8 +21,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findAllByUser_IdAndStatusIsIn(Long userId, Collection<OrderStatus> statuses);
 
-    Optional<Order> getByUserIdAndCarIdAndStatusIn(Long userId, Long carId, List<OrderStatus> statuses);
+    Optional<Order> getByUserIdAndCarIdAndStatusIn(Long userId, Long carId, Collection<OrderStatus> statuses);
 
+    List<Order> getAllByStatusIn(Collection<OrderStatus> statuses);
 
     @Transactional
     @Modifying

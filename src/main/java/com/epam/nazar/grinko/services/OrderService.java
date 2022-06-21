@@ -35,6 +35,13 @@ public class OrderService {
         return orderRepository.findAllByUser_IdAndStatusIsIn(id, Arrays.asList(status));
     }
 
+    public List<Order> getOrdersWithStatus(OrderStatus status) {
+        return orderRepository.getAllByStatusIn(Collections.singletonList(status));
+    }
+
+    public List<Order> getOrdersWithStatusIn(OrderStatus... statuses) {
+        return orderRepository.getAllByStatusIn(Arrays.asList(statuses));
+    }
 
     public Optional<Order> getOrderWithStatus(Long userId, Long carId, OrderStatus status){
         return orderRepository
