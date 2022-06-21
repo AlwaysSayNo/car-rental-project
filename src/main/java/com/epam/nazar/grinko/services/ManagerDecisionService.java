@@ -32,6 +32,10 @@ public class ManagerDecisionService {
         return decisionRepository.findDistinctByManagerId(managerId);
     }
 
+    public List<ManagerDecision> getDecisionsByOrderId(Long orderId){
+        return decisionRepository.findDistinctByOrderId(orderId);
+    }
+
     public ManagerDecision mapToObject(ManagerDecisionDto decisionDto){
         User manager = userService.mapToObject(decisionDto.getManager());
         Order order = orderService.mapToObject(decisionDto.getOrder());

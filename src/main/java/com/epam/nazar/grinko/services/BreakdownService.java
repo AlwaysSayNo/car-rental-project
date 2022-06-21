@@ -28,10 +28,27 @@ public class BreakdownService {
     }
 
     public BreakdownDto mapToDto(Breakdown breakdown){
+        PaymentDetailsDto detailsDto = null;
+        if(breakdown.getPaymentDetails() != null)
+            detailsDto = paymentDetailsService.mapToDto(breakdown.getPaymentDetails());
+
         return new BreakdownDto().setPrice(breakdown.getPrice())
                 .setMessage(breakdown.getMessage())
                 .setStatus(breakdown.getStatus())
-                .setOrder(orderService.mapToDto(breakdown.getOrder()));
+                .setOrder(orderService.mapToDto(breakdown.getOrder()))
+                .setPaymentDetails(detailsDto);
+    }
+
+    public Breakdown mapToObject(BreakdownDto breakdownDto){
+        PaymentDetails details = null;
+        if(breakdownDto.getPaymentDetails() != null)
+            details = paymentDetailsService.mapToObject(breakdownDto.getPaymentDetails());
+
+        return new Breakdown().setPrice(breakdownDto.getPrice())
+                .setMessage(breakdownDto.getMessage())
+                .setStatus(breakdownDto.getStatus())
+                .setOrder(orderService.mapToObject(breakdownDto.getOrder()))
+                .setPaymentDetails(details);
     }
 
     public void save(Breakdown breakdown){

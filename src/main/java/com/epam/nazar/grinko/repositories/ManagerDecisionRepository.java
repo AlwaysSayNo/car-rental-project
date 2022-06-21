@@ -10,5 +10,6 @@ import java.util.List;
 public interface ManagerDecisionRepository extends JpaRepository<ManagerDecision, Long> {
 
     List<ManagerDecision> findDistinctByManagerId(Long managerId);
+    List<ManagerDecision> findDistinctByOrderId(Long orderId);
 
 }

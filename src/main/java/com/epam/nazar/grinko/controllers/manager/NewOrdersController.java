@@ -38,7 +38,7 @@ public class NewOrdersController {
         model.addAttribute("order", orderDto);
         model.addAttribute("cancellation", new CancellationDto());
         model.addAttribute("bill", billDto);
-        return "manager/show-new-order";
+        return "manager/new-orders/show-new-order";
     }
 
     @PostMapping()

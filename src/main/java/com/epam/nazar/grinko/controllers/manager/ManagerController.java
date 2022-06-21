@@ -40,7 +40,7 @@ public class ManagerController {
         model.addAttribute("orders", ordersDto);
         model.addAttribute("ids", ids);
 
-        return "manager/all-new-orders";
+        return "manager/new-orders/all-new-orders";
     }
 
     @GetMapping("/active-orders")
@@ -54,7 +54,7 @@ public class ManagerController {
         model.addAttribute("orders", ordersDto);
         model.addAttribute("ids", ids);
 
-        return "manager/all-active-orders";
+        return "manager/active-orders/all-active-orders";
     }
 
     @GetMapping("/orders-history")
@@ -70,7 +70,7 @@ public class ManagerController {
         model.addAttribute("decisions", decisionsDto);
         model.addAttribute("ids", ids);
 
-        return  "manager/all-orders-history";
+        return "manager/orders-history/all-orders-history";
     }
 
 
