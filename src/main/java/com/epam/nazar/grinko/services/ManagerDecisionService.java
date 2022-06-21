@@ -24,6 +24,10 @@ public class ManagerDecisionService {
         return decisionRepository.findAll();
     }
 
+    public List<ManagerDecision> getAllByManagerId(Long managerId){
+        return decisionRepository.findDistinctByManagerId(managerId);
+    }
+
     public ManagerDecision mapToObject(ManagerDecisionDto decisionDto){
         User manager = userService.mapToObject(decisionDto.getManager());
         Order order = orderService.mapToObject(decisionDto.getOrder());
