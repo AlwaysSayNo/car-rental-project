@@ -11,4 +11,6 @@ public class CancellationDto {
 
     private String message;
 
+    private OrderDto order;
+
 }

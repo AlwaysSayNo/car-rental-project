@@ -20,6 +20,10 @@ public class ManagerDecisionService {
     private final UserService userService;
     private final OrderService orderService;
 
+    public void save(ManagerDecision decision){
+        decisionRepository.save(decision);
+    }
+
     public List<ManagerDecision> getAll(){
         return decisionRepository.findAll();
     }
