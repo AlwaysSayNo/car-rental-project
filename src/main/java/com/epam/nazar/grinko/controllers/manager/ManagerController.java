@@ -70,7 +70,7 @@ public class ManagerController {
         model.addAttribute("decisions", decisionsDto);
         model.addAttribute("ids", ids);
 
-        return "manager/orders-history/all-orders-history";
+        return "manager/decision-history/all-decision-history";
     }
 
 

@@ -24,6 +24,10 @@ public class ManagerDecisionService {
         decisionRepository.save(decision);
     }
 
+    public ManagerDecision getById(Long decisionId) {
+        return decisionRepository.getById(decisionId);
+    }
+
     public List<ManagerDecision> getAll(){
         return decisionRepository.findAll();
     }
