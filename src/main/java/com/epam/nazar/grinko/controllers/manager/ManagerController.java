@@ -31,7 +31,7 @@ public class ManagerController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/new-orders")
-    public void showNewOrders(Model model){
+    public String showNewOrders(Model model){
         List<Order> orders = orderService.getOrdersWithStatus(OrderStatus.UNDER_CONSIDERATION);
 
         List<OrderDto> ordersDto = orders.stream().map(orderService::mapToDto).collect(Collectors.toList());
@@ -39,10 +39,12 @@ public class ManagerController {
 
         model.addAttribute("orders", ordersDto);
         model.addAttribute("ids", ids);
+
+        return "manager/all-new-orders";
     }
 
     @GetMapping("/active-orders")
-    public void showActiveOrders(Model model){
+    public String showActiveOrders(Model model){
         OrderStatus[] availableStatuses = {OrderStatus.IN_USE, OrderStatus.REPAIR_PAYMENT};
         List<Order> orders = orderService.getOrdersWithStatusIn(availableStatuses);
 
@@ -51,10 +53,12 @@ public class ManagerController {
 
         model.addAttribute("orders", ordersDto);
         model.addAttribute("ids", ids);
+
+        return "manager/all-active-orders";
     }
 
     @GetMapping("/orders-history")
-    public void showOrdersHistory(HttpServletRequest request, Model model){
+    public String showOrdersHistory(HttpServletRequest request, Model model){
         String email = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
         Long managerId = userService.getUserIdByEmail(email).orElseThrow(JwtAuthenticationException::new);
         List<ManagerDecision> decisions = decisionService.getAllByManagerId(managerId);
@@ -65,6 +69,8 @@ public class ManagerController {
 
         model.addAttribute("decisions", decisionsDto);
         model.addAttribute("ids", ids);
+
+        return  "manager/all-orders-history";
     }
 
 
