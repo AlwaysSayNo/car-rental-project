@@ -75,7 +75,7 @@ public class BookCarController {
 
         OrderDto orderDto = new OrderDto().setCar(carDto)
                 .setUser(userDto)
-                .setStatus(OrderStatus.IN_USE);
+                .setStatus(OrderStatus.UNDER_CONSIDERATION);
 
         billDto.setOrder(orderDto)
                 .setPaymentDetails(paymentDetailsDto)
