@@ -37,9 +37,9 @@ public class CarService {
 
     public Page<Car> getByFilter(PageRequest request, String filterBy, String filterValue){
         switch (filterBy){
-            case "segment": return carRepository.getBySegment(CarSegment.valueOf(filterValue), request);
-            case "brand": return carRepository.getByBrand(brandService.getBrand(filterValue), request);
-            case "color": return carRepository.getByColor(colorService.getColor(filterValue), request);
+            case "segment": return carRepository.getBySegment(request, CarSegment.valueOf(filterValue));
+            case "brand": return carRepository.getByBrand(request, brandService.getBrand(filterValue));
+            case "color": return carRepository.getByColor(request, colorService.getColor(filterValue));
             default: throw new IllegalPathVariableException();
         }
     }
@@ -48,8 +48,8 @@ public class CarService {
         return carRepository.findAll(request);
     }
 
-    public List<Car> getByStatusIn(CarStatus... statuses){
-        return carRepository.findAllByStatusIsIn(Arrays.asList(statuses));
+    public Page<Car> getByStatusIn(PageRequest request, CarStatus status){
+        return carRepository.findByStatus(request, status);
     }
 
     public Car getById(long id){

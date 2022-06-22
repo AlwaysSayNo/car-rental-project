@@ -29,11 +29,11 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     String UPDATE_CAR_STATUS_BY_ID = "UPDATE Car c SET c.status=:status WHERE c.id=:id";
 
 
-    Page<Car> getBySegment(CarSegment segment, Pageable request);
-    Page<Car> getByBrand(CarBrand brand, Pageable request);
-    Page<Car> getByColor(CarColor color, Pageable request);
+    Page<Car> getBySegment(Pageable request, CarSegment segment);
+    Page<Car> getByBrand(Pageable request, CarBrand brand);
+    Page<Car> getByColor(Pageable request, CarColor color);
 
-    List<Car> findAllByStatusIsIn(Collection<CarStatus> statuses);
+    Page<Car> findByStatus(Pageable request, CarStatus status);
     boolean existsByNumber(String number);
     Optional<Car> getByNumber(String number);
 
