@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
 import java.util.Optional;
 
 @Service
@@ -75,8 +76,11 @@ public class BillService {
     public long getTotalPrice(BillDto billDto){
         long timeDifference  = billDto.getExpirationDate().getTime().getTime() - billDto.getStartDate().getTime().getTime();
         long days = (timeDifference / (1000*60*60*24)) % 365;
+        return days * (billDto.getCarPrice() + billDto.getDriverPrice());
+    }
 
-        return days * billDto.getCarPrice() + billDto.getDriverPrice();
+    public boolean isDateRangeCorrect(Calendar start, Calendar end){
+        return end.compareTo(start) > 0;
     }
 
     private double getSegmentMarkup(CarSegment segment){
@@ -92,8 +96,7 @@ public class BillService {
             case F:
             case S:
                 return 2.5;
-            default:
-                return 1;
+            default: throw new IllegalArgumentException();
         }
     }
 }

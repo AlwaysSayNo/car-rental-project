@@ -8,6 +8,8 @@ import com.epam.nazar.grinko.domians.helpers.UserRole;
 import com.epam.nazar.grinko.services.CarService;
 import com.epam.nazar.grinko.services.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,14 +25,22 @@ public class AdminController {
     private final CarService carService;
     private final UserService userService;
 
-    // ? pagination
     @GetMapping("/cars")
-    public String showAllCarsPage(Model model){
-        List<Car> allCars = carService.getAll();
-        List<CarDto> allCarDto = allCars.stream().map(carService::mapToDto).collect(Collectors.toList());
-        List<Long> allId = allCars.stream().map(Car::getId).collect(Collectors.toList());
+    public String showAllCarsPage(@RequestParam(value = "sortBy", required = false) String sortBy,
+                                  @RequestParam(value = "direction", required = false) String direction,
+                                  @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                  @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
+                                  @RequestParam(value = "filterBy", required = false) String filterBy,
+                                  @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
+        PageRequest pageRequest = carService.createRequest(page, size, sortBy, direction);
+        Page<Car> cars;
+        if(filterBy == null) cars = carService.getAll(pageRequest);
+        else cars = carService.getByFilter(pageRequest, filterBy, filterValue);
 
-        model.addAttribute("cars", allCarDto);
+        Page<CarDto> carsDto = cars.map(carService::mapToDto);
+        List<Long> allId = cars.stream().map(Car::getId).collect(Collectors.toList());
+
+        model.addAttribute("cars", carsDto);
         model.addAttribute("ids", allId);
 
         return "admin/cars/show-cars";

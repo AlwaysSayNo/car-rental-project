@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +27,11 @@ import javax.swing.text.Segment;
 public interface CarRepository extends JpaRepository<Car, Long> {
     String UPDATE_CAR_BY_ID = "UPDATE Car c SET c.number=:number, c.brand=:brand, c.name=:name, c.color=:color, c.pricePerDay=:pricePerDay, c.segment=:segment, c.status=:status WHERE c.id=:id";
     String UPDATE_CAR_STATUS_BY_ID = "UPDATE Car c SET c.status=:status WHERE c.id=:id";
+
+
+    Page<Car> getBySegment(CarSegment segment, Pageable request);
+    Page<Car> getByBrand(CarBrand brand, Pageable request);
+    Page<Car> getByColor(CarColor color, Pageable request);
 
     List<Car> findAllByStatusIsIn(Collection<CarStatus> statuses);
     boolean existsByNumber(String number);

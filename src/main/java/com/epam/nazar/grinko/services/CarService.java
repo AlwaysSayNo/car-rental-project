@@ -6,24 +6,46 @@ import com.epam.nazar.grinko.domians.CarColor;
 import com.epam.nazar.grinko.domians.helpers.CarSegment;
 import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.dto.CarDto;
+import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
 import com.epam.nazar.grinko.repositories.CarRepository;
 import lombok.AllArgsConstructor;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 @AllArgsConstructor
 public class CarService {
 
     private final CarRepository carRepository;
-    private final CarBrandService carBrandService;
-    private final CarColorService carColorService;
+    private final CarBrandService brandService;
+    private final CarColorService colorService;
 
-    public List<Car> getAll(){
-        return carRepository.findAll();
+    public PageRequest createRequest(Integer page, Integer size, String sortBy, String direction){
+        if(sortBy == null) return PageRequest.of(page, size);
+        return PageRequest.of(page, size, Sort.Direction.valueOf(direction), sortBy);
+    }
+
+    public Page<Car> getByFilter(PageRequest request, String filterBy, String filterValue){
+        switch (filterBy){
+            case "segment": return carRepository.getBySegment(CarSegment.valueOf(filterValue), request);
+            case "brand": return carRepository.getByBrand(brandService.getBrand(filterValue), request);
+            case "color": return carRepository.getByColor(colorService.getColor(filterValue), request);
+            default: throw new IllegalPathVariableException();
+        }
+    }
+
+    public Page<Car> getAll(PageRequest request){
+        return carRepository.findAll(request);
     }
 
     public List<Car> getByStatusIn(CarStatus... statuses){
@@ -55,18 +77,13 @@ public class CarService {
         carRepository.updateCarStatusById(status, id);
     }
 
-    public boolean existsById(Long id){
-        return carRepository.existsById(id);
-    }
-
     public boolean existsCarByNumber(String number){
         return carRepository.existsByNumber(number);
     }
 
-    // Конвертировать в dto в car можно в том случае, если все поля из бд уже существуют в базе данных
     public Car mapToObject(CarDto carDto){
-        CarBrand brand = carBrandService.getBrand(carDto.getBrand());
-        CarColor color = carColorService.getColor(carDto.getColor());
+        CarBrand brand = brandService.getBrand(carDto.getBrand());
+        CarColor color = colorService.getColor(carDto.getColor());
 
         return new Car().setBrand(brand)
                 .setColor(color)
@@ -86,4 +103,9 @@ public class CarService {
                 .setColor(car.getColor().getValue())
                 .setPricePerDay(car.getPricePerDay());
     }
+
+    public Page<CarDto> mapToDto(Page<Car> cars){
+        return cars.map(this::mapToDto);
+    }
+
 }

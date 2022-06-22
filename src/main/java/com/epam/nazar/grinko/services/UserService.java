@@ -6,7 +6,10 @@ import com.epam.nazar.grinko.dto.UserDto;
 import com.epam.nazar.grinko.repositories.UserRepository;
 import com.epam.nazar.grinko.domians.helpers.UserRole;
 import lombok.AllArgsConstructor;
+import net.bytebuddy.TypeCache;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

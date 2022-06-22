@@ -29,8 +29,13 @@ public class RegisteredUserController {
     private final OrderService orderService;
     private final JwtTokenProvider jwtTokenProvider;
 
+    // ? pagination
     @GetMapping("/cars")
-    public String showAllCarsPage(Model model){
+    public String showAllCarsPage(@RequestParam(value = "sortBy", required = false) String sortBy,
+                                  @RequestParam(value = "direction", required = false) String direction,
+                                  @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                  @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
+                                  @RequestParam(value = "filterBy", required = false) String filterBy, Model model){
         List<Car> allCars = carService.getByStatusIn(CarStatus.NOT_RENTED);
         List<CarDto> allCarDto = allCars.stream().map(carService::mapToDto).collect(Collectors.toList());
         List<Long> allId = allCars.stream().map(Car::getId).collect(Collectors.toList());
