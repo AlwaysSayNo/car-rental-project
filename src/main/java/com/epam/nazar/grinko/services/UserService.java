@@ -6,14 +6,14 @@ import com.epam.nazar.grinko.dto.UserDto;
 import com.epam.nazar.grinko.repositories.UserRepository;
 import com.epam.nazar.grinko.domians.helpers.UserRole;
 import lombok.AllArgsConstructor;
-import net.bytebuddy.TypeCache;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -21,6 +21,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserQueryManipulationService manipulationService;
     @Lazy
     private final PasswordEncoder passwordEncoder;
 
@@ -28,24 +29,30 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public void updateUserById(User user, long id){
+    public void updateUserById(User user, Long id){
         String password = encodePassword(user);
         userRepository.updateUserById(user.getEmail(), user.getFirstName(), user.getLastName(), password, user.getRole(), user.getPhoneNumber(), user.getStatus(), id);
     }
 
-    public void updateUserStatusById(UserStatus status, long id){
+    public void updateUserStatusById(UserStatus status, Long id){
         userRepository.updateUserStatusById(status, id);
     }
 
-    public List<User> getUsersByRole(UserRole role){
-        return userRepository.getAllByRole(role);
+    public Page<User> getUsersByRole(PageRequest request, UserRole role, String filterBy, String filterValue){
+        Map<String, String> byRole = new HashMap<>();
+        byRole.put("role", role.name());
+
+        if(filterBy != null)
+            byRole.put(filterBy, filterValue);
+
+        return manipulationService.evaluateQuery(request, byRole);
     }
 
-    public User getById(long id){
+    public User getById(Long id){
         return userRepository.getById(id);
     }
 
-    public void deleteById(long id){
+    public void deleteById(Long id){
         userRepository.deleteById(id);
     }
 
@@ -58,12 +65,16 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    public boolean existsByIdAndRole(long id, UserRole role){
+    public boolean existsByIdAndRole(Long id, UserRole role){
         return userRepository.existsByIdAndRole(id, role);
     }
 
     public Optional<Long> getUserIdByEmail(String email){
         return userRepository.getIdByEmail(email);
+    }
+
+    public String encodePassword(User user){
+        return passwordEncoder.encode(user.getPassword());
     }
 
     public User mapToObject(UserDto userDto){
@@ -76,11 +87,6 @@ public class UserService {
                 .setRole(userDto.getRole());
     }
 
-    public String encodePassword(User user){
-        return passwordEncoder.encode(user.getPassword());
-
-    }
-
     public UserDto mapToDto(User user){
         return new UserDto().setEmail(user.getEmail())
                 .setPassword(user.getPassword())
@@ -89,5 +95,9 @@ public class UserService {
                 .setLastName(user.getLastName())
                 .setStatus(user.getStatus())
                 .setRole(user.getRole());
+    }
+
+    public UserQueryManipulationService getManipulationService() {
+        return manipulationService;
     }
 }

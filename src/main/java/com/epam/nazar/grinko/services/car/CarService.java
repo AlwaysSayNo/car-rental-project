@@ -42,7 +42,7 @@ public class CarService {
         return manipulationService.evaluateQuery(request, byStatus);
     }
 
-    public Car getById(long id){
+    public Car getById(Long id){
         return carRepository.getById(id);
     }
 
@@ -54,11 +54,11 @@ public class CarService {
         carRepository.save(newCar);
     }
 
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         carRepository.deleteById(id);
     }
 
-    public void updateCarById(long id, Car car){
+    public void updateCarById(Long id, Car car){
         carRepository.updateCarById(car.getNumber(), car.getBrand(), car.getName(),
                 car.getColor(), car.getPricePerDay(), car.getSegment(), car.getStatus(), id);
     }
@@ -92,10 +92,6 @@ public class CarService {
                 .setStatus(car.getStatus())
                 .setColor(car.getColor().getValue())
                 .setPricePerDay(car.getPricePerDay());
-    }
-
-    public Page<CarDto> mapToDto(Page<Car> cars){
-        return cars.map(this::mapToDto);
     }
 
     public CarQueryManipulationService getManipulationService() {

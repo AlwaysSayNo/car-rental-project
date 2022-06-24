@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,8 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
-    boolean existsByIdAndRole(long id, UserRole role);
-    List<User> getAllByRole(UserRole role);
+    boolean existsByIdAndRole(Long id, UserRole role);
 
     @Transactional
     @Modifying
@@ -35,14 +33,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
                        @Param("role") UserRole role,
                        @Param("phoneNumber") String phoneNumber,
                        @Param("status") UserStatus status,
-                       @Param("id") long id);
+                       @Param("id") Long id);
 
     @Transactional
     @Modifying
     @Query(UPDATE_USER_STATUS_BY_ID)
     void updateUserStatusById(
                         @Param("status") UserStatus status,
-                        @Param("id") long id);
+                        @Param("id") Long id);
 
     @Transactional
     @Query(SELECT_USER_ID_BY_EMAIL)
