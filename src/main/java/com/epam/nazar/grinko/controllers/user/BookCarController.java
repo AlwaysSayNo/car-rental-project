@@ -10,7 +10,7 @@ import com.epam.nazar.grinko.dto.*;
 import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
 import com.epam.nazar.grinko.services.BillService;
-import com.epam.nazar.grinko.services.CarService;
+import com.epam.nazar.grinko.services.car.CarService;
 import com.epam.nazar.grinko.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;

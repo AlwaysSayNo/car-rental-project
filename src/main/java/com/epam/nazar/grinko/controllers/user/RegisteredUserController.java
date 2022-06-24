@@ -1,15 +1,14 @@
 package com.epam.nazar.grinko.controllers.user;
 
-import com.epam.nazar.grinko.domians.Bill;
 import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.Order;
 import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import com.epam.nazar.grinko.dto.*;
-import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
 import com.epam.nazar.grinko.exceptions.IllegalJwtContentException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
 import com.epam.nazar.grinko.services.*;
+import com.epam.nazar.grinko.services.car.CarService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

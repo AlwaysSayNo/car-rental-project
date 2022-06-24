@@ -1,4 +1,4 @@
-package com.epam.nazar.grinko.services;
+package com.epam.nazar.grinko.services.car;
 
 import com.epam.nazar.grinko.domians.CarColor;
 import com.epam.nazar.grinko.repositories.CarColorRepository;

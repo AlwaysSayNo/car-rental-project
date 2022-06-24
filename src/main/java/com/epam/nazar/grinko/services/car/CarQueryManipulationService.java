@@ -1,8 +1,6 @@
-package com.epam.nazar.grinko.services;
+package com.epam.nazar.grinko.services.car;
 
 import com.epam.nazar.grinko.domians.Car;
-import com.epam.nazar.grinko.domians.CarBrand;
-import com.epam.nazar.grinko.domians.CarColor;
 import com.epam.nazar.grinko.domians.helpers.CarSegment;
 import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import lombok.AllArgsConstructor;
@@ -15,8 +13,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
 import java.util.*;
 
 @Service

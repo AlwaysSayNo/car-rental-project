@@ -5,7 +5,7 @@ import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.dto.CarDto;
 import com.epam.nazar.grinko.dto.UserDto;
 import com.epam.nazar.grinko.domians.helpers.UserRole;
-import com.epam.nazar.grinko.services.CarService;
+import com.epam.nazar.grinko.services.car.CarService;
 import com.epam.nazar.grinko.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
