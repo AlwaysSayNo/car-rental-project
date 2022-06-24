@@ -32,10 +32,8 @@ public class AdminController {
                                   @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
                                   @RequestParam(value = "filterBy", required = false) String filterBy,
                                   @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
-        PageRequest pageRequest = carService.createRequest(page, size, sortBy, direction);
-        Page<Car> cars;
-        if(filterBy == null) cars = carService.getAll(pageRequest);
-        else cars = carService.getByFilter(pageRequest, filterBy, filterValue);
+        PageRequest pageRequest = carService.getManipulationService().createRequest(page - 1, size, sortBy, direction);
+        Page<Car> cars = carService.getAll(pageRequest, filterBy, filterValue);
 
         Page<CarDto> carsDto = cars.map(carService::mapToDto);
         List<Long> allId = cars.stream().map(Car::getId).collect(Collectors.toList());

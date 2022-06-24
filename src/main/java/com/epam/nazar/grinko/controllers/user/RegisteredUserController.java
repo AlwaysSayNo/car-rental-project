@@ -11,6 +11,8 @@ import com.epam.nazar.grinko.exceptions.IllegalJwtContentException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
 import com.epam.nazar.grinko.services.*;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,16 +31,18 @@ public class RegisteredUserController {
     private final OrderService orderService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    // ? pagination
     @GetMapping("/cars")
     public String showAllCarsPage(@RequestParam(value = "sortBy", required = false) String sortBy,
                                   @RequestParam(value = "direction", required = false) String direction,
                                   @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                   @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
-                                  @RequestParam(value = "filterBy", required = false) String filterBy, Model model){
-        List<Car> allCars = carService.getByStatusIn(CarStatus.NOT_RENTED);
-        List<CarDto> allCarDto = allCars.stream().map(carService::mapToDto).collect(Collectors.toList());
-        List<Long> allId = allCars.stream().map(Car::getId).collect(Collectors.toList());
+                                  @RequestParam(value = "filterBy", required = false) String filterBy,
+                                  @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
+        PageRequest pageRequest = carService.getManipulationService().createRequest(page, size, sortBy, direction);
+        Page<Car> cars = carService.getAll(pageRequest, filterBy, filterValue);
+
+        List<CarDto> allCarDto = cars.stream().map(carService::mapToDto).collect(Collectors.toList());
+        List<Long> allId = cars.stream().map(Car::getId).collect(Collectors.toList());
 
         model.addAttribute("cars", allCarDto);
         model.addAttribute("ids", allId);

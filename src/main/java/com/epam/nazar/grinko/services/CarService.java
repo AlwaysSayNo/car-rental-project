@@ -3,53 +3,35 @@ package com.epam.nazar.grinko.services;
 import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.CarBrand;
 import com.epam.nazar.grinko.domians.CarColor;
-import com.epam.nazar.grinko.domians.helpers.CarSegment;
 import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.dto.CarDto;
-import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
 import com.epam.nazar.grinko.repositories.CarRepository;
 import lombok.AllArgsConstructor;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class CarService {
 
+
     private final CarRepository carRepository;
     private final CarBrandService brandService;
     private final CarColorService colorService;
+    private final CarQueryManipulationService manipulationService;
 
-    public PageRequest createRequest(Integer page, Integer size, String sortBy, String direction){
-        if(sortBy == null) return PageRequest.of(page, size);
-        return PageRequest.of(page, size, Sort.Direction.valueOf(direction), sortBy);
+    public Page<Car> getByStatus(PageRequest request, CarStatus status, String filterBy, String filterValue){
+        Map<String, Object> byStatus = new HashMap<>();
+        byStatus.put("status", status);
+
+        return manipulationService.evaluateQuery(request, filterBy, filterValue, byStatus);
     }
 
-    public Page<Car> getByFilter(PageRequest request, String filterBy, String filterValue){
-        switch (filterBy){
-            case "segment": return carRepository.getBySegment(request, CarSegment.valueOf(filterValue));
-            case "brand": return carRepository.getByBrand(request, brandService.getBrand(filterValue));
-            case "color": return carRepository.getByColor(request, colorService.getColor(filterValue));
-            default: throw new IllegalPathVariableException();
-        }
-    }
-
-    public Page<Car> getAll(PageRequest request){
-        return carRepository.findAll(request);
-    }
-
-    public Page<Car> getByStatusIn(PageRequest request, CarStatus status){
-        return carRepository.findByStatus(request, status);
+    public Page<Car> getAll(PageRequest request, String filterBy, String filterValue){
+        return manipulationService.evaluateQuery(request, filterBy, filterValue, new HashMap<>());
     }
 
     public Car getById(long id){
@@ -106,6 +88,10 @@ public class CarService {
 
     public Page<CarDto> mapToDto(Page<Car> cars){
         return cars.map(this::mapToDto);
+    }
+
+    public CarQueryManipulationService getManipulationService() {
+        return manipulationService;
     }
 
 }

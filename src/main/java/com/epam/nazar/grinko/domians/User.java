@@ -44,9 +44,9 @@ public class User {
     private UserRole role;
 
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Collection<Order> orders;
 
-    @OneToMany(mappedBy = "manager", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "manager", fetch = FetchType.LAZY)
     private Collection<ManagerDecision> decisions;
 }
