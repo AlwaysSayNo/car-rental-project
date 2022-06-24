@@ -4,7 +4,7 @@ import com.epam.nazar.grinko.constants.ViewExceptionsConstants;
 import com.epam.nazar.grinko.domians.helpers.UserRole;
 import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.dto.UserDto;
-import com.epam.nazar.grinko.services.UserService;
+import com.epam.nazar.grinko.services.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

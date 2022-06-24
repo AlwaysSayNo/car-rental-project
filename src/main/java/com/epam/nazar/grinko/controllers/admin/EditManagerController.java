@@ -1,12 +1,10 @@
 package com.epam.nazar.grinko.controllers.admin;
 
-import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.User;
-import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.domians.helpers.UserRole;
 import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
-import com.epam.nazar.grinko.services.UserService;
+import com.epam.nazar.grinko.services.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

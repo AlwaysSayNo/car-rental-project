@@ -1,4 +1,4 @@
-package com.epam.nazar.grinko.services;
+package com.epam.nazar.grinko.services.user;
 
 import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.domians.helpers.UserStatus;

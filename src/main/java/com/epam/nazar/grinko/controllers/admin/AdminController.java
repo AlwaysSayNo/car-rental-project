@@ -6,7 +6,7 @@ import com.epam.nazar.grinko.dto.CarDto;
 import com.epam.nazar.grinko.dto.UserDto;
 import com.epam.nazar.grinko.domians.helpers.UserRole;
 import com.epam.nazar.grinko.services.car.CarService;
-import com.epam.nazar.grinko.services.UserService;
+import com.epam.nazar.grinko.services.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,30 +44,40 @@ public class AdminController {
         return "admin/cars/show-cars";
     }
 
-    // ? pagination
     @GetMapping("/managers")
-    public String showAllManagers(Model model){
-        List<User> allManagers = userService.getUsersByRole(UserRole.ROLE_MANAGER);
-        List<UserDto> allManagersDto = allManagers.stream().map(userService::mapToDto)
-                .collect(Collectors.toList());
-        List<Long> allId = allManagers.stream().map(User::getId).collect(Collectors.toList());
+    public String showAllManagers(@RequestParam(value = "sortBy", required = false) String sortBy,
+                                  @RequestParam(value = "direction", required = false) String direction,
+                                  @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                  @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
+                                  @RequestParam(value = "filterBy", required = false) String filterBy,
+                                  @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
+        PageRequest pageRequest = userService.getManipulationService().createRequest(page - 1, size, sortBy, direction);
+        Page<User> managers = userService.getUsersByRole(pageRequest, UserRole.ROLE_MANAGER, filterBy, filterValue);
 
-        model.addAttribute("managers", allManagersDto);
+        Page<UserDto> managersDto = managers.map(userService::mapToDto);
+        List<Long> allId = managers.stream().map(User::getId).collect(Collectors.toList());
+
+        model.addAttribute("managers", managersDto);
         model.addAttribute("ids", allId);
 
         return "admin/managers/show-managers";
     }
 
 
-    // ? pagination
     @GetMapping("/registered-users")
-    public String showAllRegistered(Model model){
-        List<User> allRegistered = userService.getUsersByRole(UserRole.ROLE_USER);
-        List<UserDto> allRegisteredDto = allRegistered.stream().map(userService::mapToDto)
-                .collect(Collectors.toList());
-        List<Long> allId = allRegistered.stream().map(User::getId).collect(Collectors.toList());
+    public String showAllRegistered(@RequestParam(value = "sortBy", required = false) String sortBy,
+                                    @RequestParam(value = "direction", required = false) String direction,
+                                    @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                    @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
+                                    @RequestParam(value = "filterBy", required = false) String filterBy,
+                                    @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
+        PageRequest pageRequest = userService.getManipulationService().createRequest(page - 1, size, sortBy, direction);
+        Page<User> users = userService.getUsersByRole(pageRequest, UserRole.ROLE_USER, filterBy, filterValue);
 
-        model.addAttribute("registeredUsers", allRegisteredDto);
+        Page<UserDto> usersDto = users.map(userService::mapToDto);
+        List<Long> allId = users.stream().map(User::getId).collect(Collectors.toList());
+
+        model.addAttribute("users", usersDto);
         model.addAttribute("ids", allId);
 
         return "admin/users/show-users";

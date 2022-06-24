@@ -17,7 +17,6 @@ import java.util.*;
 @AllArgsConstructor
 public class CarService {
 
-
     private final CarRepository carRepository;
     private final CarBrandService brandService;
     private final CarColorService colorService;

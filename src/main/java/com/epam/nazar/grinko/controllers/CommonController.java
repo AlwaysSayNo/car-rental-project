@@ -5,7 +5,7 @@ import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.dto.UserDto;
 import com.epam.nazar.grinko.exceptions.IllegalJwtContentException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
-import com.epam.nazar.grinko.services.UserService;
+import com.epam.nazar.grinko.services.user.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

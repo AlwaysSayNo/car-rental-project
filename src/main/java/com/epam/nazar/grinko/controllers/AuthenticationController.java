@@ -8,7 +8,7 @@ import com.epam.nazar.grinko.dto.UserDto;
 import com.epam.nazar.grinko.domians.helpers.UserRole;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
 import com.epam.nazar.grinko.services.AuthenticationService;
-import com.epam.nazar.grinko.services.UserService;
+import com.epam.nazar.grinko.services.user.UserService;
 import com.epam.nazar.grinko.utils.Utility;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

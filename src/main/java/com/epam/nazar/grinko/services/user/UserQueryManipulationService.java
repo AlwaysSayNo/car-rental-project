@@ -1,8 +1,9 @@
-package com.epam.nazar.grinko.services;
+package com.epam.nazar.grinko.services.user;
 
 import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.domians.helpers.UserRole;
 import com.epam.nazar.grinko.domians.helpers.UserStatus;
+import com.epam.nazar.grinko.services.AbstractQueryManipulation;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;

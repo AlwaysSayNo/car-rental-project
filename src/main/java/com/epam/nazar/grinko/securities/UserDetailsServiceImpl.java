@@ -2,7 +2,7 @@ package com.epam.nazar.grinko.securities;
 
 import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.services.AuthenticationService;
-import com.epam.nazar.grinko.services.UserService;
+import com.epam.nazar.grinko.services.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
