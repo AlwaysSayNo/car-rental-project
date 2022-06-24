@@ -1,36 +1,27 @@
 package com.epam.nazar.grinko.services;
 
+import com.epam.nazar.grinko.constants.BillConstants;
 import com.epam.nazar.grinko.domians.Bill;
 import com.epam.nazar.grinko.domians.helpers.CarSegment;
 import com.epam.nazar.grinko.dto.BillDto;
 import com.epam.nazar.grinko.dto.CarDto;
 import com.epam.nazar.grinko.repositories.BillRepository;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.Optional;
 
 @Service
-@PropertySource("classpath:/META-INF/my-application.properties")
+@ComponentScan("com.epam.nazar.grinko")
+@AllArgsConstructor
 public class BillService {
-
-    @Value("${min.driver.price}")
-    Long MIN_DRIVER_PRICE;
-    @Value("${percent.of.car.price}")
-    Double PERCENT_OF_CAR_PRICE;
 
     private final BillRepository billRepository;
     private final OrderService orderService;
     private final PaymentDetailsService paymentDetailsService;
-
-    public BillService(BillRepository billRepository, OrderService orderService,
-                       PaymentDetailsService paymentDetailsService) {
-        this.billRepository = billRepository;
-        this.orderService = orderService;
-        this.paymentDetailsService = paymentDetailsService;
-    }
+    private final BillConstants constants;
 
     public void addBill(Bill bill){
         orderService.save(bill.getOrder());
@@ -66,8 +57,8 @@ public class BillService {
     }
 
     public long getDriverPrice(CarDto carDto){
-        double driverPrice = carDto.getPricePerDay() * PERCENT_OF_CAR_PRICE;
-        driverPrice = driverPrice > MIN_DRIVER_PRICE ? driverPrice : MIN_DRIVER_PRICE;
+        double driverPrice = carDto.getPricePerDay() * constants.PERCENT_OF_CAR_PRICE();
+        driverPrice = driverPrice > constants.MIN_DRIVER_PRICE() ? driverPrice : constants.MIN_DRIVER_PRICE();
         driverPrice *= getSegmentMarkup(carDto.getSegment());
         if(driverPrice % 10 != 0) driverPrice = ((driverPrice / 10) + 1) * 10;
         return (long) driverPrice;
@@ -99,4 +90,5 @@ public class BillService {
             default: throw new IllegalArgumentException();
         }
     }
+
 }
