@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 import java.util.*;
 
 @Service
@@ -47,13 +49,11 @@ public class CarQueryManipulationService {
                     break;
                 }
                 case "brand": {
-                    Join<Car, CarBrand> brandJoin = root.join("brand");
-                    predicates.add(builder.equal(brandJoin.get("value"), brandService.getBrand(filterValue)));
+                    predicates.add(builder.equal(root.get("brand"), brandService.getBrand(filterValue)));
                     break;
                 }
                 case "color": {
-                    Join<Car, CarColor> colorJoin = root.join("color");
-                    predicates.add(builder.equal(colorJoin.get("value"), colorService.getColor(filterValue)));
+                    predicates.add(builder.equal(root.get("color"), colorService.getColor(filterValue)));
                     break;
                 }
             }
@@ -73,7 +73,7 @@ public class CarQueryManipulationService {
         List<Predicate> predicates = getPredicates(builder, root, filterBy, filterValue);
         if(byValue.containsKey("status")) {
             CarStatus status = (CarStatus) byValue.get("status");
-            predicates.add(builder.equal(root.get("status"), status.name()));
+            predicates.add(builder.equal(root.get("status"), status));
         }
         if(!predicates.isEmpty()) query.where(builder.and(predicates.toArray(new Predicate[0])));
 

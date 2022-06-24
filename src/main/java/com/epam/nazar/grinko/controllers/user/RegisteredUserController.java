@@ -38,8 +38,8 @@ public class RegisteredUserController {
                                   @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
                                   @RequestParam(value = "filterBy", required = false) String filterBy,
                                   @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
-        PageRequest pageRequest = carService.getManipulationService().createRequest(page, size, sortBy, direction);
-        Page<Car> cars = carService.getAll(pageRequest, filterBy, filterValue);
+        PageRequest pageRequest = carService.getManipulationService().createRequest(page - 1, size, sortBy, direction);
+        Page<Car> cars = carService.getByStatus(pageRequest, CarStatus.NOT_RENTED, filterBy, filterValue);
 
         List<CarDto> allCarDto = cars.stream().map(carService::mapToDto).collect(Collectors.toList());
         List<Long> allId = cars.stream().map(Car::getId).collect(Collectors.toList());

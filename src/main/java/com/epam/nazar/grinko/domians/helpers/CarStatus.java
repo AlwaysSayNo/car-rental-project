@@ -10,7 +10,7 @@ public enum CarStatus {
      *     <li>The manager can stop the rental and issue an invoice for repairs</li>
      * </ul>
      */
-    RENTED,
+    RENTED("RENTED"),
     /**
      * The car isn`t in current moment rented / is in the garage.
      * <ul>
@@ -18,7 +18,7 @@ public enum CarStatus {
      *     <li>Cannot be modified/deleted by admin</li>
      * </ul>
      */
-    NOT_RENTED,
+    NOT_RENTED("NOT_RENTED"),
     /**
      * The car isn`t in the public domain. Intermediate stage between RENTED and NOT_RENTED
      * <ul>
@@ -27,7 +27,7 @@ public enum CarStatus {
      *     <li>Status can be changed by admin to ON_HOLD</li>
      * </ul>
      */
-    ON_PROCESSING,
+    ON_PROCESSING("ON_PROCESSING"),
     /**
      * The car isn`t in the public domain.
      * <ul>
@@ -35,6 +35,12 @@ public enum CarStatus {
      *     <li>Can be modified/deleted by admin</li>
      * </ul>
      */
-    ON_HOLD
+    ON_HOLD("ON_HOLD");
+
+    private final String value;
+
+    CarStatus(String value) {
+        this.value = value;
+    }
 
 }
