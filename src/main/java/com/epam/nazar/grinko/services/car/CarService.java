@@ -23,15 +23,23 @@ public class CarService {
     private final CarColorService colorService;
     private final CarQueryManipulationService manipulationService;
 
-    public Page<Car> getByStatus(PageRequest request, CarStatus status, String filterBy, String filterValue){
-        Map<String, Object> byStatus = new HashMap<>();
-        byStatus.put("status", status);
+    public Page<Car> getAll(PageRequest request, String filterBy, String filterValue){
+        Map<String, String> byAll = new HashMap<>();
 
-        return manipulationService.evaluateQuery(request, filterBy, filterValue, byStatus);
+        if(filterBy != null)
+            byAll.put(filterBy, filterValue);
+
+        return manipulationService.evaluateQuery(request, byAll);
     }
 
-    public Page<Car> getAll(PageRequest request, String filterBy, String filterValue){
-        return manipulationService.evaluateQuery(request, filterBy, filterValue, new HashMap<>());
+    public Page<Car> getByStatus(PageRequest request, CarStatus status, String filterBy, String filterValue){
+        Map<String, String> byStatus = new HashMap<>();
+        byStatus.put("status", status.name());
+
+        if(filterBy != null)
+            byStatus.put(filterBy, filterValue);
+
+        return manipulationService.evaluateQuery(request, byStatus);
     }
 
     public Car getById(long id){
