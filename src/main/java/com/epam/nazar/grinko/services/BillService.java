@@ -6,6 +6,7 @@ import com.epam.nazar.grinko.domians.helpers.CarSegment;
 import com.epam.nazar.grinko.dto.BillDto;
 import com.epam.nazar.grinko.dto.CarDto;
 import com.epam.nazar.grinko.repositories.BillRepository;
+import com.epam.nazar.grinko.services.order.OrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;

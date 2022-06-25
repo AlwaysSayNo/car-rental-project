@@ -1,4 +1,4 @@
-package com.epam.nazar.grinko.services;
+package com.epam.nazar.grinko.services.order;
 
 import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.Order;
@@ -9,21 +9,23 @@ import com.epam.nazar.grinko.repositories.OrderRepository;
 import com.epam.nazar.grinko.services.car.CarService;
 import com.epam.nazar.grinko.services.user.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderQueryManipulationService manipulationService;
     private final UserService userService;
     private final CarService carService;
 
+    //?
     public void save(Order order){
         carService.updateCarStatusById(order.getCar().getId(), order.getCar().getStatus());
         orderRepository.save(order);
@@ -37,12 +39,24 @@ public class OrderService {
         return orderRepository.findAllByUser_IdAndStatusIsIn(userId, Arrays.asList(status));
     }
 
-    public List<Order> getOrdersWithStatus(OrderStatus status) {
-        return orderRepository.getAllByStatusIn(Collections.singletonList(status));
+    public Page<Order> getOrdersWithStatus(PageRequest request, OrderStatus status, String filterBy, String filterValue) {
+        return getOrdersWithStatusIn(request, Collections.singletonList(status), filterBy, filterValue);
     }
 
-    public List<Order> getOrdersWithStatusIn(OrderStatus... statuses) {
-        return orderRepository.getAllByStatusIn(Arrays.asList(statuses));
+    public Page<Order> getOrdersWithStatusIn(PageRequest request, List<OrderStatus> statuses, String filterBy, String filterValue) {
+        Map<String, List<String>> byStatuses = new HashMap<>();
+        byStatuses.put("status", statuses.stream().map(OrderStatus::name).collect(Collectors.toList()));
+
+        if(filterBy != null) {
+            List<String> values;
+            if (byStatuses.containsKey(filterBy)) values = new ArrayList<>(byStatuses.get(filterBy));
+            else values = new ArrayList<>();
+
+            values.add(filterValue);
+            byStatuses.put(filterBy, values);
+        }
+
+        return manipulationService.evaluateQuery(request, byStatuses);
     }
 
     public Optional<Order> getOrderWithStatus(Long userId, Long carId, OrderStatus status){
@@ -54,6 +68,12 @@ public class OrderService {
         return orderRepository
                 .getByUserIdAndCarIdAndStatusIn(userId, carId, Arrays.asList(statuses));
     }
+
+    public void updateOrderStatus(OrderStatus status, Long id){
+        orderRepository.updateBreakdownStatusById(status, id);
+    }
+
+
 
     public Order mapToObject(OrderDto orderDto){
         Long carId = carService.getByNumber(orderDto.getCar().getNumber())
@@ -75,8 +95,8 @@ public class OrderService {
                 .setStatus(order.getStatus());
     }
 
-    public void updateOrderStatus(OrderStatus status, Long id){
-        orderRepository.updateBreakdownStatusById(status, id);
+    public OrderQueryManipulationService getManipulationService() {
+        return manipulationService;
     }
 
 }
