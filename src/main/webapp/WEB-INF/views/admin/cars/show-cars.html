@@ -96,6 +96,14 @@
 </div>
 <hr>
 <a th:text="#{add.new.car}" th:href="@{/car-rental-service/admin/cars/new}" href="/admin/cars/new">Add new car</a>
+<div class="center-block">
+    <button type = "button" th:text = "#{lang.en}" onclick="location.href='http://localhost:8080/car-rental-service/international?lang=eng'" >
+        English
+    </button>
+    <button type = "button" th:text = "#{lang.ukr}" onclick="location.href='http://localhost:8080/car-rental-service/international?lang=ukr'" >
+        Ukrainian
+    </button>
+</div>
 
 </body>
 </html>

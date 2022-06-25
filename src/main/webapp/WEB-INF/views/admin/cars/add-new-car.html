@@ -93,6 +93,14 @@
             <button class="button add-button" th:text="#{button.add}" type="submit">Add</button>
         </div>
     </div>
+    <div class="center-block">
+        <button type = "button" th:text = "#{lang.en}" th:onclick="'http://localhost:8080/car-rental-service/admin/cars?lang=en'" >
+            English
+        </button>
+        <button type = "button" th:text = "#{lang.ukr}" th:onclick="'http://localhost:8080/car-rental-service/admin/cars?lang=ukr'" >
+            Ukrainian
+        </button>
+    </div>
 </form>
 
 </body>
