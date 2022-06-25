@@ -1,10 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>All active orders</title>
 </head>
 <body>
+
+<div th:each="order : ${orders}">
+    <div th:with="user=${order.user}, car=${order.car}">
+        <div th:text="'STATUS:' + ${order.status.name()}"></div>
+
+        <div th:text="'USER: '"></div>
+        <div th:text="${user.email}">email</div>
+        <div th:text="${user.phoneNumber}">email</div>
+
+        <div th:text="'CAR:' "></div>
+        <div th:text="${car.brand}"></div>
+        <div th:text="${car.name}"></div>
+        <div th:text="${car.number}"></div>
+    </div>
+</div>
 
 </body>
 </html>
