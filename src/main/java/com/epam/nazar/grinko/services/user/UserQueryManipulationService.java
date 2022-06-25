@@ -12,25 +12,33 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserQueryManipulationService extends AbstractQueryManipulation<User> {
 
     protected UserQueryManipulationService(EntityManager em) {
-        super(em, Arrays.asList("status", "role"), Arrays.asList("email", "firstName", "lastName"), User.class);
+        super(em, Arrays.asList("status", "role"),
+                Arrays.asList("email", "firstName", "lastName"), User.class);
     }
 
     @Override
-    protected List<Predicate> getPredicates(CriteriaBuilder builder, Root<User> root, Map<String, String> filter) {
+    protected List<Predicate> getPredicates(CriteriaBuilder builder, Root<User> root, Map<String, List<String>> filter) {
         List<Predicate> predicates = new ArrayList<>();
 
         filter.forEach((filterBy, value) -> {
             switch (filterBy) {
                 case "status":
-                    predicates.add(builder.equal(root.get("status"), UserStatus.valueOf(value)));
+                    List<UserStatus> statuses = value.stream()
+                            .map(UserStatus::valueOf)
+                            .collect(Collectors.toList());
+                    predicates.add(root.get("status").in(statuses));
                     break;
                 case "role":
-                    predicates.add(builder.equal(root.get("role"), UserRole.valueOf(value)));
+                    List<UserRole> roles = value.stream()
+                            .map(UserRole::valueOf)
+                            .collect(Collectors.toList());
+                    predicates.add(root.get("role").in(roles));
                     break;
                 default:
                     throw new IllegalArgumentException();

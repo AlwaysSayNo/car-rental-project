@@ -12,9 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -39,11 +37,18 @@ public class UserService {
     }
 
     public Page<User> getUsersByRole(PageRequest request, UserRole role, String filterBy, String filterValue){
-        Map<String, String> byRole = new HashMap<>();
-        byRole.put("role", role.name());
+        Map<String, List<String>> byRole = new HashMap<>();
+        byRole.put("role", Collections.singletonList(role.name()));
 
-        if(filterBy != null)
-            byRole.put(filterBy, filterValue);
+        if(filterBy != null) {
+            List<String> values;
+            if (byRole.containsKey(filterBy)) values = new ArrayList<>(byRole.get(filterBy));
+            else values = new ArrayList<>();
+
+            values.add(filterValue);
+            byRole.put(filterBy, values);
+        }
+
 
         return manipulationService.evaluateQuery(request, byRole);
     }

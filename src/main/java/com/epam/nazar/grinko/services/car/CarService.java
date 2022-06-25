@@ -23,20 +23,26 @@ public class CarService {
     private final CarQueryManipulationService manipulationService;
 
     public Page<Car> getAll(PageRequest request, String filterBy, String filterValue){
-        Map<String, String> byAll = new HashMap<>();
+        Map<String, List<String>> byAll = new HashMap<>();
 
         if(filterBy != null)
-            byAll.put(filterBy, filterValue);
+            byAll.put(filterBy, Collections.singletonList(filterValue));
 
         return manipulationService.evaluateQuery(request, byAll);
     }
 
     public Page<Car> getByStatus(PageRequest request, CarStatus status, String filterBy, String filterValue){
-        Map<String, String> byStatus = new HashMap<>();
-        byStatus.put("status", status.name());
+        Map<String, List<String>> byStatus = new HashMap<>();
+        byStatus.put("status", Collections.singletonList(status.name()));
 
-        if(filterBy != null)
-            byStatus.put(filterBy, filterValue);
+        if(filterBy != null) {
+            List<String> values;
+            if (byStatus.containsKey(filterBy)) values = new ArrayList<>(byStatus.get(filterBy));
+            else values = new ArrayList<>();
+
+            values.add(filterValue);
+            byStatus.put(filterBy, values);
+        }
 
         return manipulationService.evaluateQuery(request, byStatus);
     }

@@ -52,14 +52,15 @@ public abstract class AbstractQueryManipulation <T> implements QueryManipulation
 
     public Long countWithPredicates(CriteriaBuilder builder, List<Predicate> predicates) {
         CriteriaQuery<Long> countQuery = builder.createQuery(Long.class);
-        Root<T> booksRootCount = countQuery.from(type);
+        Root<T> root = countQuery.from(type);
 
-        countQuery.select(builder.count(booksRootCount));
+        countQuery.select(builder.count(root));
         if(!predicates.isEmpty()) countQuery.where(builder.and(predicates.toArray(new Predicate[0])));
 
         return em.createQuery(countQuery).getSingleResult();
     }
-    public Page<T> evaluateQuery(PageRequest request, Map<String, String> filter){
+
+    public Page<T> evaluateQuery(PageRequest request, Map<String, List<String>> filter){
         CriteriaBuilder builder = em.getCriteriaBuilder();
         CriteriaQuery<T> query = builder.createQuery(type);
         Root<T> root = query.from(type);
@@ -79,12 +80,10 @@ public abstract class AbstractQueryManipulation <T> implements QueryManipulation
 
         Long count = countWithPredicates(builder, predicates);
 
-
-
         return new PageImpl<>(result, request, count);
     }
 
 
-    protected abstract List<Predicate> getPredicates(CriteriaBuilder builder, Root<T> root, Map<String, String> filter);
+    protected abstract List<Predicate> getPredicates(CriteriaBuilder builder, Root<T> root, Map<String, List<String>> filter);
 
 }
