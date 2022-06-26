@@ -6,6 +6,7 @@ import com.epam.nazar.grinko.domians.CarColor;
 import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.dto.CarDto;
 import com.epam.nazar.grinko.repositories.CarRepository;
+import com.epam.nazar.grinko.utils.Utility;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,24 +26,16 @@ public class CarService {
     public Page<Car> getAll(PageRequest request, String filterBy, String filterValue){
         Map<String, List<String>> byAll = new HashMap<>();
 
-        if(filterBy != null)
-            byAll.put(filterBy, Collections.singletonList(filterValue));
+        Utility.safetyAdd(byAll, filterBy, filterValue);
 
         return manipulationService.evaluateQuery(request, byAll);
     }
 
     public Page<Car> getByStatus(PageRequest request, CarStatus status, String filterBy, String filterValue){
         Map<String, List<String>> byStatus = new HashMap<>();
-        byStatus.put("status", Collections.singletonList(status.name()));
 
-        if(filterBy != null) {
-            List<String> values;
-            if (byStatus.containsKey(filterBy)) values = new ArrayList<>(byStatus.get(filterBy));
-            else values = new ArrayList<>();
-
-            values.add(filterValue);
-            byStatus.put(filterBy, values);
-        }
+        Utility.safetyAdd(byStatus, "status", status.name());
+        Utility.safetyAdd(byStatus, filterBy, filterValue);
 
         return manipulationService.evaluateQuery(request, byStatus);
     }
@@ -70,6 +63,10 @@ public class CarService {
 
     public void updateCarStatusById(Long id, CarStatus status){
         carRepository.updateCarStatusById(status, id);
+    }
+
+    public Long updateCarStatusByIdIn(CarStatus status, List<Long> ids){
+        return (long) carRepository.updateCarStatusByIdIn(status, ids);
     }
 
     public boolean existsCarByNumber(String number){

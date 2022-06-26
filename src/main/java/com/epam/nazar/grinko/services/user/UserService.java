@@ -5,6 +5,7 @@ import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.dto.UserDto;
 import com.epam.nazar.grinko.repositories.UserRepository;
 import com.epam.nazar.grinko.domians.helpers.UserRole;
+import com.epam.nazar.grinko.utils.Utility;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
@@ -38,17 +39,9 @@ public class UserService {
 
     public Page<User> getUsersByRole(PageRequest request, UserRole role, String filterBy, String filterValue){
         Map<String, List<String>> byRole = new HashMap<>();
-        byRole.put("role", Collections.singletonList(role.name()));
 
-        if(filterBy != null) {
-            List<String> values;
-            if (byRole.containsKey(filterBy)) values = new ArrayList<>(byRole.get(filterBy));
-            else values = new ArrayList<>();
-
-            values.add(filterValue);
-            byRole.put(filterBy, values);
-        }
-
+        Utility.safetyAdd(byRole, "role", role.name());
+        Utility.safetyAdd(byRole, filterBy, filterValue);
 
         return manipulationService.evaluateQuery(request, byRole);
     }
