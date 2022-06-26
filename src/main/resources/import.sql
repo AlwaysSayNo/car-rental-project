@@ -38,3 +38,13 @@ INSERT INTO orders (user_id, car_id, status) VALUE (1, 2, 'UNDER_CONSIDERATION')
 INSERT INTO orders (user_id, car_id, status) VALUE (2, 6, 'UNDER_CONSIDERATION');
 INSERT INTO orders (user_id, car_id, status) VALUE (1, 7, 'IN_USE');
 INSERT INTO orders (user_id, car_id, status) VALUE (2, 5, 'REPAIR_PAYMENT');
+
+# PAYMENT DETAILS
+INSERT INTO payment_details(passport_number, first_name, last_name, date_of_birth) VALUE ('000000000', 'User', 'One', '2000-01-01');
+INSERT INTO payment_details(passport_number, first_name, last_name, date_of_birth) VALUE ('000000001', 'User', 'Two', '2000-01-01');
+
+# BILL
+INSERT INTO bills (order_id, payment_details_id, start_date, expiration_date, car_price, with_driver, driver_price, total_price, status) VALUE (1, 1, '2022-02-11', '2022-02-24', 100, false, 0, 100, 'PAID');
+INSERT INTO bills (order_id, payment_details_id, start_date, expiration_date, car_price, with_driver, driver_price, total_price, status) VALUE (2, 2, '2022-07-11', '2022-07-14', 100, false, 0, 100, 'PAID');
+INSERT INTO bills (order_id, payment_details_id, start_date, expiration_date, car_price, with_driver, driver_price, total_price, status) VALUE (3, 1, '2022-03-12', '2022-05-12', 100, false, 0, 100, 'PAID');
+INSERT INTO bills (order_id, payment_details_id, start_date, expiration_date, car_price, with_driver, driver_price, total_price, status) VALUE (4, 2, '2022-08-11', '2022-09-12', 100, false, 0, 100, 'PAID');

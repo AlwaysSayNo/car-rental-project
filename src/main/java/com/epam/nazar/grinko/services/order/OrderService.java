@@ -3,11 +3,13 @@ package com.epam.nazar.grinko.services.order;
 import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.Order;
 import com.epam.nazar.grinko.domians.User;
+import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import com.epam.nazar.grinko.dto.OrderDto;
 import com.epam.nazar.grinko.repositories.OrderRepository;
 import com.epam.nazar.grinko.services.car.CarService;
 import com.epam.nazar.grinko.services.user.UserService;
+import com.epam.nazar.grinko.utils.Utility;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,18 +45,13 @@ public class OrderService {
         return getOrdersWithStatusIn(request, Collections.singletonList(status), filterBy, filterValue);
     }
 
-    public Page<Order> getOrdersWithStatusIn(PageRequest request, List<OrderStatus> statuses, String filterBy, String filterValue) {
+    public Page<Order> getOrdersWithStatusIn(PageRequest request, List<OrderStatus> statuses,
+                                             String filterBy, String filterValue) {
         Map<String, List<String>> byStatuses = new HashMap<>();
-        byStatuses.put("status", statuses.stream().map(OrderStatus::name).collect(Collectors.toList()));
 
-        if(filterBy != null) {
-            List<String> values;
-            if (byStatuses.containsKey(filterBy)) values = new ArrayList<>(byStatuses.get(filterBy));
-            else values = new ArrayList<>();
-
-            values.add(filterValue);
-            byStatuses.put(filterBy, values);
-        }
+        statuses.stream().map(OrderStatus::name).forEach(
+                statusName -> Utility.safetyAdd(byStatuses, "status", statusName));
+        Utility.safetyAdd(byStatuses, filterBy, filterValue);
 
         return manipulationService.evaluateQuery(request, byStatuses);
     }
@@ -70,9 +67,26 @@ public class OrderService {
     }
 
     public void updateOrderStatus(OrderStatus status, Long id){
-        orderRepository.updateBreakdownStatusById(status, id);
+        orderRepository.updateOrderStatusById(status, id);
     }
 
+    public void updateOrderStatusByIdIn(OrderStatus status, List<Long> id){
+        orderRepository.updateOrderStatusByIdIn(status, id);
+    }
+
+    public List<Order> endExpiredSuccessfully(Calendar date){
+        List<Order> orders = orderRepository.selectOrdersByStatusAndExpirationDateLess(OrderStatus.IN_USE, date);
+        carService.updateCarStatusByIdIn(CarStatus.NOT_RENTED,
+                orders.stream().map(Order::getCar).map(Car::getId).collect(Collectors.toList()));
+        orderRepository.updateOrderStatusByIdIn(OrderStatus.ENDED_SUCCESSFULLY,
+                orders.stream().map(Order::getId).collect(Collectors.toList()));
+
+        return orders;
+    }
+
+    public List<Order> selectOrdersByStatusAndStartDateLess(OrderStatus status, Calendar date){
+        return orderRepository.selectOrdersByStatusAndStartDateLess(status, date);
+    }
 
 
     public Order mapToObject(OrderDto orderDto){
