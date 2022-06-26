@@ -1,35 +1,54 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Index</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <style>
-        html {
-            font-size: 10px;
+        .language img {
+            width: 1.5em;
+            height: 1em;
         }
 
-        body {
-            font-size: 1.6em;
-            margin: 0;
+        .content {
+            margin-top: 30vh;
         }
 
-        h1 {
-            margin: 0 auto 10px auto;
-            padding: 0;
+        .big-text {
+            font-size: 3.5em !important;
         }
 
-        .center-block{
-            text-align: center;
-        }
     </style>
 </head>
-<body>
+<body class="bg-light">
+<!-- header -->
+<header class="container d-flex flex-row-reverse mt-4">
+    <div class="col-4 d-flex justify-content-end">
+        <button type="button" class="btn btn-outline-dark m-2" th:text="#{sign.in}">Sign in</button>
+        <button type="button" class="btn btn-outline-dark m-2" th:text="#{sign.up}">Sign up</button>
 
-<div class="center-block">
-    <h1>Index</h1>
-    <a th:href="@{/car-rental-service/sign-in}" href="sign-in.html">Sign in</a>
-    <a th:href="@{/car-rental-service/sign-up}" href="sign-up.html">Sign up</a>
-    <a th:href="@{/car-rental-service/about-us}" href="about-us.html">About us</a>
+        <div class="col-4 d-flex justify-content-end">
+            <div class="d-flex flex-column ms-2">
+                <a class="language link-dark" th:text="#{lang.ua}" th:href="@{/car-rental-service/international(lang=ua)}" href="#?lang=ua">
+                    ua
+                    <img class="ms-2" th:src="@{/statics/images/flags/ukraine.png}" th:alt="#{lang.ua.big}" src="../../statics/images/flags/ukraine.png" alt="UA">
+                </a>
+                <a class="language link-dark" th:text="#{lang.en}" th:href="@{/car-rental-service/international(lang=en)}" href="#?lang=en">
+                    en
+                    <img class="ms-2" th:src="@{/statics/images/flags/usa.svg}" th:alt="#{lang.en.big}" src="../../statics/images/flags/usa.svg" alt="EN">
+                </a>
+            </div>
+        </div>
+    </div>
+    <a class="col-4 text-secondary text-center text-uppercase fw-normal fs-1 text-decoration-none" th:text="#{website.name.small}" th:href="@{/car-rental-service/index}" href="index.html">car rental service</a>
+</header>
+
+<!-- body -->
+
+<div class="content container text-center">
+    <h1 class="big-text" th:text="#{greetings}">Greetings!</h1>
+    <button type="button" class="col-3 btn btn-outline-dark py-3 mt-5" th:text="#{about.us}">About us</button>
 </div>
 
 </body>
