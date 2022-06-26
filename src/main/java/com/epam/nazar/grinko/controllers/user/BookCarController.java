@@ -1,6 +1,7 @@
 package com.epam.nazar.grinko.controllers.user;
 
 import com.epam.nazar.grinko.domians.Car;
+import com.epam.nazar.grinko.domians.Order;
 import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.domians.helpers.BillStatus;
 import com.epam.nazar.grinko.domians.helpers.CarStatus;
@@ -11,6 +12,7 @@ import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
 import com.epam.nazar.grinko.services.BillService;
 import com.epam.nazar.grinko.services.car.CarService;
+import com.epam.nazar.grinko.services.order.OrderService;
 import com.epam.nazar.grinko.services.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,15 +21,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping("car-rental-service/registered-user/cars/{id}")
 @AllArgsConstructor
 public class BookCarController {
 
-    private final CarService carService;
     private final UserService userService;
+    private final CarService carService;
     private final BillService billService;
+    private final OrderService orderService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping("/book")
@@ -99,6 +103,12 @@ public class BookCarController {
         User user = userService.getByEmail(
                 jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request))
         ).orElseThrow(IllegalPathVariableException::new);
+
+        List<Order> orderList = orderService.getAllByUserIdAndStatus(user.getId(),
+                OrderStatus.IN_USE, OrderStatus.REPAIR_PAYMENT, OrderStatus.UNDER_CONSIDERATION);
+
+        if(!orderList.isEmpty())
+            throw new IllegalStateException();
 
         if(!user.getStatus().equals(UserStatus.ACTIVE))
             throw new IllegalPathVariableException();
