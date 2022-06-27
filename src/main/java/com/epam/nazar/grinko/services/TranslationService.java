@@ -11,11 +11,11 @@ import java.util.Locale;
 @AllArgsConstructor
 public class TranslationService {
 
-    private ResourceBundleMessageSource messageSource;
+    //private ResourceBundleMessageSource messageSource;
 
     public String toLocale(String code) {
-        Locale locale = LocaleContextHolder.getLocale();
-        return messageSource.getMessage(code, null, locale);
+        //Locale locale = LocaleContextHolder.getLocale();
+        return null; //messageSource.getMessage(code, null, locale);
     }
 
 }

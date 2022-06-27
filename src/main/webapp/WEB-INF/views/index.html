@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"/>
     <style>
         .language img {
             width: 1.5em;
@@ -25,17 +25,17 @@
 <!-- header -->
 <header class="container d-flex flex-row-reverse mt-4">
     <div class="col-4 d-flex justify-content-end">
-        <button type="button" class="btn btn-outline-dark m-2" th:text="#{sign.in}">Sign in</button>
-        <button type="button" class="btn btn-outline-dark m-2" th:text="#{sign.up}">Sign up</button>
+        <button type="button" id="signInButton" class="btn btn-outline-dark m-2" th:text="#{sign.in}">Sign in</button>
+        <button type="button" id="signUpButton" class="btn btn-outline-dark m-2" th:text="#{sign.up}">Sign up</button>
 
         <div class="col-4 d-flex justify-content-end">
             <div class="d-flex flex-column ms-2">
-                <a class="language link-dark" th:text="#{lang.ua}" th:href="@{/car-rental-service/international(lang=ua)}" href="#?lang=ua">
-                    ua
+                <a class="language link-dark"  th:href="@{/car-rental-service/international(lang=ua)}" href="#?lang=ua">
+                    <span th:text="#{lang.ua}">ua</span>
                     <img class="ms-2" th:src="@{/statics/images/flags/ukraine.png}" th:alt="#{lang.ua.big}" src="../../statics/images/flags/ukraine.png" alt="UA">
                 </a>
-                <a class="language link-dark" th:text="#{lang.en}" th:href="@{/car-rental-service/international(lang=en)}" href="#?lang=en">
-                    en
+                <a class="language link-dark" th:href="@{/car-rental-service/international(lang=en)}" href="#?lang=en">
+                    <span th:text="#{lang.en}">en</span>
                     <img class="ms-2" th:src="@{/statics/images/flags/usa.svg}" th:alt="#{lang.en.big}" src="../../statics/images/flags/usa.svg" alt="EN">
                 </a>
             </div>
@@ -48,8 +48,23 @@
 
 <div class="content container text-center">
     <h1 class="big-text" th:text="#{greetings}">Greetings!</h1>
-    <button type="button" class="col-3 btn btn-outline-dark py-3 mt-5" th:text="#{about.us}">About us</button>
+    <button type="button" class="col-3 btn btn-outline-dark py-3 mt-5" id="aboutUdButton" th:text="#{about.us}">About us</button>
 </div>
 
 </body>
+
+<script th:inline="javascript">
+    document.getElementById("signInButton").onclick = function () {
+        location.href = /*[[@{/car-rental-service/sign-in}]]*/ "/car-rental-project/src/main/webapp/WEB-INF/views/sign-in.html";
+    };
+
+    document.getElementById("signUpButton").onclick = function () {
+        location.href = /*[[@{/car-rental-service/sign-up}]]*/ "/car-rental-project/src/main/webapp/WEB-INF/views/sign-up.html";
+    };
+
+    document.getElementById("aboutUdButton").onclick = function () {
+        location.href = /*[[@{/car-rental-service/about-us}]]*/ "/car-rental-project/src/main/webapp/WEB-INF/views/about-us.html";
+    };
+</script>
+
 </html>
