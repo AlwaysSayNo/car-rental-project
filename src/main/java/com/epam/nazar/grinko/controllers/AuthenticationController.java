@@ -16,10 +16,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.Locale;
 
 @Controller
@@ -39,8 +41,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-in")
-    public String authenticate(@ModelAttribute("authRequest") AuthenticationRequestDto requestDto,
-                                          HttpServletResponse response, Model model) {
+    public String authenticate(@Valid @ModelAttribute("authRequest") AuthenticationRequestDto requestDto,
+                               BindingResult bindingResult,
+                               HttpServletResponse response, Model model) {
+        if(bindingResult.hasErrors()) return "sign-in";
         try {
             User user = authenticationService.authenticateUser(requestDto);
             jwtTokenProvider.setCookieToken(response, user);
@@ -63,8 +67,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/sign-up")
-    public String register(@ModelAttribute("user") UserDto userDto, HttpServletResponse response, Model model) {
-
+    public String register(@Valid @ModelAttribute("user") UserDto userDto,
+                           BindingResult bindingResult,
+                           HttpServletResponse response, Model model) {
+        if(bindingResult.hasErrors()) return "sign-up";
         if(userService.existsByEmail(userDto.getEmail())){
             model.addAttribute(ViewExceptionsConstants.USER_ALREADY_EXISTS_EXCEPTION, true);
             model.addAttribute("user", new UserDto());
@@ -89,7 +95,9 @@ public class AuthenticationController {
         securityContextLogoutHandler.logout(request, response, null);
         jwtTokenProvider.removeCookieToken(response);
 
-        return "redirect:/car-rental-service/sign-in";
+        String url = "/car-rental-service/sign-in";
+
+        return "redirect:" + url;
     }
 
 }
