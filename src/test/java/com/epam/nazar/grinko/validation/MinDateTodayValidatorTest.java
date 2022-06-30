@@ -67,4 +67,13 @@ public class MinDateTodayValidatorTest {
         assertThat(violations.iterator().next().getMessage()).isEqualTo("This date is later than today.");
     }
 
+
+    @Test
+    public void testNullDate(){
+        DateCovering date = new DateCovering(null);
+
+        Set<ConstraintViolation<DateCovering>> violations = validator.validate(date);
+        assertThat(violations.size()).isEqualTo(0);
+    }
+
 }
