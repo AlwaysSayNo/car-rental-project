@@ -1,143 +1,196 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Sign up</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link th:href="@{/statics/css/utils/error.css}" href="../../statics/css/utils/error.css" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/statics/js/utils/ErrorManager.js}" src="../../statics/js/utils/utility.js"></script>
     <style>
-        html {
-            font-size: 10px;
+        .language img {
+            width: 1.5em;
+            height: 1em;
         }
 
-        body {
-            font-size: 1.6em;
-            margin: 0;
+        #signUpForm {
+            margin-top: 6em;
         }
 
-        .sign-up {
-            background-color: #0d910d;
+        .form-title {
+            top: -.75em
         }
+
     </style>
 </head>
-<body>
-<form th:method="POST" th:action="@{/car-rental-service/sign-up}" th:object="${userDto}" action="/sign-up.html" novalidate>
+<body class="bg-light">
+<!-- header -->
+<header th:insert="templates/headers :: baseHeader ('no-buttons')" class="container d-flex flex-row-reverse mt-4"></header>
 
-    <div class="center-block">
-        <h1 th:text="#{user.sign.up}">Sign up</h1>
-    </div>
-    <div class="link-box">
-        <a id="go-back-link" th:href="@{/car-rental-service/index}" href="/show-cars.html">Go back</a>
-        <hr class="link-hr"/>
-    </div>
-    <fieldset>
-        <div id="block-user-email">
-            <label for="user-email" th:text="#{user.email.enter}">Enter email</label>
-            <input type="email" th:field="*{email}" name="user-email" id="user-email" required>
+<!-- body -->
+<div class="container d-flex justify-content-center" id="signUpForm">
+    <form th:method="POST" th:action="@{/car-rental-service/sign-up}" th:object="${user}"  class="col-5 border-2 border p-4 position-relative rounded" action="common/profile.html" novalidate>
+        <h3 th:text="#{sign.up.to.crs}" class="bg-light px-3 position-absolute form-title">Sign up to CRS:</h3>
+        <div class="mb-3 mt-5">
+            <label th:text="#{first.name}" class="form-label control-label" for="signUpFirstName">First name</label>
+            <input th:field="*{firstName}" class="form-control validate rounded-0" id="signUpFirstName" type="text" required>
             <span class="error" aria-live="polite"></span>
         </div>
-        <div id="block-user-password-first">
-            <label for="user-password-first" th:text="#{user.password.first.enter}">Enter password</label>
-            <input type="password" th:field="*{password}" name="user-password-first" id="user-password-first" required>
+        <div class="mb-3 mt-5">
+            <label th:text="#{last.name}" class="form-label control-label" for="signUpLastName">Last name</label>
+            <input th:field="*{lastName}" class="form-control validate rounded-0" id="signUpLastName" type="text" required>
             <span class="error" aria-live="polite"></span>
         </div>
-        <div id="block-user-phone-number">
-            <label for="user-phone-number" th:text="#{user.phone.number.enter}">Enter phone number</label>
-            <input type="text" th:field="*{phoneNumber}" name="user-phone-number" id="user-phone-number" required>
+        <div class="mb-3 mt-5">
+            <label th:text="#{email}" class="form-label control-label" for="signUpEmail">Email</label>
+            <input th:field="*{email}" class="form-control validate rounded-0" id="signUpEmail" type="email" required>
             <span class="error" aria-live="polite"></span>
         </div>
-        <div id="block-user-first-name">
-            <label for="user-first-name" th:text="#{user.first.name.enter}">Enter first name</label>
-            <input type="text" th:field="*{firstName}" name="user-first-name" id="user-first-name" required>
+        <div class="mb-3 mt-5">
+            <label th:text="#{password}" class="form-label control-label" for="signUpPassword">Password</label>
+            <input th:field="*{password}" class="form-control validate rounded-0" id="signUpPassword" type="password" required>
             <span class="error" aria-live="polite"></span>
         </div>
-        <div id="block-user-last-name">
-            <label for="user-last-name" th:text="#{user.last.name.enter}">Enter last name</label>
-            <input type="text" th:field="*{lastName}" name="user-last-name" id="user-last-name" required>
+        <div class="mb-3 mt-5">
+            <label th:text="#{confirm.password}" class="form-label control-label" for="signUpConfirmPassword">Confirm password</label>
+            <input class="form-control validate rounded-0" id="signUpConfirmPassword" type="password" required>
             <span class="error" aria-live="polite"></span>
         </div>
-    </fieldset>
-    <div class="center-block">
-        <div class="button-set">
-            <button class="button sign-up" th:text="#{user.button.sign.up}" type="submit">Sign up</button>
+        <div class="mb-3 mt-5">
+            <label  th:text="#{phone.number}" class="form-label control-label" for="signUpPhoneNumber">Phone number</label>
+            <input th:field="*{phoneNumber}" class="form-control validate rounded-0" id="signUpPhoneNumber" type="tel" required>
+            <span class="error" aria-live="polite"></span>
         </div>
-    </div>
-</form>
-
+        <div>
+            <input type="hidden" id="externalError" value="1">
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <button th:text="#{sign.up}" class="btn btn-success w-100 mt-5 rounded-0" type="submit">Sign up</button>
+        <div class="registration-footer d-flex justify-content-center mt-3">
+            <span th:text="#{dont.have.account}" class="mx-2">Don't have an account?</span>
+            <a th:text="#{sign.in}" href="sign-in.html" class="mx-2 switch-auth-mode">Sign in.</a>
+        </div>
+    </form>
+</div>
 </body>
-</html>
 
-<script>
+<script th:inline="javascript">
+
+    // variables
     const form  = document.getElementsByTagName('form')[0];
-    const email = document.getElementById('user-email');
-    const password = document.getElementById('user-password-first');
-    const phoneNumber = document.getElementById('user-phone-number');
-    const firstName = document.getElementById('user-first-name');
-    const lastName = document.getElementById('user-last-name');
+    const signUpFirstName = document.getElementById("signUpFirstName");
+    const signUpLastName = document.getElementById("signUpLastName");
+    const signUpEmail = document.getElementById("signUpEmail");
+    const signUpPassword = document.getElementById("signUpPassword");
+    const signUpConfirmPassword = document.getElementById("signUpConfirmPassword");
+    const signUpPhoneNumber = document.getElementById("signUpPhoneNumber");
+    const externalError = document.getElementById("externalError");
 
-    let userAlreadyExistsError = "[[${userAlreadyExistsError}]]" === "true";
+    let userAlreadyExistsException = /*[[${userAlreadyExistsException}  == true]]*/ false;
 
-    //email.setAttribute("pattern", "[[#{email.regexp}]]");
-    //phoneNumber.setAttribute("pattern", "[[#{phone.number.regexp}]]");
+    const emailRegexp = /*[[#{email.regexp}]]*/ "regexp@gmail.com";
+    const passwordRegexp = /*[[#{password.regexp}]]*/ "regexp";
+    const firstNameRegexp = /*[[#{first.name.regexp}]]*/ "First";
+    const lastNameRegexp = /*[[#{last.name.regexp}]]*/ "Last";
+    const phoneNumberRegexp = /*[[#{phone.number.regexp}]]*/ "+380501112233";
 
+    signUpFirstName.setAttribute("pattern", firstNameRegexp);
+    signUpLastName.setAttribute("pattern", lastNameRegexp);
+    signUpEmail.setAttribute("pattern", emailRegexp);
+    signUpPassword.setAttribute("pattern", passwordRegexp);
+    signUpConfirmPassword.setAttribute("pattern", passwordRegexp);
+    signUpPhoneNumber.setAttribute("pattern", phoneNumberRegexp);
+
+    const additionalErrors = new Map();
+    additionalErrors.set(externalError, userAlreadyExistsException);
+    additionalErrors.set(signUpConfirmPassword, false);
+
+    // functions
     getErrorMessage = (element) => {
-        let message;
-        if(element === email && userAlreadyExistsError){
-            message = "[[#{error.user.email.already.exists}]]" /*User with such email already exists*/
-            userAlreadyExistsError = false;
+        let message = null;
+
+        if(additionalErrors.has(element) && additionalErrors.get(element)){
+            if(element === externalError)
+                message =  /*[[#{user.already.exists.exception.exception}]]*/ 'User with such mail already exists.';
+            else if(element === signUpConfirmPassword)
+                message =  /*[[#{different.passwords.error}]]*/ 'Different passwords.';
+        } else {
+            if (element.validity.valueMissing)
+                message = /*[[#{required.error}]]*/ 'This field is required.';
+            else if (element.validity.typeMismatch)
+                message = /*[[#{invalid.type.error}]]*/ 'This field must match its type.';
+            else if (element.validity.patternMismatch)
+                message = /*[[#{invalid.structure.error}]]*/ 'This field must match its structure.';
+            else if (element.validity.rangeUnderflow || element.validity.rangeOverflow)
+                message = /*[[#{invalid.range.error}]]*/ 'Incorrect range of field';
         }
-        else if(element.validity.valueMissing) {
-            message = "[[#{error.required}]]" /*'This field is required'*/;
-        }
-        else if(element.validity.typeMismatch) {
-            message = "[[#{error.incorrect.type}]]" /*'This field must match its type: ' + element.type*/;
-        }
-        else if(element.validity.patternMismatch) {
-            message = "[[#{error.incorrect.pattern}]]" /*'This field must match its pattern: ' + element.pattern*/;
-        }
-        else if(element.validity.rangeUnderflow || element.validity.rangeOverflow) {
-            message = "[[#{error.incorrect.range}]]" /*'Incorrect range: min ' + element.min + ', max ' + element.max*/;
-        }
+
         return message;
     }
 
-    const elementsArr = [email, password, phoneNumber, firstName, lastName];
+    // check errors on document start
+    const errorsMap = new Map();
+    errorsMap.set(userAlreadyExistsException, externalError);
+    onStart(document, errorsMap);
 
-    document.addEventListener('DOMContentLoaded', (event) => {
-        if(userAlreadyExistsError === true){
-            showErrorMessage(email, getErrorMessage(email));
-        }
+    // check errors by input
+    const elementsArr = [signUpFirstName, signUpLastName, signUpEmail, signUpPassword,
+        signUpConfirmPassword, signUpPhoneNumber, externalError];
+    elementsArr.forEach(element => {
+
+        element.addEventListener('input', function (event) {
+            if (element.validity.valid) clearError(getErrorsPlace(element));
+            else showErrorMessage(getErrorsPlace(element), getErrorMessage(element));
+
+            if((element === signUpConfirmPassword || element === signUpPassword)){
+                const isValid = signUpConfirmPassword.validity.valid;
+                const areEqual = signUpConfirmPassword.value === signUpPassword.value;
+
+                additionalErrors.set(signUpConfirmPassword, isValid && !areEqual);
+
+                if(isValid){
+                    if (!areEqual)
+                        showErrorMessage(getErrorsPlace(signUpConfirmPassword), getErrorMessage(signUpConfirmPassword));
+                    else if (areEqual)
+                        clearError(getErrorsPlace(signUpConfirmPassword));
+                }
+            }
+        })
     });
 
-    elementsArr.forEach(element => element.addEventListener('input', function (event) {
-            if (element.validity.valid) clearError(element);
-            else showErrorMessage(element, getErrorMessage(element));
-        })
-    );
-
+    // check errors by submit
     form.addEventListener('submit', function (event) {
         let hasException = false;
         for(let i = 0; i < elementsArr.length; ++i){
             let element = elementsArr[i];
+
             if(!element.disabled && !element.validity.valid) {
                 hasException = true;
-                let message = getErrorMessage(element);
-                showErrorMessage(element, message);
+                showErrorMessage(getErrorsPlace(element), getErrorMessage(element));
             }
             else{
-                clearError(element);
+                clearError(getErrorsPlace(element));
+            }
+
+            if(element === signUpConfirmPassword){
+                const isValid = signUpConfirmPassword.validity.valid;
+                const areEqual = signUpConfirmPassword.value === signUpPassword.value;
+
+                additionalErrors.set(signUpConfirmPassword, isValid && !areEqual);
+
+                if(isValid){
+                    if (!areEqual) {
+                        showErrorMessage(getErrorsPlace(signUpConfirmPassword), getErrorMessage(signUpConfirmPassword));
+                        hasException = true;
+                    }
+                    else if (areEqual) {
+                        clearError(getErrorsPlace(signUpConfirmPassword));
+                    }
+                }
             }
         }
         if(hasException) event.preventDefault();
     });
 
-    showErrorMessage = (element, message) => {
-        let errorSpan = element.nextElementSibling;
-        errorSpan.textContent = message;
-        errorSpan.className = 'error active';
-    }
-
-    clearError = (element) => {
-        let errorSpan = element.nextElementSibling;
-        errorSpan.textContent = '';
-        errorSpan.className = 'error';
-    }
 </script>
+</html>
