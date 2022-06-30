@@ -34,12 +34,12 @@ public class AuthenticationController {
 
     @GetMapping("/sign-in")
     public String showSignInPage(Model model){
-        model.addAttribute("requestDto", new AuthenticationRequestDto());
+        model.addAttribute("authRequest", new AuthenticationRequestDto());
         return "sign-in";
     }
 
     @PostMapping("/sign-in")
-    public String authenticate(@ModelAttribute("requestDto") AuthenticationRequestDto requestDto,
+    public String authenticate(@ModelAttribute("authRequest") AuthenticationRequestDto requestDto,
                                           HttpServletResponse response, Model model) {
         try {
             User user = authenticationService.authenticateUser(requestDto);
@@ -58,16 +58,16 @@ public class AuthenticationController {
 
     @GetMapping("/sign-up")
     public String showSignUpPage(Model model){
-        model.addAttribute("userDto", new UserDto());
+        model.addAttribute("user", new UserDto());
         return "sign-up";
     }
 
     @PostMapping("/sign-up")
-    public String register(@ModelAttribute("userDto") UserDto userDto, HttpServletResponse response, Model model) {
+    public String register(@ModelAttribute("user") UserDto userDto, HttpServletResponse response, Model model) {
 
         if(userService.existsByEmail(userDto.getEmail())){
             model.addAttribute(ViewExceptionsConstants.USER_ALREADY_EXISTS_EXCEPTION, true);
-            model.addAttribute("userDto", new UserDto());
+            model.addAttribute("user", new UserDto());
 
             return "sign-up";
         }
