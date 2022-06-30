@@ -52,11 +52,6 @@
             <span class="error" aria-live="polite"></span>
         </div>
         <div class="mb-3 mt-5">
-            <label th:text="#{confirm.password}" class="form-label control-label" for="signUpConfirmPassword">Confirm password</label>
-            <input class="form-control validate rounded-0" id="signUpConfirmPassword" type="password" required>
-            <span class="error" aria-live="polite"></span>
-        </div>
-        <div class="mb-3 mt-5">
             <label  th:text="#{phone.number}" class="form-label control-label" for="signUpPhoneNumber">Phone number</label>
             <input th:field="*{phoneNumber}" class="form-control validate rounded-0" id="signUpPhoneNumber" type="tel" required>
             <span class="error" aria-live="polite"></span>
@@ -68,7 +63,7 @@
         <button th:text="#{sign.up}" class="btn btn-success w-100 mt-5 rounded-0" type="submit">Sign up</button>
         <div class="registration-footer d-flex justify-content-center mt-3">
             <span th:text="#{dont.have.account}" class="mx-2">Don't have an account?</span>
-            <a th:text="#{sign.in}" href="sign-in.html" class="mx-2 switch-auth-mode">Sign in.</a>
+            <a th:text="#{sign.in}" th:href="@{/car-rental-service/sign-in}" href="sign-in.html" class="mx-2 switch-auth-mode">Sign in.</a>
         </div>
     </form>
 </div>
@@ -82,7 +77,6 @@
     const signUpLastName = document.getElementById("signUpLastName");
     const signUpEmail = document.getElementById("signUpEmail");
     const signUpPassword = document.getElementById("signUpPassword");
-    const signUpConfirmPassword = document.getElementById("signUpConfirmPassword");
     const signUpPhoneNumber = document.getElementById("signUpPhoneNumber");
     const externalError = document.getElementById("externalError");
 
@@ -98,12 +92,10 @@
     signUpLastName.setAttribute("pattern", lastNameRegexp);
     signUpEmail.setAttribute("pattern", emailRegexp);
     signUpPassword.setAttribute("pattern", passwordRegexp);
-    signUpConfirmPassword.setAttribute("pattern", passwordRegexp);
     signUpPhoneNumber.setAttribute("pattern", phoneNumberRegexp);
 
     const additionalErrors = new Map();
     additionalErrors.set(externalError, userAlreadyExistsException);
-    additionalErrors.set(signUpConfirmPassword, false);
 
     // functions
     getErrorMessage = (element) => {
@@ -111,9 +103,7 @@
 
         if(additionalErrors.has(element) && additionalErrors.get(element)){
             if(element === externalError)
-                message =  /*[[#{user.already.exists.exception.exception}]]*/ 'User with such mail already exists.';
-            else if(element === signUpConfirmPassword)
-                message =  /*[[#{different.passwords.error}]]*/ 'Different passwords.';
+                message = /*[[#{user.already.exists.exception.exception}]]*/ 'User with such mail already exists.';
         } else {
             if (element.validity.valueMissing)
                 message = /*[[#{required.error}]]*/ 'This field is required.';
@@ -134,63 +124,12 @@
     onStart(document, errorsMap);
 
     // check errors by input
-    const elementsArr = [signUpFirstName, signUpLastName, signUpEmail, signUpPassword,
-        signUpConfirmPassword, signUpPhoneNumber, externalError];
-    elementsArr.forEach(element => {
-
-        element.addEventListener('input', function (event) {
-            if (element.validity.valid) clearError(getErrorsPlace(element));
-            else showErrorMessage(getErrorsPlace(element), getErrorMessage(element));
-
-            if((element === signUpConfirmPassword || element === signUpPassword)){
-                const isValid = signUpConfirmPassword.validity.valid;
-                const areEqual = signUpConfirmPassword.value === signUpPassword.value;
-
-                additionalErrors.set(signUpConfirmPassword, isValid && !areEqual);
-
-                if(isValid){
-                    if (!areEqual)
-                        showErrorMessage(getErrorsPlace(signUpConfirmPassword), getErrorMessage(signUpConfirmPassword));
-                    else if (areEqual)
-                        clearError(getErrorsPlace(signUpConfirmPassword));
-                }
-            }
-        })
-    });
+    const elementsArr = [signUpFirstName, signUpLastName, signUpEmail,
+        signUpPassword, signUpPhoneNumber, externalError];
+    elementsArr.forEach(element => onInput(element, getErrorMessage));
 
     // check errors by submit
-    form.addEventListener('submit', function (event) {
-        let hasException = false;
-        for(let i = 0; i < elementsArr.length; ++i){
-            let element = elementsArr[i];
-
-            if(!element.disabled && !element.validity.valid) {
-                hasException = true;
-                showErrorMessage(getErrorsPlace(element), getErrorMessage(element));
-            }
-            else{
-                clearError(getErrorsPlace(element));
-            }
-
-            if(element === signUpConfirmPassword){
-                const isValid = signUpConfirmPassword.validity.valid;
-                const areEqual = signUpConfirmPassword.value === signUpPassword.value;
-
-                additionalErrors.set(signUpConfirmPassword, isValid && !areEqual);
-
-                if(isValid){
-                    if (!areEqual) {
-                        showErrorMessage(getErrorsPlace(signUpConfirmPassword), getErrorMessage(signUpConfirmPassword));
-                        hasException = true;
-                    }
-                    else if (areEqual) {
-                        clearError(getErrorsPlace(signUpConfirmPassword));
-                    }
-                }
-            }
-        }
-        if(hasException) event.preventDefault();
-    });
+    onSubmit(form, elementsArr, getErrorMessage);
 
 </script>
 </html>

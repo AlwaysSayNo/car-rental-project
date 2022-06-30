@@ -26,21 +26,7 @@
 </head>
 <body class="bg-light">
 <!-- header -->
-<header class="container d-flex flex-row-reverse mt-4">
-    <div class="col-4 d-flex justify-content-end">
-        <div class="d-flex flex-column ms-2">
-            <a class="language link-dark" th:text="#{lang.ua}" th:href="@{/car-rental-service/international(lang=ua)}" href="#?lang=ua">
-                ua
-                <img class="ms-2" th:src="@{/statics/images/flags/ukraine.png}" th:alt="#{lang.ua.big}" src="../../statics/images/flags/ukraine.png" alt="UA">
-            </a>
-            <a class="language link-dark" th:text="#{lang.en}" th:href="@{/car-rental-service/international(lang=en)}" href="#?lang=en">
-                en
-                <img class="ms-2" th:src="@{/statics/images/flags/usa.svg}" th:alt="#{lang.en.big}" src="../../statics/images/flags/usa.svg" alt="EN">
-            </a>
-        </div>
-    </div>
-    <a class="col-4 text-secondary text-center text-uppercase fw-normal fs-1 text-decoration-none" th:text="#{website.name.small}" th:href="@{/car-rental-service/index}" href="index.html">car rental service</a>
-</header>
+<header th:insert="templates/headers :: baseHeader ('no-buttons')" class="container d-flex flex-row-reverse mt-4"></header>
 
 <!-- body about us -->
 <div class="content container text-center">

@@ -5,20 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bootstrap demo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <script type="text/javascript" th:src="@{/statics/js/utils/utility.js}" src="../../statics/js/utils/utility.js"></script>
-
+    <link th:href="@{/statics/css/utils/error.css}" href="../../statics/css/utils/error.css" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/statics/js/utils/ErrorManager.js}" src="../../statics/js/utils/utility.js"></script>
     <style>
         .language img {
             width: 1.5em;
             height: 1em;
-        }
-
-        .content {
-            margin-top: 30vh;
-        }
-
-        .big-text {
-            font-size: 3.5em !important;
         }
 
         #signInForm {
@@ -28,44 +20,11 @@
         .form-title {
             top: -.75em
         }
-
-        .error {
-            width: 188px;
-            padding: 0;
-
-            font-size: 80%;
-            color: white;
-            background-color: #900;
-            border-radius: 0 0 5px 5px;
-
-            box-sizing: border-box;
-        }
-
-        .error.active {
-            padding: 0.3em;
-        }
-
     </style>
 </head>
 <body class="bg-light">
 <!-- header -->
-<header class="container d-flex flex-row-reverse mt-4">
-    <div class="col-4 d-flex justify-content-end">
-        <div class="col-4 d-flex justify-content-end">
-            <div class="d-flex flex-column ms-2">
-                <a class="language link-dark"  th:href="@{/car-rental-service/international(lang=ua)}" href="#?lang=ua">
-                    <span th:text="#{lang.ua}">ua</span>
-                    <img class="ms-2" th:src="@{/statics/images/flags/ukraine.png}" th:alt="#{lang.ua.big}" src="../../statics/images/flags/ukraine.png" alt="UA">
-                </a>
-                <a class="language link-dark" th:href="@{/car-rental-service/international(lang=en)}" href="#?lang=en">
-                    <span th:text="#{lang.en}">en</span>
-                    <img class="ms-2" th:src="@{/statics/images/flags/usa.svg}" th:alt="#{lang.en.big}" src="../../statics/images/flags/usa.svg" alt="EN">
-                </a>
-            </div>
-        </div>
-    </div>
-    <a class="col-4 text-secondary text-center text-uppercase fw-normal fs-1 text-decoration-none" th:text="#{website.name.small}" th:href="@{/car-rental-service/index}" href="index.html">car rental service</a>
-</header>
+<header th:insert="templates/headers :: baseHeader ('no-buttons')" class="container d-flex flex-row-reverse mt-4"></header>
 
 <!-- body -->
 <div class="container d-flex justify-content-center" id="signInForm" >
@@ -73,7 +32,7 @@
         <h3 th:text="#{sign.in.to.crs}" class="bg-light px-3 position-absolute form-title">Sign in to CRS:</h3>
         <div class="mb-3 mt-5">
             <label th:text="#{email}" class="form-label control-label" for="signInEmail">Email</label>
-            <input th:field="*{email}" class="form-control validate rounded-0" id="signInEmail" type="email" max-length="45" required>
+            <input th:field="*{email}" class="form-control validate rounded-0" id="signInEmail" type="email" required>
             <span class="error" aria-live="polite"></span>
         </div>
         <div class="mb-3 mt-5">
@@ -81,7 +40,7 @@
                 <label th:text="#{password}" class="form-label control-label" for="signInPassword">Password</label>
                 <a th:text="#{forgot.password}" th:href="@{/car-rental-service/sign-in}"  class="forgot-password" href="#">Forgot password?</a>
             </div>
-            <input th:field="*{password}" class="form-control validate rounded-0" id="signInPassword" type="password" max-length="45" required>
+            <input th:field="*{password}" class="form-control validate rounded-0" id="signInPassword" type="password" required>
             <span class="error" aria-live="polite"></span>
         </div>
         <div>
@@ -98,6 +57,7 @@
 </body>
 
 <script th:inline="javascript">
+
     // variables
     const form  = document.getElementsByTagName('form')[0];
     const signInEmail = document.getElementById("signInEmail");
@@ -121,7 +81,7 @@
                 message =  /*[[#{invalid.credentials.exception}]]*/ 'There is no email with this password.';
         } else {
             if (element.validity.valueMissing)
-                message = /*[[#{required.exception}]]*/ 'This field is required.';
+                message = /*[[#{required.error}]]*/ 'This field is required.';
             else if (element.validity.typeMismatch)
                 message = /*[[#{invalid.type.error}]]*/ 'This field must match its type.';
             else if (element.validity.patternMismatch)
@@ -133,59 +93,17 @@
         return message;
     }
 
-    let errorsMap = new Map();
+    // check errors on document start
+    const errorsMap = new Map();
     errorsMap.set(invalidCredentialsException, externalError);
+    onStart(document, errorsMap);
 
-
-    document.addEventListener('DOMContentLoaded', (event) => {
-        processStartErrors(errorsMap);
-    })
-
-    processStartErrors = (map) => {
-        map.forEach((input, flag) => {
-            if (flag) {
-                showErrorMessage(getErrorsPlace(input), getErrorMessage(input));
-                flag = false;
-            }
-        });
-    }
-
-    getErrorsPlace = (element) => {
-        return findPlaceholder('error', element);
-    }
-
+    // check errors by input
     const elementsArr = [signInEmail, signInPassword, externalError];
+    elementsArr.forEach(element => onInput(element, getErrorMessage));
 
-    elementsArr.forEach(element => element.addEventListener('input', function (event) {
-            if (element.validity.valid) clearError(getErrorsPlace(element));
-            else showErrorMessage(getErrorsPlace(element), getErrorMessage(element));
-        })
-    );
-
-    form.addEventListener('submit', function (event) {
-        let hasException = false;
-        for(let i = 0; i < elementsArr.length; ++i){
-            let element = elementsArr[i];
-            if(!element.disabled && !element.validity.valid) {
-                hasException = true;
-                showErrorMessage(getErrorsPlace(element), getErrorMessage(element));
-            }
-            else{
-                clearError(getErrorsPlace(element));
-            }
-        }
-        if(hasException) event.preventDefault();
-    });
-
-    showErrorMessage = (element, message) => {
-        element.textContent = message;
-        element.className = 'error active';
-    }
-
-    clearError = (element) => {
-        element.textContent = '';
-        element.className = 'error';
-    }
+    // check errors by submit
+    onSubmit(form, elementsArr, getErrorMessage);
 
 </script>
 
