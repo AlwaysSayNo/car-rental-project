@@ -1,5 +1,5 @@
 submitForm = (form, event, filterSelect, sortSelect) => {
-    const none = 'NONE'
+    const none = 'none'
 
     const map = new Map();
     map.set('optgroupLabel', '');
