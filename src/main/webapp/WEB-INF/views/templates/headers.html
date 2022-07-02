@@ -19,11 +19,11 @@
 
         <div class="col-4 d-flex justify-content-end">
             <div class="d-flex flex-column ms-2">
-                <a class="language link-dark"  th:href="@{/car-rental-service/international(lang=ua)}" href="#?lang=ua">
+                <a class="language link-dark text-end"  th:href="@{/car-rental-service/international(lang=ua)}" href="#?lang=ua">
                     <span th:text="#{lang.ua}">ua</span>
                     <img class="ms-2" th:src="@{/statics/images/flags/ukraine.png}" th:alt="#{lang.ua.big}" src="../../statics/images/flags/ukraine.png" alt="UA">
                 </a>
-                <a class="language link-dark" th:href="@{/car-rental-service/international(lang=en)}" href="#?lang=en">
+                <a class="language link-dark text-end" th:href="@{/car-rental-service/international(lang=en)}" href="#?lang=en">
                     <span th:text="#{lang.en}">en</span>
                     <img class="ms-2" th:src="@{/statics/images/flags/usa.svg}" th:alt="#{lang.en.big}" src="../../statics/images/flags/usa.svg" alt="EN">
                 </a>
@@ -36,11 +36,11 @@
 <header th:fragment="inRoleHeader (role, linkSelected)" class="container d-flex flex-row-reverse mt-4 border-bottom">
     <div class="col-4 d-flex justify-content-end">
         <div class="d-flex flex-column ms-2">
-            <a class="language link-dark"  th:href="@{/car-rental-service/international(lang=ua)}" href="#?lang=ua">
+            <a class="language link-dark text-end"  th:href="@{/car-rental-service/international(lang=ua)}" href="#?lang=ua">
                 <span th:text="#{lang.ua}">ua</span>
                 <img class="ms-2" th:src="@{/statics/images/flags/ukraine.png}" th:alt="#{lang.ua.big}" src="../../statics/images/flags/ukraine.png" alt="UA">
             </a>
-            <a class="language link-dark" th:href="@{/car-rental-service/international(lang=en)}" href="#?lang=en">
+            <a class="language link-dark text-end" th:href="@{/car-rental-service/international(lang=en)}" href="#?lang=en">
                 <span th:text="#{lang.en}">en</span>
                 <img class="ms-2" th:src="@{/statics/images/flags/usa.svg}" th:alt="#{lang.en.big}" src="../../statics/images/flags/usa.svg" alt="EN">
             </a>
