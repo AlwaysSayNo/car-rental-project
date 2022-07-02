@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pagination template</title>
+    <script type="text/javascript" th:src="@{/statics/js/utils/UrlManager.js}" src="../../statics/js/utils/UrlManager.js"></script>
+</head>
+<body>
+
+<div th:fragment="pagination (pageNumbers, itemStep, totalPages, page, size)" class="pagination">
+    <div class="container my-0 py-0">
+        <nav aria-label="Pagination template">
+            <div class="row mb-2">
+
+                <!-- Elements amount -->
+                <div class="col">
+                    <ul class="pagination justify-content-start mb-5 pb-2">
+                        <li class="page-item">
+                            <button th:text="#{amount}" class="page-link disabled">Amount</button>
+                        </li>
+
+                        <div th:each="step : ${itemStep}">
+                            <div th:if="${step} == ${size}">
+                                <li class="page-item active">
+                                    <button class="page-link"
+                                            th:data-param="'size'"
+                                            th:data-value="${step}"
+                                            th:onclick="executeUrlParameter(this.getAttribute('data-param'), this.getAttribute('data-value'))"
+                                            th:text="${step}">
+                                    </button>
+                                </li>
+                            </div>
+                            <div th:unless="${step} == ${size}">
+                                <li class="page-item">
+                                    <button class="page-link"
+                                            th:data-param="'size'"
+                                            th:data-value="${step}"
+                                            th:onclick="executeUrlParameter(this.getAttribute('data-param'), this.getAttribute('data-value'))"
+                                            th:text="${step}">
+                                    </button>
+                                </li>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+
+                <!-- Pages -->
+                <div class="col">
+                    <!-- PREVIOUS button-->
+                    <ul class="pagination justify-content-center mb-5 pb-2">
+                        <div th:if="${page == 1}">
+                            <li class="page-item disabled">
+                                <button class="page-link disabled"
+                                        th:data-param="'page'"
+                                        th:data-value="${page - 1}"
+                                        th:onclick="executeUrlParameter(this.getAttribute('data-param'), this.getAttribute('data-value'))"
+                                        th:text="#{previous}">
+                                </button>
+                            </li>
+                        </div>
+                        <div th:unless="${page == 1}">
+                            <li class="page-item">
+                                <button class="page-link"
+                                        th:data-param="'page'"
+                                        th:data-value="${page - 1}"
+                                        th:onclick="executeUrlParameter(this.getAttribute('data-param'), this.getAttribute('data-value'))"
+                                        th:text="#{previous}">
+                                </button>
+                            </li>
+                        </div>
+
+                        <!-- Page sequence -->
+                        <div th:if="${totalPages}  > 0"
+                             th:each="pageNumber : ${pageNumbers}">
+                            <div th:if="${page} == ${pageNumber}">
+                                <li class="page-item active">
+                                    <button class="page-link"
+                                            th:data-param="'page'"
+                                            th:data-value="${pageNumber}"
+                                            th:onclick="executeUrlParameter(this.getAttribute('data-param'), this.getAttribute('data-value'))"
+                                            th:text="${pageNumber}">
+                                    </button>
+                                </li>
+                            </div>
+                            <div th:unless="${page} == ${pageNumber}">
+                                <li class="page-item">
+                                    <button class="page-link"
+                                            th:data-param="'page'"
+                                            th:data-value="${pageNumber}"
+                                            th:onclick="executeUrlParameter(this.getAttribute('data-param'), this.getAttribute('data-value'))"
+                                            th:text="${pageNumber}">
+                                    </button>
+                                </li>
+                            </div>
+                        </div>
+
+                        <!-- NEXT button-->
+                        <div th:if="${page} == ${totalPages}">
+                            <li class="page-item disabled">
+                                <button class="page-link disabled"
+                                        th:data-param="'page'"
+                                        th:data-value="${page} + 1"
+                                        th:onclick="executeUrlParameter(this.getAttribute('data-param'), this.getAttribute('data-value'))"
+                                        th:text="#{next}">
+                                </button>
+                            </li>
+                        </div>
+                        <div th:unless="${page} == ${totalPages}">
+                            <li class="page-item">
+                                <button class="page-link"
+                                        th:data-param="'page'"
+                                        th:data-value="${page} + 1"
+                                        th:onclick="executeUrlParameter(this.getAttribute('data-param'), this.getAttribute('data-value'))"
+                                        th:text="#{next}">
+                                </button>
+                            </li>
+                        </div>
+                    </ul>
+                </div>
+                <!-- 3rd column -->
+               <div class="col"></div>
+            </div>
+        </nav>
+    </div>
+
+    <!--    <script src="../../static/js/addUrlParameter.js"></script>-->
+
+</div>
+
+</body>
+</html>

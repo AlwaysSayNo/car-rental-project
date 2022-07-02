@@ -7,6 +7,7 @@ import com.epam.nazar.grinko.domians.helpers.CarSegment;
 import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.dto.CarDto;
 import com.epam.nazar.grinko.engines.FilterPresetEngine;
+import com.epam.nazar.grinko.engines.PaginationPresetEngine;
 import com.epam.nazar.grinko.engines.SortPresetEngine;
 import com.epam.nazar.grinko.services.car.CarBrandService;
 import com.epam.nazar.grinko.services.car.CarColorService;
@@ -54,6 +55,7 @@ public class AllCarsController {
         model.addAttribute("cars", carsDto);
         model.addAttribute("ids", allId);
 
+        PaginationPresetEngine.updateModelForPagination(model, carsDto, page, size);
         SortPresetEngine.updateModelForSorting(model, sortBy, direction);
         FilterPresetEngine.updateModelForFiltering(model, filterBy, filterValue);
 

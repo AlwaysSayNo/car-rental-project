@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Car rental service</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <style>
+        .language img {
+            width: 1.5em;
+            height: 1em;
+        }
+
+        #learnMore {
+            width: 40em;
+        }
+        .car-icon {
+            width: 10em;
+            height: 4em;
+        }
+
+        .car-icon img{
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<!-- body -->
+<div class="container mt-5 ">
+    <div id="learnMore" class="m-auto p-4 border border-2 rounded-2">
+        <div id="learnMoreHeader" class="row">
+            <div class="col-6">
+                <div class="car-icon">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Sinnbild_PKW.svg/2560px-Sinnbild_PKW.svg.png" alt="" srcset="">
+                </div>
+            </div>
+            <div class="col-6 text-end">
+                <a href="#">Go back</a>
+            </div>
+        </div>
+        <div id="learnMoreBody" class="mt-5">
+            <div class="row my-2">
+                <span class="col-6 fw-bold">Brand:</span>
+                <span class="col-6 text-uppercase">bmw</span>
+            </div>
+            <div class="row my-2">
+                <span class="col-6 fw-bold">Number:</span>
+                <span class="col-6 text-uppercase">AA 1111 AA</span>
+            </div>
+            <div class="row my-2">
+                <span class="col-6 fw-bold">Name:</span>
+                <span class="col-6 text-uppercase">x6</span>
+            </div>
+            <div class="row my-2">
+                <span class="col-6 fw-bold">Segment:</span>
+                <span class="col-6 text-uppercase">s</span>
+            </div>
+            <div class="row my-2">
+                <span class="col-6 fw-bold">Color:</span>
+                <span class="col-6 text-uppercase">red</span>
+            </div>
+            <div class="row my-2 mt-5">
+                <span class="col-6 fw-bold">Price per day:</span>
+                <span class="col-6 fw-bold text-success">$300</span>
+            </div>
+
+            <div class="mt-4">
+                <div class="row my-2">
+                    <span class="col-6 fw-bold">Status</span>
+                    <div class="col-3">
+                        <select class="form-select">
+                            <option selected>Car brand</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-primary w-100" type="button">Change</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div id="learnmore-footer" class="d-flex justify-content-around mt-5">
+            <div class="col-3">
+                <button class="btn btn-primary w-100 py-2" type="button">Edit</button>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-danger w-100 py-2" type="button">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
