@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bootstrap demo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script type="text/javascript" th:src="@{/statics/js/utils/SubmitForm.js}" src="../../statics/js/utils/SubmitForm.js"></script>
     <style>
         .big-text {
             font-size: 3.5em !important;
@@ -50,6 +51,8 @@
                     <option th:each="value : ${filter.value}" th:value="${value}" th:text="${value}">Filter value</option>
                 </optgroup>
             </select>
+<!--            <input type="hidden" name="filterBy" id="filterBy"/>-->
+<!--            <input type="hidden" name="filterValue" id="filterValue"/>-->
             <!-- sorts -->
             <select id="sortSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Sort">
                 <option th:text="#{sort}" value="NONE" selected>Sort</option>
@@ -57,6 +60,8 @@
                     <option th:each="value : ${sort.value}" th:value="${value}" th:text="${value}">Filter value</option>
                 </optgroup>
             </select>
+<!--            <input type="hidden" name="sortBy" id="sortBy" />-->
+<!--            <input type="hidden" name="direction" id="direction" />-->
             <button id="applyButton" class="btn btn-outline-secondary w-100 h-50 mx-2" type="submit">Apply</button>
         </form>
     </div>
@@ -242,73 +247,15 @@
 <script th:inline="javascript">
 
     // variables
-    const form = document.getElementById('filterSortForm');
-    const filterSelect = document.getElementById('filterSelect');
-    const sortSelect = document.getElementById('sortSelect');
+    //const form = document.getElementById('filterSortForm');
+    //const filterSelect = document.getElementById('filterSelect');
+    //const sortSelect = document.getElementById('sortSelect');
 
-    form.addEventListener('submit', function (event){
-        event.preventDefault();
-        const none = 'NONE'
-
-        let action = this.action;
-
-        const target = new URL(action);
-        const params = new URLSearchParams();
-        let hasPrevious = false;
-
-        if(filterSelect.value === none && sortSelect.value === none)
-            return;
-
-        if(sortSelect.value !== none){
-            const sortChildren = Array.prototype.slice.call(sortSelect.children);
-
-            sortChildren.forEach(function (optgroup){
-                if(optgroup.tagName.toLowerCase() === 'optgroup'){
-                    const options = Array.prototype.slice.call(optgroup.children);
-
-                    options.forEach(function (option){
-                        if(option.selected){
-                            params.set('sortBy', optgroup.label);
-                            params.set('direction', option.value);
-                            hasPrevious = true;
-                        }
-                    })
-                }
-            })
-        }
-
-        if(filterSelect.value !== none){
-            const sortChildren = Array.prototype.slice.call(filterSelect.children);
-
-            sortChildren.forEach(function (optgroup){
-                if(optgroup.tagName.toLowerCase() === 'optgroup'){
-                    const options = Array.prototype.slice.call(optgroup.children);
-
-                    options.forEach(function (option){
-                        if(option.selected){
-                            params.set('filterBy', optgroup.label);
-                            params.set('filterValue', option.value);
-                            hasPrevious = true;
-                        }
-                    })
-                }
-            })
-        }
-
-        //action = "/car-rental-service/admin/cars?%26id";
-        //this.setAttribute('action', action)
-        //this.action = action;
-        //this.submit();
-
-        target.search = params.toString();
-
-        const request = new XMLHttpRequest();
-        request.open('get', target, true);
-        request.onload = function (){
-            document.write(request.response);
-        }
-        request.send();
-
+    document.getElementById('filterSortForm').addEventListener('submit', function (event) {
+        const form = document.getElementById('filterSortForm');
+        const filterSelect = document.getElementById('filterSelect');
+        const sortSelect = document.getElementById('sortSelect');
+        submitForm(form, event, filterSelect, sortSelect);
     });
 
 </script>

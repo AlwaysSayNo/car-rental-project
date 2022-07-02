@@ -124,7 +124,7 @@ public class AdminController {
         List<String> directions = Arrays.asList("ASC", "DESC");
 
         sortsMap.put("pricePerDay", directions);
-        sortsMap.put("brand", directions);
+        sortsMap.put("name", directions);
 
         return sortsMap;
     }

@@ -30,7 +30,8 @@ public abstract class AbstractQueryManipulation <T> implements QueryManipulation
 
     @Override
     public PageRequest createRequest(Integer page, Integer size, String sortBy, String direction) {
-        if(sortBy != null && !availableSorts.contains(sortBy)) throw new IllegalArgumentException();
+        if(sortBy != null && !availableSorts.contains(sortBy))
+            throw new IllegalArgumentException("The argument" + sortBy + " is not in the sort list.");
 
         if(!availableSorts.contains(sortBy)) return PageRequest.of(page, size);
         return PageRequest.of(page, size, Sort.Direction.valueOf(direction), sortBy);
