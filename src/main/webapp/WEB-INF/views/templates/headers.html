@@ -8,6 +8,7 @@
 </head>
 <body>
 
+<!-- Header for unregistered users -->
 <header th:fragment="baseHeader (buttons)" class="container d-flex flex-row-reverse mt-4">
     <div class="col-4 d-flex justify-content-end">
         <div th:switch="${buttons}">
@@ -33,6 +34,7 @@
     <a class="col-4 text-secondary text-center text-uppercase fw-normal fs-1 text-decoration-none" th:text="#{website.name.small}" th:href="@{/car-rental-service/}" href="index.html">car rental service</a>
 </header>
 
+<!-- Header for users with role -->
 <header th:fragment="inRoleHeader (role, linkSelected)" class="container d-flex flex-row-reverse mt-4 border-bottom">
     <div class="col-4 d-flex justify-content-end">
         <div class="d-flex flex-column ms-2">
@@ -46,14 +48,14 @@
             </a>
         </div>
     </div>
-    <nav th:switch="${role}" class="nav header-links col-8">
-        <div th:case="'admin'" class="nav header-links col-8">
+    <nav th:switch="${role}" class="col-8">
+        <div th:case="'admin'" class="nav header-links">
             <a th:text="#{profile}" th:unless="${#strings.equals(linkSelected, 'profile')}" th:href="@{/car-rental-service/admin/profile}" class="nav-link" href="#">Profile</a>
             <a th:text="#{profile}" th:if="${#strings.equals(linkSelected, 'profile')}" class="nav-link disabled">Profile</a>
             <a th:text="#{cars}" th:unless="${#strings.equals(linkSelected, 'cars')}" th:href="@{/car-rental-service/admin/cars}" class="nav-link" href="#">Cars</a>
             <a th:text="#{cars}" th:if="${#strings.equals(linkSelected, 'cars')}" class="nav-link disabled">Cars</a>
-            <a th:text="#{managers}" th:unless="${#strings.equals(linkSelected, 'profile')}" th:href="@{/car-rental-service/admin/profile}" class="nav-link" href="#">Managers</a>
-            <a th:text="#{managers}" th:if="${#strings.equals(linkSelected, 'profile')}" class="nav-link disabled">Managers</a>
+            <a th:text="#{managers}" th:unless="${#strings.equals(linkSelected, 'managers')}" th:href="@{/car-rental-service/admin/managers}" class="nav-link" href="#">Managers</a>
+            <a th:text="#{managers}" th:if="${#strings.equals(linkSelected, 'managers')}" class="nav-link disabled">Managers</a>
             <a th:text="#{users}" th:unless="${#strings.equals(linkSelected, 'users')}" th:href="@{/car-rental-service/admin/users}" class="nav-link" href="#">Users</a>
             <a th:text="#{users}" th:if="${#strings.equals(linkSelected, 'users')}" class="nav-link disabled">Users</a>
         </div>

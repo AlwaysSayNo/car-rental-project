@@ -43,7 +43,7 @@ public class CommonController {
         Optional<User> user = userService.getByEmail(username);
         UserDto userDto = userService.mapToDto(user.orElseThrow(IllegalJwtContentException::new));
 
-        model.addAttribute("userDto", userDto);
+        model.addAttribute("user", userDto);
         model.addAttribute("role", role);
 
         return "common/profile";
@@ -57,7 +57,7 @@ public class CommonController {
 
         UserDto userDto = userService.mapToDto(user);
 
-        model.addAttribute("userDto", userDto);
+        model.addAttribute("user", userDto);
         model.addAttribute("oldEmail", user.getEmail());
         model.addAttribute("role", role);
 
@@ -72,7 +72,7 @@ public class CommonController {
 
         if(!oldEmailUser.getId().equals(currEmailUser.getId())){
             model.addAttribute(ViewExceptionsConstants.USER_ALREADY_EXISTS_EXCEPTION, true);
-            model.addAttribute("userDto", userDto);
+            model.addAttribute("user", userDto);
 
             //log.info("PROFILE-EDIT FAILURE: user already exists ({}, {})", userDto.getEmail(), userDto.getPassword());
 

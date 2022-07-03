@@ -1,34 +1,66 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Profile</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <style>
-        html {
-            font-size: 10px;
+        .language img {
+            width: 1.5em;
+            height: 1em;
         }
 
-        body {
-            font-size: 1.6em;
-            margin: 0;
+        .car-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
         }
 
-        h1 {
-            margin: 0 auto 10px auto;
-            padding: 0;
+        .form-title {
+            top: -.75em
         }
 
-        .center-block{
-            text-align: center;
+        .header-links {
+            height: fit-content;
+        }
+
+        .nav-link:not(:last-child) {
+            border-right: 1px solid gray;
         }
     </style>
 </head>
-<body>
-<div class="center-block">
-    <h1 th:text="'Profile: ' + ${role}"></h1>
-    <form th:method="POST" th:action="@{/car-rental-service/sign-out}" action="/sign-out">
-        <button th:text="Sign-out" type="submit"></button>
+<body class="bg-light">
+<!-- header -->
+<header th:replace="/templates/headers :: inRoleHeader ('admin', 'profile')"></header>
+
+<!-- body -->
+<div class="container d-flex justify-content-center mt-5" id="profileForm">
+    <form class="col-5 border-2 border p-4 position-relative rounded" action="/car-rental-service/{role}/profile/edit" method="get"
+          th:method="GET" th:action="@{/car-rental-service/${role}/profile/edit}">
+        <h3 class="bg-light px-3 position-absolute form-title"
+            th:with="lowerRole=#{${role}}"
+            th:text="#{profile} + ': ' + ${#strings.toLowerCase(lowerRole)}"> Profile: role
+        </h3>
+        <div class="mb-3 mt-5">
+            <label th:text="#{first.name}" class="form-label control-label" for="profileFirstName">First name</label>
+            <input th:field="${user.firstName}" class="form-control validate rounded-0" id="profileFirstName" type="text" disabled>
+        </div>
+        <div class="mb-3 mt-5">
+            <label th:text="#{last.name}" class="form-label control-label" for="profileLastName">Last name</label>
+            <input th:field="${user.lastName}" class="form-control validate rounded-0" id="profileLastName" type="text" disabled>
+        </div>
+        <div class="mb-3 mt-5">
+            <label th:text="#{mail}" class="form-label control-label" for="profileEmail">Mail</label>
+            <input th:field="${user.email}" class="form-control validate rounded-0" id="profileEmail" type="email" disabled>
+        </div>
+        <div class="mb-3 mt-5">
+            <label th:text="#{phone.number}" class="form-label control-label" for="profilePhoneNumber">Phone number</label>
+            <input th:field="${user.phoneNumber}" class="form-control validate rounded-0" id="profilePhoneNumber" type="tel" disabled>
+        </div>
+        <button class="btn btn-primary w-100 mt-5 rounded-0 fw-bold" type="submit" th:text="#{edit}">Edit</button>
     </form>
 </div>
+
 </body>
 </html>
