@@ -29,8 +29,8 @@ public class UserService {
     }
 
     public void updateUserById(User user, Long id){
-        String password = encodePassword(user);
-        userRepository.updateUserById(user.getEmail(), user.getFirstName(), user.getLastName(), password, user.getRole(), user.getPhoneNumber(), user.getStatus(), id);
+        userRepository.updateUserById(user.getEmail(), user.getFirstName(), user.getLastName(),
+                user.getPassword(), user.getRole(), user.getPhoneNumber(), user.getStatus(), id);
     }
 
     public void updateUserStatusById(UserStatus status, Long id){
@@ -55,7 +55,6 @@ public class UserService {
     }
 
     public void save(User newUser){
-        newUser.setPassword(encodePassword(newUser));
         userRepository.save(newUser);
     }
 
@@ -71,8 +70,8 @@ public class UserService {
         return userRepository.getIdByEmail(email);
     }
 
-    public String encodePassword(User user){
-        return passwordEncoder.encode(user.getPassword());
+    public String encodePassword(String password){
+        return passwordEncoder.encode(password);
     }
 
     public User mapToObject(UserDto userDto){

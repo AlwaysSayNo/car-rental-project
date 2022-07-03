@@ -6,12 +6,8 @@
     <title>Profile</title>
     <link th:href="@{/statics/images/icon.png}" rel="icon" type="image/x-icon" href="../../statics/images/icon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link th:href="@{/statics/css/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
     <style>
-        .language img {
-            width: 1.5em;
-            height: 1em;
-        }
-
         .car-icon img {
             width: 100%;
             height: 100%;
@@ -38,26 +34,26 @@
 <!-- body -->
 <div class="container d-flex justify-content-center mt-5" id="profileForm">
     <form class="col-5 border-2 border p-4 position-relative rounded" action="/car-rental-service/{role}/profile/edit" method="get"
-          th:method="GET" th:action="@{/car-rental-service/${role}/profile/edit}">
+          th:method="GET" th:action="@{/car-rental-service/${role}/profile/edit}" th:object="${user}">
         <h3 class="bg-light px-3 position-absolute form-title"
             th:with="lowerRole=#{${role}}"
             th:text="#{profile} + ': ' + ${#strings.toLowerCase(lowerRole)}"> Profile: role
         </h3>
         <div class="mb-3 mt-5">
             <label th:text="#{first.name}" class="form-label control-label" for="profileFirstName">First name</label>
-            <input th:field="${user.firstName}" class="form-control validate rounded-0" id="profileFirstName" type="text" disabled>
+            <input th:field="*{firstName}" class="form-control validate rounded-0" id="profileFirstName" type="text" disabled>
         </div>
         <div class="mb-3 mt-5">
             <label th:text="#{last.name}" class="form-label control-label" for="profileLastName">Last name</label>
-            <input th:field="${user.lastName}" class="form-control validate rounded-0" id="profileLastName" type="text" disabled>
+            <input th:field="*{lastName}" class="form-control validate rounded-0" id="profileLastName" type="text" disabled>
         </div>
         <div class="mb-3 mt-5">
-            <label th:text="#{mail}" class="form-label control-label" for="profileEmail">Mail</label>
-            <input th:field="${user.email}" class="form-control validate rounded-0" id="profileEmail" type="email" disabled>
+            <label th:text="#{email}" class="form-label control-label" for="profileEmail">Mail</label>
+            <input th:field="*{email}" class="form-control validate rounded-0" id="profileEmail" type="email" disabled>
         </div>
         <div class="mb-3 mt-5">
             <label th:text="#{phone.number}" class="form-label control-label" for="profilePhoneNumber">Phone number</label>
-            <input th:field="${user.phoneNumber}" class="form-control validate rounded-0" id="profilePhoneNumber" type="tel" disabled>
+            <input th:field="*{phoneNumber}" class="form-control validate rounded-0" id="profilePhoneNumber" type="tel" disabled>
         </div>
         <button class="btn btn-primary w-100 mt-5 rounded-0 fw-bold" type="submit" th:text="#{edit}">Edit</button>
     </form>

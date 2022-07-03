@@ -1,10 +1,143 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Edit profile</title>
+    <link th:href="@{/statics/images/icon.png}" rel="icon" type="image/x-icon" href="../../statics/images/icon.png">
+    <script th:src="@{/statics/js/utils/ErrorManager.js}" type="text/javascript"src="../../statics/js/utils/ErrorManager.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link th:href="@{/statics/css/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
+    <style>
+        .header-links {
+            height: fit-content;
+        }
+        .nav-link:not(:last-child) {
+            border-right: 1px solid gray;
+        }
+
+        .big-text {
+            font-size: 3.5em !important;
+        }
+
+        .car-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+
+        .form-title {
+            top: -.75em
+        }
+    </style>
 </head>
-<body>
-<h1>Update form</h1>
+<body class="bg-light">
+<!-- header -->
+<header th:replace="/templates/headers :: inRoleHeader ('admin', 'none')"></header>
+
+<!-- body -->
+<div class="container d-flex justify-content-center mt-5" id="profileForm">
+    <form class="col-5 border-2 border p-4 position-relative rounded" action="/car-rental-service/{role}/profile/edit" method="post"
+          th:method="PATCH" th:action="@{/car-rental-service/${role}/profile/edit}" th:object="${user}">
+        <h3 th:text="#{edit.profile}" class="bg-light px-3 position-absolute form-title"> Edit profile</h3>
+        <div class="mb-3 mt-5">
+            <label th:text="#{first.name}" class="form-label control-label" for="profileFirstName">First name</label>
+            <input th:field="*{firstName}" class="form-control validate rounded-0" id="profileFirstName" type="text">
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <div class="mb-3 mt-5">
+            <label th:text="#{last.name}" class="form-label control-label" for="profileLastName">Last name</label>
+            <input th:field="*{lastName}" class="form-control validate rounded-0" id="profileLastName" type="text">
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <div class="mb-3 mt-5">
+            <label th:text="#{email}" class="form-label control-label" for="profileEmail">Mail</label>
+            <input th:field="*{email}" class="form-control validate rounded-0" id="profileEmail" type="email">
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <div class="mb-3 mt-5">
+            <label th:text="#{password}" class="form-label control-label" for="profilePassword">Password</label>
+            <input class="form-control validate rounded-0" id="profilePassword" type="password"
+                   th:field="*{password}" th:label="#{new.password}">
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <div class="mb-3 mt-5">
+            <label th:text="#{phone.number}" class="form-label control-label" for="profilePhoneNumber">Phone number</label>
+            <input th:field="*{phoneNumber}" class="form-control validate rounded-0" id="profilePhoneNumber" type="tel">
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <div>
+            <input type="hidden" id="externalError" value="1">
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <button class="btn btn-success w-100 mt-5 rounded-0 fw-bold" type="submit" th:text="#{apply}">Apply</button>
+    </form>
+</div>
+
 </body>
+<script th:inline="javascript">
+
+    // variables
+    const form  = document.getElementsByTagName('form')[0];
+    const profileFirstName = document.getElementById("profileFirstName");
+    const profileLastName = document.getElementById("profileLastName");
+    const profileEmail = document.getElementById("profileEmail");
+    const profilePassword = document.getElementById("profilePassword");
+    const profilePhoneNumber = document.getElementById("profilePhoneNumber");
+    const externalError = document.getElementById("externalError");
+
+    let userAlreadyExistsException = /*[[${userAlreadyExistsException}  == true]]*/ false;
+
+    const emailRegexp = /*[[#{email.regexp}]]*/ "regexp@gmail.com";
+    const passwordRegexp = /*[[#{password.regexp}]]*/ "regexp";
+    const firstNameRegexp = /*[[#{first.name.regexp}]]*/ "First";
+    const lastNameRegexp = /*[[#{last.name.regexp}]]*/ "Last";
+    const phoneNumberRegexp = /*[[#{phone.number.regexp}]]*/ "+380501112233";
+
+    profileFirstName.setAttribute("pattern", firstNameRegexp);
+    profileLastName.setAttribute("pattern", lastNameRegexp);
+    profileEmail.setAttribute("pattern", emailRegexp);
+    profilePassword.setAttribute("pattern", passwordRegexp);
+    profilePhoneNumber.setAttribute("pattern", phoneNumberRegexp);
+
+    const additionalErrors = new Map();
+    additionalErrors.set(externalError, userAlreadyExistsException);
+
+    // functions
+    getErrorMessage = (element) => {
+        let message = null;
+
+        if(additionalErrors.has(element) && additionalErrors.get(element)){
+            if(element === externalError)
+                message = /*[[#{user.already.exists.exception.exception}]]*/ 'User with such mail already exists.';
+        } else {
+            if (element.validity.valueMissing)
+                message = /*[[#{required.error}]]*/ 'This field is required.';
+            else if (element.validity.typeMismatch)
+                message = /*[[#{invalid.type.error}]]*/ 'This field must match its type.';
+            else if (element.validity.patternMismatch)
+                message = /*[[#{invalid.structure.error}]]*/ 'This field must match its structure.';
+            else if (element.validity.rangeUnderflow || element.validity.rangeOverflow)
+                message = /*[[#{invalid.range.error}]]*/ 'Incorrect range of field';
+        }
+
+        return message;
+    }
+
+    // check errors on document start
+    const errorsMap = new Map();
+    errorsMap.set(userAlreadyExistsException, externalError);
+    onStart(document, errorsMap);
+
+    // check errors by input
+    const elementsArr = [signUpFirstName, signUpLastName, signUpEmail,
+        signUpPassword, signUpPhoneNumber, externalError];
+    elementsArr.forEach(element => {
+        onInput(element, getErrorMessage)
+    });
+
+    // check errors by submit
+    onSubmit(form, elementsArr, getErrorMessage);
+</script>
 </html>

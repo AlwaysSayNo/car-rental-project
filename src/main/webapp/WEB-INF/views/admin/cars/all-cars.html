@@ -8,7 +8,7 @@
     <script type="text/javascript" th:src="@{/statics/js/utils/SortFilterForm.js}" src="../../statics/js/utils/SortFilterForm.js"></script>
     <script type="text/javascript" th:src="@{/statics/js/utils/UrlManager.js}" src="../../statics/js/utils/UrlManager.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <link th:href="@{/statics/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
+    <link th:href="@{/statics/css/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
     <style>
         .big-text {
             font-size: 3.5em !important;
@@ -18,11 +18,6 @@
             width: 100%;
             height: 100%;
             object-fit: fill;
-        }
-
-        .language img {
-            width: 1.5em;
-            height: 1em;
         }
 
         .header-links {
@@ -126,32 +121,6 @@
 
     <!-- CarList nav -->
     <div th:replace="/templates/paginations :: pagination (${pageNumbers}, ${itemStep}, ${totalPages}, ${page}, ${size})"></div>
-
-<!--    <div id="carList-footer" class="my-5 d-flex justify-content-center">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">4</a></li>
-                <li class="page-item"><a class="page-link" href="#">...</a></li>
-                <li class="page-item"><a class="page-link" href="#">12</a></li>
-                <li class="page-item"><a class="page-link" href="#">13</a></li>
-
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>-->
-
 </div>
 
 </body>
