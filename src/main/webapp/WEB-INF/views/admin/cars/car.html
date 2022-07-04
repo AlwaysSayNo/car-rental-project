@@ -3,17 +3,16 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Car rental service</title>
+    <title>Car</title>
+    <link th:href="@{/statics/images/icon.png}" rel="icon" type="image/x-icon" href="../../statics/images/icon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link th:href="@{/statics/css/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
+    <link th:href="@{/statics/css/utils/links.css}" rel="stylesheet" href="../../statics/utils/links.css">
     <style>
-        .language img {
-            width: 1.5em;
-            height: 1em;
-        }
-
         #learnMore {
             width: 40em;
         }
+
         .car-icon {
             width: 10em;
             height: 4em;
@@ -27,72 +26,126 @@
     </style>
 </head>
 <body class="bg-light">
+<!-- header -->
+<header th:replace="/templates/headers :: inRoleHeader ('admin', 'none')" class="container d-flex flex-row-reverse mt-4 border-bottom"></header>
+
 <!-- body -->
 <div class="container mt-5 ">
-    <div id="learnMore" class="m-auto p-4 border border-2 rounded-2">
-        <div id="learnMoreHeader" class="row">
-            <div class="col-6">
-                <div class="car-icon">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Sinnbild_PKW.svg/2560px-Sinnbild_PKW.svg.png" alt="" srcset="">
+    <form method="post" action="edit-car">
+        <div class="m-auto p-4 border border-2 rounded-2" id="learnMore" th:object="${car}">
+            <div id="learnMoreHeader" class="row">
+                <div class="col-6">
+                    <div class="car-icon">
+                        <img th:src="@{/statics/images/car.png}" th:alt="*{brand} + ' ' + *{name}" alt="car">
+                    </div>
                 </div>
             </div>
-            <div class="col-6 text-end">
-                <a href="#">Go back</a>
-            </div>
-        </div>
-        <div id="learnMoreBody" class="mt-5">
-            <div class="row my-2">
-                <span class="col-6 fw-bold">Brand:</span>
-                <span class="col-6 text-uppercase">bmw</span>
-            </div>
-            <div class="row my-2">
-                <span class="col-6 fw-bold">Number:</span>
-                <span class="col-6 text-uppercase">AA 1111 AA</span>
-            </div>
-            <div class="row my-2">
-                <span class="col-6 fw-bold">Name:</span>
-                <span class="col-6 text-uppercase">x6</span>
-            </div>
-            <div class="row my-2">
-                <span class="col-6 fw-bold">Segment:</span>
-                <span class="col-6 text-uppercase">s</span>
-            </div>
-            <div class="row my-2">
-                <span class="col-6 fw-bold">Color:</span>
-                <span class="col-6 text-uppercase">red</span>
-            </div>
-            <div class="row my-2 mt-5">
-                <span class="col-6 fw-bold">Price per day:</span>
-                <span class="col-6 fw-bold text-success">$300</span>
-            </div>
-
-            <div class="mt-4">
+            <div id="learnMoreBody" class="mt-5">
                 <div class="row my-2">
-                    <span class="col-6 fw-bold">Status</span>
-                    <div class="col-3">
-                        <select class="form-select">
-                            <option selected>Car brand</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
+                    <span th:text="#{brand} + ':'" class="col-6 fw-bold">Brand:</span>
+                    <span th:text="*{brand}" class="col-6 text-uppercase">BMW</span>
+                </div>
+                <div class="row my-2">
+                    <span th:text="#{number} + ':'" class="col-6 fw-bold">Number:</span>
+                    <span th:text="*{number}" class="col-6 text-uppercase">AA 1111 AA</span>
+                </div>
+                <div class="row my-2">
+                    <span th:text="#{name} + ':'" class="col-6 fw-bold">Name:</span>
+                    <span th:text="*{name}" class="col-6 text-uppercase">x6</span>
+                </div>
+                <div class="row my-2">
+                    <span th:text="#{segment} + ':'" class="col-6 fw-bold">Segment:</span>
+                    <span th:text="*{segment.name()}" class="col-6 text-uppercase">s</span>
+                </div>
+                <div class="row my-2">
+                    <span th:text="#{color} + ':'" class="col-6 fw-bold">Color:</span>
+                    <span th:text="*{color}" class="col-6 text-uppercase">RED</span>
+                </div>
+                <div class="row my-2 mt-5">
+                    <span th:text="#{price.per.day} + ':'" class="col-6 fw-bold">Price per day:</span>
+                    <span th:text="*{pricePerDay} + '$'" class="col-6 fw-bold text-success">300$</span>
+                </div>
+
+                <!-- status / change status -->
+                <div class="mt-4">
+                    <div class="row my-2">
+                        <span th:text="#{status} + ':'" class="col-6 fw-bold">Status</span>
+                        <span class="col-6 text-uppercase" id="carStatus"
+                              th:text="*{status.name()}" th:field="*{status.name()}" >NOT_RENTED
+                        </span>
                     </div>
-                    <div class="col-3">
-                        <button class="btn btn-primary w-100" type="button">Change</button>
+                    <div class="row my-2 justify-content-end">
+                        <div class="row col-6 px-sm-0">
+                            <div class="col-6 ps-sm-0">
+                                <select class="form-select" id="statusSelect" aria-label="Car status select"
+                                        th:disabled="(*{status.name()} == 'RENTED') or(*{status.name()} == 'ON_PROCESSING')">
+                                    <option th:each="status : ${statuses}"
+                                            th:text="${status.name()}"
+                                            th:value="${status.name()}"
+                                            th:selected="${status} == *{status}">NOT_RENTED
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <button th:text="#{apply}" class="btn btn-primary w-100" id="changeStatusButton" type="submit" disabled>Apply</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-        </div>
-        <div id="learnmore-footer" class="d-flex justify-content-around mt-5">
-            <div class="col-3">
-                <button class="btn btn-primary w-100 py-2" type="button">Edit</button>
+            <div class="d-flex justify-content-around mt-5">
+                <div class="col-3">
+                    <button class="btn btn-primary w-100 py-2" id="editButton" type="submit"
+                            th:text="#{edit}" th:disabled="*{status.name()} != 'ON_HOLD'">Edit</button>
+                </div>
+                <div class="col-3">
+                    <button class="btn btn-danger w-100 py-2" id="deleteButton" type="submit"
+                            th:text="#{delete}" th:disabled="*{status.name()} != 'ON_HOLD'">Delete</button>
+                </div>
             </div>
-            <div class="col-3">
-                <button class="btn btn-danger w-100 py-2" type="button">Delete</button>
-            </div>
         </div>
-    </div>
+    </form>
 </div>
 </body>
+
+<script th:inline="javascript">
+    const form = document.getElementsByTagName('form')[0];
+    const statusSelect = document.getElementById("statusSelect");
+
+    document.getElementById('editButton').onclick = function () {
+        form.method = 'get';
+        form.action = /*[[@{/car-rental-service/admin/cars/{id}/edit(id=${id})}]]*/
+            'https://localhost:8080/car-rental-service/admin/cars/edit';
+    }
+
+    document.getElementById('changeStatusButton').onclick = function () {
+        form.method = 'post';
+        form.action = /*[[@{/car-rental-service/admin/cars/{id}/edit/change-status(id=${id})}]]*/
+            'https://localhost:8080/car-rental-service/admin/cars/1/edit/change-status';
+
+        const selectedStatus = statusSelect.value;
+        const newStatus = document.createElement('input')
+        newStatus.setAttribute("type", "hidden");
+        newStatus.setAttribute("name", "newStatus");
+        newStatus.setAttribute("value", selectedStatus);
+
+        form.appendChild(newStatus);
+    }
+
+    document.getElementById('deleteButton').onclick = function () {
+        form.method = 'post';
+        form.action = /*[[@{/car-rental-service/admin/cars/{id}/edit/delete(id=${id})}]]*/
+            'https://localhost:8080/car-rental-service/admin/cars/2/edit/delete';
+    }
+
+    statusSelect.addEventListener('input', function() {
+        const carStatus = document.getElementById('carStatus');
+        const changeStatusButton = document.getElementById('changeStatusButton')
+
+        changeStatusButton.disabled = statusSelect.value === carStatus.textContent;
+    })
+
+</script>
+
 </html>

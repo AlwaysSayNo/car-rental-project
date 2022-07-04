@@ -12,17 +12,20 @@ import com.epam.nazar.grinko.services.car.CarBrandService;
 import com.epam.nazar.grinko.services.car.CarColorService;
 import com.epam.nazar.grinko.services.car.CarService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("car-rental-service/admin/cars/{id}/edit")
+@RequestMapping("/car-rental-service/admin/cars/{id}/edit")
 @AllArgsConstructor
+@Slf4j
 public class CarEditController {
 
     private final CarBrandService carBrandService;
@@ -39,7 +42,7 @@ public class CarEditController {
         return "admin/cars/edit-car-by-id";
     }
 
-    @PutMapping()
+    @PostMapping()
     public String saveCarChanges(@PathVariable("id") Long carId, @ModelAttribute("carDto") CarDto carDto,
                                  Model model){
         Car car = carService.mapToObject(carDto);
@@ -56,19 +59,25 @@ public class CarEditController {
         return "redirect:/car-rental-service/admin/cars";
     }
 
-    @PatchMapping()
-    public String changeCarStatus(@PathVariable("id") Long carId, @RequestParam("status") String newStatus){
+    @PostMapping("/change-status")
+    public String changeCarStatus(@PathVariable("id") Long carId,
+                                  @ModelAttribute("statuses") ArrayList<CarStatus> statuses,
+                                  @RequestParam("newStatus") String newStatus){
         CarStatus status = CarStatus.valueOf(newStatus);
-
-        if(status.equals(CarStatus.RENTED))
-            throw new IllegalPathVariableException("Car with id " + carId + " cannot be modified");
+        Car car = carService.getById(carId);
+        if(!getAvailableStatuses().contains(status) || car.getStatus().equals(status)) {
+            log.info("CAR-EDIT-STATUS FAILURE: oldStatus={}, newStatus={}", car.getStatus().name(), status.name());
+            return "redirect:/car-rental-service/admin/cars/" + carId;
+        }
 
         carService.updateCarStatusById(carId, status);
+        log.info("CAR-EDIT-STATUS SUCCESS: carId={}, oldStatus={}, newStatus={}",
+                carId, car.getStatus().name(), status.name());
 
         return "redirect:/car-rental-service/admin/cars";
     }
 
-    @DeleteMapping()
+    @PostMapping("/delete")
     public String deleteCar(@PathVariable("id") Long carId){
         carService.deleteById(carId);
         return "redirect:/car-rental-service/admin/cars";
@@ -80,7 +89,7 @@ public class CarEditController {
         Car car = carService.getById(carId);
         CarStatus status = car.getStatus();
 
-        if(status.equals(CarStatus.RENTED) || status.equals(CarStatus.ON_PROCESSING))
+        if(!getAvailableStatuses().contains(status))
             throw new IllegalPathVariableException("Car with id " + carId + " cannot be modified");
     }
 
@@ -101,6 +110,10 @@ public class CarEditController {
 
     @ModelAttribute("statuses")
     private List<CarStatus> addStatusesAttribute(){
+        return getAvailableStatuses();
+    }
+
+    private List<CarStatus> getAvailableStatuses() {
         return Arrays.asList(CarStatus.NOT_RENTED, CarStatus.ON_HOLD);
     }
 

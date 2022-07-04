@@ -17,7 +17,7 @@ INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segm
 INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('CC 1111 CC', 4, 'Aura', 3, 200, 'B', 'NOT_RENTED');
 INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('DD 1111 DD', 4, 'I30', 4, 300, 'C', 'NOT_RENTED');
 INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('AA 2222 AA', 1, 'X6', 1, 600, 'S', 'ON_HOLD');
-INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('BB 2222 BB', 2, 'A6', 2, 450, 'E', 'ON_HOLD');
+INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('BB 2222 BB', 2, 'A6', 2, 450, 'E', 'RENTED');
 INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('EE 2222 EE', 3, 'Taurus', 2, 400, 'E', 'NOT_RENTED');
 INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('CC 2222 CC', 4, 'Aura', 3, 200, 'B', 'NOT_RENTED');
 INSERT INTO cars (number, car_brands_id, name, car_color_id, price_per_day, segment, status) VALUES ('DD 2222 DD', 4, 'i30', 4, 300, 'C', 'NOT_RENTED');

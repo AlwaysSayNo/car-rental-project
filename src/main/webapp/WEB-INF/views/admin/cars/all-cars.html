@@ -28,7 +28,7 @@
 </head>
 <body class="bg-light">
 <!-- header -->
-<header th:insert="templates/headers :: inRoleHeader ('admin', 'cars')" class="container d-flex flex-row-reverse mt-4 border-bottom"></header>
+<header th:replace="templates/headers :: inRoleHeader ('admin', 'cars')" class="container d-flex flex-row-reverse mt-4 border-bottom"></header>
 
 <!-- body -->
 <div class="container mt-5">
@@ -38,9 +38,16 @@
 
             <!-- filters -->
             <select id="filterSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Filter">
-                <option th:text="#{filter}" th:selected="${filterBy} == 'none'" value="none" selected>Filter</option>
+                <option value="none" selected
+                        th:text="#{filter}"
+                        th:selected="${filterBy} == 'none'">Filter
+                </option>
                 <optgroup th:each="filter : ${filtersMap.entrySet()}" th:with="key=${filter.key}" th:label="${filter.key}" label="optgroup">
-                    <option th:each="value : ${filter.value}" th:value="${value}" th:text="${filter.key} + ': ' + ${value}" th:selected="(${filterBy} == ${key}) and (${filterValue} == ${value})">Filter value</option>
+                    <option th:each="value : ${filter.value}"
+                            th:text="${filter.key} + ': ' + ${value}"
+                            th:value="${value}"
+                            th:selected="(${filterBy} == ${key}) and (${filterValue} == ${value})">Filter value
+                    </option>
                 </optgroup>
             </select>
             <input type="hidden" name="filterBy" id="filterBy"/>
@@ -48,14 +55,22 @@
 
             <!-- sorts -->
             <select id="sortSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Sort">
-                <option th:text="#{sort}" th:selected="${sortBy} == 'none'" value="none" selected>Sort</option>
+                <option value="none" selected
+                        th:text="#{sort}"
+                        th:selected="${sortBy} == 'none'">Sort
+                </option>
                 <optgroup th:each="sort : ${sortsMap.entrySet()}" th:with="key=${sort.key}" th:label="${sort.key}" label="optgroup">
-                    <option th:each="value : ${sort.value}" th:value="${value}" th:text="${key} + ' ' + (${value} == 'ASC' ? '🡅' : '🡇')" th:selected="(${sortBy} == ${key}) and (${direction} == ${value})">Filter value</option>
+                    <option th:each="value : ${sort.value}"
+                            th:text="${key} + ' ' + (${value} == 'ASC' ? '🡅' : '🡇')"
+                            th:value="${value}"
+                            th:selected="(${sortBy} == ${key}) and (${direction} == ${value})">Filter value
+                    </option>
                 </optgroup>
             </select>
             <input type="hidden" name="sortBy" id="sortBy" />
             <input type="hidden" name="direction" id="direction" />
-            <button id="applyButton" class="btn btn-outline-secondary w-100 h-50 mx-2" type="submit">Apply</button>
+
+            <button th:text="#{apply}" class="btn btn-outline-secondary w-100 h-50 mx-2" id="applyButton" type="submit">Apply</button>
         </form>
     </div>
 </div>
@@ -65,10 +80,10 @@
     <div class="row">
 
         <div th:each="car, iterStat : ${cars}" class="car-info col-lg-6 col-md-9 px-3 py-1">
-            <div class="row border rounded-2 p-3">
+            <div class="row border rounded-2 p-3" th:object="${car}">
                 <div class="col-3 px-2 d-flex align-items-center">
                     <div class="car-icon">
-                        <img th:src="@{/statics/images/car.png}" src="../../statics/images/car.png" alt="" srcset="">
+                        <img th:src="@{/statics/images/car.png}" th:alt="*{brand} + ' ' + *{name}" alt="car">
                     </div>
                 </div>
                 <div class="col-9">
@@ -76,21 +91,21 @@
                         <div class="col-6">
                             <div class="row my-2">
                                 <span th:text="#{brand} + ':'" class="col-6 fw-bold">Brand:</span>
-                                <span th:text="${car.brand}" class="col-6 text-uppercase">BMW</span>
+                                <span th:text="*{brand}" class="col-6 text-uppercase">BMW</span>
                             </div>
                             <div class="row my-2">
                                 <span th:text="#{name} + ':'" class="col-6 fw-bold">Name:</span>
-                                <span th:text="${car.name}" class="col-6 text-uppercase">A6</span>
+                                <span th:text="*{name}" class="col-6 text-uppercase">A6</span>
                             </div>
                             <div class="row my-2">
                                 <span th:text="#{segment} + ':'" class="col-6 fw-bold">Segment:</span>
-                                <span th:text="${car.segment.name()}" class="col-6">A</span>
+                                <span th:text="*{segment.name()}" class="col-6">A</span>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="row my-2">
                                 <span th:text="#{status} + ':'" class="col-4 fw-bold">Status:</span>
-                                <span th:text="${car.status.name()}" class="col-8">NOT_RENTED</span>
+                                <span th:text="*{status.name()}" class="col-8">NOT_RENTED</span>
                             </div>
                         </div>
                     </div>
@@ -98,12 +113,14 @@
                         <div class="col-6">
                             <div class="row my-2">
                                 <span th:text="#{price.per.day} + ':'" class="col-6 fw-bold">Price per day:</span>
-                                <span th:text="${car.pricePerDay} + '$'" class="col-4 fw-bold text-success">$300</span>
+                                <span th:text="*{pricePerDay} + '$'" class="col-4 fw-bold text-success">$300</span>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="row text-center">
-                                <a th:text="#{see.more} + ' >>'" th:href="@{/car-rental-service/admin/cars/{id}(id=${ids.get(iterStat.index)})}" href="#" class="my-2">See more >></a>
+                                <a class="my-2" href="#"
+                                   th:text="#{see.more} + ' >>'" th:href="@{/car-rental-service/admin/cars/{id}(id=${ids.get(iterStat.index)})}">See more >>
+                                </a>
                             </div>
                         </div>
                     </div>
