@@ -1,0 +1,7 @@
+.header-links {
+    height: fit-content;
+}
+
+.nav-link:not(:last-child) {
+    border-right: 1px solid gray;
+}
