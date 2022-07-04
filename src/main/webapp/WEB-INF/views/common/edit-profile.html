@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Edit profile</title>
     <link th:href="@{/statics/images/icon.png}" rel="icon" type="image/x-icon" href="../../statics/images/icon.png">
-    <script th:src="@{/statics/js/utils/ErrorManager.js}" type="text/javascript"src="../../statics/js/utils/ErrorManager.js"></script>
+    <script th:src="@{/statics/js/utils/ErrorManager.js}" type="text/javascript" src="../../statics/js/utils/ErrorManager.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link th:href="@{/statics/css/utils/error.css}" rel="stylesheet" href="../../statics/utils/error.css">
     <link th:href="@{/statics/css/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
     <style>
         .header-links {
@@ -15,10 +16,6 @@
         }
         .nav-link:not(:last-child) {
             border-right: 1px solid gray;
-        }
-
-        .big-text {
-            font-size: 3.5em !important;
         }
 
         .car-icon img {
@@ -34,38 +31,43 @@
 </head>
 <body class="bg-light">
 <!-- header -->
-<header th:replace="/templates/headers :: inRoleHeader ('admin', 'none')"></header>
+<header th:replace="/templates/headers :: inRoleHeader (${role}, 'none')"></header>
 
 <!-- body -->
 <div class="container d-flex justify-content-center mt-5" id="profileForm">
-    <form class="col-5 border-2 border p-4 position-relative rounded" action="/car-rental-service/{role}/profile/edit" method="post"
-          th:method="PATCH" th:action="@{/car-rental-service/${role}/profile/edit}" th:object="${user}">
+    <form class="col-5 border-2 border p-4 position-relative rounded" action="/car-rental-service/{role}/profile/edit" method="post" novalidate
+          th:method="PATCH" th:action="@{/car-rental-service/{role}/profile/edit(role=${roleValue})}" th:with="roleValue=${userRole}" th:object="${user}">
         <h3 th:text="#{edit.profile}" class="bg-light px-3 position-absolute form-title"> Edit profile</h3>
         <div class="mb-3 mt-5">
             <label th:text="#{first.name}" class="form-label control-label" for="profileFirstName">First name</label>
-            <input th:field="*{firstName}" class="form-control validate rounded-0" id="profileFirstName" type="text">
+            <input th:field="*{firstName}" class="form-control validate rounded-0" id="profileFirstName" type="text" required>
             <span class="error" aria-live="polite"></span>
         </div>
         <div class="mb-3 mt-5">
             <label th:text="#{last.name}" class="form-label control-label" for="profileLastName">Last name</label>
-            <input th:field="*{lastName}" class="form-control validate rounded-0" id="profileLastName" type="text">
+            <input th:field="*{lastName}" class="form-control validate rounded-0" id="profileLastName" type="text" required>
             <span class="error" aria-live="polite"></span>
         </div>
         <div class="mb-3 mt-5">
             <label th:text="#{email}" class="form-label control-label" for="profileEmail">Mail</label>
-            <input th:field="*{email}" class="form-control validate rounded-0" id="profileEmail" type="email">
+            <input th:field="*{email}" class="form-control validate rounded-0" id="profileEmail" type="email" required>
             <span class="error" aria-live="polite"></span>
         </div>
         <div class="mb-3 mt-5">
             <label th:text="#{password}" class="form-label control-label" for="profilePassword">Password</label>
-            <input class="form-control validate rounded-0" id="profilePassword" type="password"
-                   th:field="*{password}" th:label="#{new.password}">
+            <input class="form-control validate rounded-0" id="profilePassword" type="text"
+                   th:field="*{password}" th:placeholder ="#{new.password}">
             <span class="error" aria-live="polite"></span>
         </div>
         <div class="mb-3 mt-5">
             <label th:text="#{phone.number}" class="form-label control-label" for="profilePhoneNumber">Phone number</label>
-            <input th:field="*{phoneNumber}" class="form-control validate rounded-0" id="profilePhoneNumber" type="tel">
+            <input th:field="*{phoneNumber}" class="form-control validate rounded-0" id="profilePhoneNumber" type="tel" required>
             <span class="error" aria-live="polite"></span>
+        </div>
+        <div>
+            <input type="hidden" th:field="*{status}">
+            <input type="hidden" th:field="*{role}">
+            <input type="hidden" th:name="oldEmail" th:value="${oldEmail}">
         </div>
         <div>
             <input type="hidden" id="externalError" value="1">
@@ -83,9 +85,11 @@
     const profileFirstName = document.getElementById("profileFirstName");
     const profileLastName = document.getElementById("profileLastName");
     const profileEmail = document.getElementById("profileEmail");
-    const profilePassword = document.getElementById("profilePassword");
+    let profilePassword = document.getElementById("profilePassword");
     const profilePhoneNumber = document.getElementById("profilePhoneNumber");
     const externalError = document.getElementById("externalError");
+
+    let oldPassword = /*[[${oldPassword}]]*/ null;
 
     let userAlreadyExistsException = /*[[${userAlreadyExistsException}  == true]]*/ false;
 
@@ -128,16 +132,27 @@
     // check errors on document start
     const errorsMap = new Map();
     errorsMap.set(userAlreadyExistsException, externalError);
-    onStart(document, errorsMap);
+    document.addEventListener('DOMContentLoaded', (event) => {
+        onStart(errorsMap);
+        profilePassword.value = '';
+    });
 
     // check errors by input
-    const elementsArr = [signUpFirstName, signUpLastName, signUpEmail,
-        signUpPassword, signUpPhoneNumber, externalError];
+    const elementsArr = [profileFirstName, profileLastName, profileEmail,
+        profilePassword, profilePhoneNumber, externalError];
     elementsArr.forEach(element => {
-        onInput(element, getErrorMessage)
+        element.addEventListener('input', function (event) {
+            onInput(element, getErrorMessage)
+        })
     });
 
     // check errors by submit
-    onSubmit(form, elementsArr, getErrorMessage);
+    form.addEventListener('submit', function (event) {
+        let hasException = onSubmit(elementsArr, getErrorMessage);
+
+        if(hasException) event.preventDefault();
+        else if(profilePassword.value === '') profilePassword.value = oldPassword;
+    });
+
 </script>
 </html>

@@ -93,14 +93,23 @@
     // check errors on document start
     const errorsMap = new Map();
     errorsMap.set(invalidCredentialsException, externalError);
-    onStart(document, errorsMap);
+    document.addEventListener('DOMContentLoaded', (event) => {
+        onStart(errorsMap);
+    });
 
     // check errors by input
     const elementsArr = [signInEmail, signInPassword, externalError];
-    elementsArr.forEach(element => onInput(element, getErrorMessage));
+    elementsArr.forEach(element => {
+        element.addEventListener('input', function (event) {
+            onInput(element, getErrorMessage)
+        })
+    });
 
     // check errors by submit
-    onSubmit(form, elementsArr, getErrorMessage);
+    form.addEventListener('submit', function (event) {
+        let hasException = onSubmit(elementsArr, getErrorMessage);
+        if(hasException) event.preventDefault();
+    });
 
 </script>
 
