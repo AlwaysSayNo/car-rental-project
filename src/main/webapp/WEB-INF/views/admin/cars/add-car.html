@@ -33,25 +33,24 @@
 
 <!-- body -->
 <div class="container mt-5 ">
-    <form class="m-auto p-4 border border-2 rounded-2" id="carEdit" action="/car-rental-service/admin/cars/2/edit" method="post" novalidate
-          th:method="POST" th:action="@{/car-rental-service/admin/cars/{id}/edit(id=${id})}" th:object="${car}">
+    <form class="m-auto p-4 border border-2 rounded-2" id="carAdd" action="/car-rental-service/admin/cars/new" method="post" novalidate
+          th:method="POST" th:action="@{/car-rental-service/admin/cars/new}" th:object="${car}">
         <div class="row">
             <div class="col-6">
                 <div class="car-icon">
-                    <img th:src="@{/statics/images/car.png}" th:alt="*{brand} + ' ' + *{name}" alt="car">
+                    <img th:src="@{/statics/images/car.png}" alt="car">
                 </div>
             </div>
         </div>
         <div class="mt-5">
             <div class="mt-4">
                 <div class="row my-2">
-                    <label th:text="#{select.brand}" class="col-6" for="brandSelect">Select brand:</label>
+                    <label th:text="#{select.brand} + ':'" class="col-6" for="brandSelect">Select brand:</label>
                     <div class="col-3">
                         <select class="form-select" id="brandSelect" aria-label="Brand select">
                             <option th:each="brand : ${brands}"
                                     th:text="${brand}"
-                                    th:value="${brand}"
-                                    th:selected="${brand} == *{brand}">BMW
+                                    th:value="${brand}">BMW
                             </option>
                         </select>
                     </div>
@@ -76,7 +75,7 @@
                     </div>
                 </div>
                 <div class="row my-2">
-                    <label th:text="#{number}" class="col-6" for="numberInput">Number</label>
+                    <label th:text="#{number} + ':'" class="col-6" for="numberInput">Number</label>
                     <div class="col-6">
                         <input class="form-control validate" id="numberInput" type="text" aria-label="Number input" required
                                th:field="*{number}"
@@ -87,13 +86,12 @@
             </div>
             <div class="mt-4">
                 <div class="row my-2">
-                    <label th:text="#{select.segment}" class="col-6" for="segmentSelect">Select segment</label>
+                    <label th:text="#{select.segment} + ':'" class="col-6" for="segmentSelect">Select segment</label>
                     <div class="col-3">
                         <select class="form-select" id="segmentSelect" aria-label="Segment select">
                             <option th:each="segment : ${segments}"
                                     th:text="${segment}"
-                                    th:value="${segment}"
-                                    th:selected="${segment} == *{segment}">A
+                                    th:value="${segment}">A
                             </option>
                         </select>
                     </div>
@@ -101,13 +99,12 @@
             </div>
             <div class="mt-4">
                 <div class="row my-2">
-                    <label th:text="#{select.color}" class="col-6" for="colorSelect">Select color</label>
+                    <label th:text="#{select.color} + ':'" class="col-6" for="colorSelect">Select color</label>
                     <div class="col-3">
                         <select class="form-select" id="colorSelect" aria-label="Color select">
                             <option th:each="color : ${colors}"
                                     th:text="${color}"
-                                    th:value="${color}"
-                                    th:selected="${color} == *{color}">BLACK
+                                    th:value="${color}">BLACK
                             </option>
                         </select>
                     </div>
@@ -123,7 +120,7 @@
             </div>
             <div class="mt-4">
                 <div class="row my-2">
-                    <label th:text="#{price.per.day}" class="col-6" for="pricePerDayInput">Price per day</label>
+                    <label th:text="#{price.per.day} + ':'" class="col-6" for="pricePerDayInput">Price per day</label>
                     <div class="col-6">
                         <input class="form-control validate" id="pricePerDayInput" type="number" min="50" max="10000" aria-label="Price per day input" required
                                th:field="*{pricePerDay}"

@@ -18,12 +18,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface CarRepository extends JpaRepository<Car, Long> {
+    String SELECT_ID_BY_NUMBER = "SELECT c.id FROM Car c WHERE c.number=:number";
     String UPDATE_CAR_BY_ID = "UPDATE Car c SET c.number=:number, c.brand=:brand, c.name=:name, c.color=:color, c.pricePerDay=:pricePerDay, c.segment=:segment, c.status=:status WHERE c.id=:id";
     String UPDATE_CAR_STATUS_BY_ID = "UPDATE Car c SET c.status=:status WHERE c.id=:id";
     String UPDATE_CAR_STATUS_BY_ID_IN = "UPDATE Car c SET c.status=:status WHERE c.id IN (:id)";
 
     boolean existsByNumber(String number);
     Optional<Car> getByNumber(String number);
+
+    @Transactional
+    @Query(SELECT_ID_BY_NUMBER)
+    Long getIdByNumber(@Param("number") String number);
 
     @Transactional
     @Modifying
@@ -48,4 +53,5 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     @Query(UPDATE_CAR_STATUS_BY_ID_IN)
     Integer updateCarStatusByIdIn(@Param("status") CarStatus status,
                              @Param("id") List<Long> id);
+
 }

@@ -47,7 +47,7 @@ public class CarEditController {
 
     @PostMapping()
     public String saveCarChanges(@PathVariable("id") Long carId,
-                                 @Valid @ModelAttribute("carDto") CarDto carDto, BindingResult bindingResult,
+                                 @Valid @ModelAttribute("car") CarDto carDto, BindingResult bindingResult,
                                  Model model){
         CarDto oldCarDto = carService.mapToDto(carService.getById(carId));
 
@@ -69,9 +69,7 @@ public class CarEditController {
         carColorService.addColorIfExists(carDto.getColor());
         carBrandService.addBrandIfNotExists((carDto.getBrand()));
 
-        Car newCar = carService.mapToObject(carDto).setId(carId);
-
-        carService.updateCarById(carId, newCar);
+        carService.updateCarById(carId, carService.mapToObject(carDto).setId(carId));
         log.info("CAR-EDIT SUCCESS: carId={}, oldData={}, newData={}",
                 carId, oldCarDto, carDto);
 

@@ -49,6 +49,10 @@ public class CarService {
         return carRepository.getByNumber(number);
     }
 
+    public Long getIdByNumber(String number){
+        return carRepository.getIdByNumber(number);
+    }
+
     public void save(Car newCar){
         carRepository.save(newCar);
     }
