@@ -69,7 +69,7 @@ public class AllCarsController {
         List<String> segments = Arrays.stream(CarSegment.values()).map(CarSegment::name).collect(Collectors.toList());
         filtersMap.put("segment", segments);
 
-        List<String> brands = brandService.getAllCarBrands().stream().map(CarBrand::getValue).collect(Collectors.toList());
+        List<String> brands = brandService.getAll().stream().map(CarBrand::getValue).collect(Collectors.toList());
         filtersMap.put("brand", brands);
 
         List<String> colors = colorService.getAll().stream().map(CarColor::getValue).collect(Collectors.toList());

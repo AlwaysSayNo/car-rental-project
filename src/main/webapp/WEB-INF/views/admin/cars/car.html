@@ -55,7 +55,7 @@
                 </div>
                 <div class="row my-2">
                     <span th:text="#{segment} + ':'" class="col-6 fw-bold">Segment:</span>
-                    <span th:text="*{segment.name()}" class="col-6 text-uppercase">s</span>
+                    <span th:text="*{segment}" class="col-6 text-uppercase">s</span>
                 </div>
                 <div class="row my-2">
                     <span th:text="#{color} + ':'" class="col-6 fw-bold">Color:</span>
@@ -71,17 +71,17 @@
                     <div class="row my-2">
                         <span th:text="#{status} + ':'" class="col-6 fw-bold">Status</span>
                         <span class="col-6 text-uppercase" id="carStatus"
-                              th:text="*{status.name()}" th:field="*{status.name()}" >NOT_RENTED
+                              th:text="*{status}" th:field="*{status}" >NOT_RENTED
                         </span>
                     </div>
                     <div class="row my-2 justify-content-end">
                         <div class="row col-6 px-sm-0">
                             <div class="col-6 ps-sm-0">
                                 <select class="form-select" id="statusSelect" aria-label="Car status select"
-                                        th:disabled="(*{status.name()} == 'RENTED') or(*{status.name()} == 'ON_PROCESSING')">
+                                        th:disabled="(*{status} == 'RENTED') or(*{status} == 'ON_PROCESSING')">
                                     <option th:each="status : ${statuses}"
-                                            th:text="${status.name()}"
-                                            th:value="${status.name()}"
+                                            th:text="${status}"
+                                            th:value="${status}"
                                             th:selected="${status} == *{status}">NOT_RENTED
                                     </option>
                                 </select>
@@ -97,11 +97,11 @@
             <div class="d-flex justify-content-around mt-5">
                 <div class="col-3">
                     <button class="btn btn-primary w-100 py-2" id="editButton" type="submit"
-                            th:text="#{edit}" th:disabled="*{status.name()} != 'ON_HOLD'">Edit</button>
+                            th:text="#{edit}" th:disabled="*{status} != 'ON_HOLD'">Edit</button>
                 </div>
                 <div class="col-3">
                     <button class="btn btn-danger w-100 py-2" id="deleteButton" type="submit"
-                            th:text="#{delete}" th:disabled="*{status.name()} != 'ON_HOLD'">Delete</button>
+                            th:text="#{delete}" th:disabled="*{status} != 'ON_HOLD'">Delete</button>
                 </div>
             </div>
         </div>
@@ -124,13 +124,7 @@
         form.action = /*[[@{/car-rental-service/admin/cars/{id}/edit/change-status(id=${id})}]]*/
             'https://localhost:8080/car-rental-service/admin/cars/1/edit/change-status';
 
-        const selectedStatus = statusSelect.value;
-        const newStatus = document.createElement('input')
-        newStatus.setAttribute("type", "hidden");
-        newStatus.setAttribute("name", "newStatus");
-        newStatus.setAttribute("value", selectedStatus);
-
-        form.appendChild(newStatus);
+        addHiddenInForm(form, 'newStatus', statusSelect.value);
     }
 
     document.getElementById('deleteButton').onclick = function () {
@@ -145,6 +139,14 @@
 
         changeStatusButton.disabled = statusSelect.value === carStatus.textContent;
     })
+
+    const addHiddenInForm = (form, name, value) => {
+        const newChild = document.createElement('input')
+        newChild.setAttribute("type", "hidden");
+        newChild.setAttribute("name", name);
+        newChild.setAttribute("value", value);
+        form.appendChild(newChild);
+    }
 
 </script>
 

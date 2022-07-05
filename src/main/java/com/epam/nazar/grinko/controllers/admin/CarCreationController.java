@@ -41,7 +41,7 @@ public class CarCreationController {
         }
 
         carColorService.addColorIfExists(carDto.getColor());
-        carBrandService.addBrandIfExists((carDto.getBrand()));
+        carBrandService.addBrandIfNotExists((carDto.getBrand()));
 
         carService.save(carService.mapToObject(carDto));
 
@@ -50,7 +50,7 @@ public class CarCreationController {
 
     @ModelAttribute("brands")
     private List<CarBrand> addBrandsAttribute(){
-        return carBrandService.getAllCarBrands();
+        return carBrandService.getAll();
     }
 
     @ModelAttribute("colors")

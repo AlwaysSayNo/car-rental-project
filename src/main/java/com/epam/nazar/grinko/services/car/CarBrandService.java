@@ -21,7 +21,7 @@ public class CarBrandService {
         carBrandRepository.save(newBrand);
     }
 
-    public List<CarBrand> getAllCarBrands(){
+    public List<CarBrand> getAll(){
         return carBrandRepository.findAll();
     }
 
@@ -29,7 +29,7 @@ public class CarBrandService {
         return carBrandRepository.existsCarBrandByValue(brand);
     }
 
-    public void addBrandIfExists(String brandName){
+    public void addBrandIfNotExists(String brandName){
         if(!carBrandExists(brandName)){
             CarBrand brand = new CarBrand().setValue(brandName);
             save(brand);

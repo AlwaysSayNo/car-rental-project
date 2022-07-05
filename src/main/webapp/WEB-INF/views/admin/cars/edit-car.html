@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit car</title>
+    <link th:href="@{/statics/images/icon.png}" rel="icon" type="image/x-icon" href="../../statics/images/icon.png">
+    <script th:src="@{/statics/js/utils/ErrorManager.js}" type="text/javascript" src="../../statics/js/utils/ErrorManager.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link th:href="@{/statics/css/utils/error.css}" rel="stylesheet" href="../../statics/utils/error.css">
+    <link th:href="@{/statics/css/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
+    <link th:href="@{/statics/css/utils/links.css}" rel="stylesheet" href="../../statics/utils/links.css">
+    <style>
+        #carEdit {
+            width: 40em;
+        }
+
+        .car-icon {
+            width: 10em;
+            height: 4em;
+        }
+
+        .car-icon img{
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<!-- header -->
+<header th:replace="/templates/headers :: inRoleHeader ('admin', 'none')"></header>
+
+<!-- body -->
+<div class="container mt-5 ">
+    <form class="m-auto p-4 border border-2 rounded-2" id="carEdit" action="/car-rental-service/admin/cars/2/edit" method="post" novalidate
+          th:method="POST" th:action="@{/car-rental-service/admin/cars/{id}/edit(id=${id})}" th:object="${car}">
+        <div class="row">
+            <div class="col-6">
+                <div class="car-icon">
+                    <img th:src="@{/statics/images/car.png}" th:alt="*{brand} + ' ' + *{name}" alt="car">
+                </div>
+            </div>
+        </div>
+        <div class="mt-5">
+            <div class="mt-4">
+                <div class="row my-2">
+                    <label th:text="#{select.brand}" class="col-6" for="brandSelect">Select brand:</label>
+                    <div class="col-3">
+                        <select class="form-select" id="brandSelect" aria-label="Brand select">
+                            <option th:each="brand : ${brands}"
+                                    th:text="${brand}"
+                                    th:value="${brand}"
+                                    th:selected="${brand} == *{brand}">BMW
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <label th:text="#{enter.new} + ':'" class="col-6" for="newBrandInput">Or enter new:</label>
+                    <div class="col-6">
+                        <input class="form-control validate" id="newBrandInput" type="text" th:placeholder="#{brand}" aria-label="New brand input">
+                        <span class="error" aria-live="polite"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="row my-2">
+                    <label th:text="#{name} + ':'" class="col-6" for="nameInput">Name</label>
+                    <div class="col-6">
+                        <input th:field="*{name}" class="form-control validate" id="nameInput" type="text" aria-label="Name input" required>
+                        <span class="error" aria-live="polite"></span>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <label th:text="#{number}" class="col-6" for="numberInput">Number</label>
+                    <div class="col-6">
+                        <input th:field="*{number}" class="form-control validate" id="numberInput" type="text" aria-label="Number input" required>
+                        <span class="error" aria-live="polite"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="row my-2">
+                    <label th:text="#{select.segment}" class="col-6" for="segmentSelect">Select segment</label>
+                    <div class="col-3">
+                        <select class="form-select" id="segmentSelect" aria-label="Segment select">
+                            <option th:each="segment : ${segments}"
+                                    th:text="${segment}"
+                                    th:value="${segment}"
+                                    th:selected="${segment} == *{segment}">A
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="row my-2">
+                    <label th:text="#{select.color}" class="col-6" for="colorSelect">Select color</label>
+                    <div class="col-3">
+                        <select class="form-select" id="colorSelect" aria-label="Color select">
+                            <option th:each="color : ${colors}"
+                                    th:text="${color}"
+                                    th:value="${color}"
+                                    th:selected="${color} == *{color}">BLACK
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row my-2">
+                    <label th:text="#{enter.new} + ':'" class="col-6" for="newColorInput">Or enter new:</label>
+                    <div class="col-6">
+                        <input class="form-control validate" id="newColorInput" type="text" aria-label="New color input" th:placeholder="#{color}">
+                        <span class="error" aria-live="polite"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="row my-2">
+                    <label th:text="#{price.per.day}" class="col-6" for="pricePerDayInput">Price per day</label>
+                    <div class="col-6">
+                        <input th:field="*{pricePerDay}" class="form-control validate" id="pricePerDayInput" type="number" min="50" max="10000" aria-label="Price per day input" required>
+                        <span class="error" aria-live="polite"></span>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <input type="hidden" id="externalError" value="1">
+                <span class="error" aria-live="polite"></span>
+            </div>
+            <div>
+                <input type="hidden" th:field="*{status}">
+            </div>
+        </div>
+        <div class="d-flex justify-content-center mt-5">
+            <div class="col-3">
+                <button th:text="#{apply}" class="btn btn-success w-100" type="submit">Apply</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+
+<script th:inline="javascript">
+
+    // variables
+    const form  = document.getElementsByTagName('form')[0];
+    const nameInput = document.getElementById("nameInput");
+    const numberInput = document.getElementById("numberInput");
+    const pricePerDayInput = document.getElementById("pricePerDayInput");
+
+    const segmentSelect = document.getElementById("segmentSelect");
+    const brandSelect = document.getElementById("brandSelect");
+    const colorSelect = document.getElementById("colorSelect");
+
+    const newBrandInput = document.getElementById("newBrandInput");
+    const newColorInput = document.getElementById("newColorInput");
+
+    let carNumberAlreadyExistsException = /*[[${carNumberAlreadyExistsException}  == true]]*/ false;
+
+    const nonEmptyStringRegexp = /*[[#{non.empty.string.regexp}]]*/ "Aa";
+    const carNumberRegexp = /*[[#{car.number.regexp}]]*/ "AA 1111 AA"
+
+    nameInput.setAttribute("pattern", nonEmptyStringRegexp);
+    numberInput.setAttribute("pattern", carNumberRegexp);
+
+    newBrandInput.setAttribute("pattern", nonEmptyStringRegexp);
+    newColorInput.setAttribute("pattern", nonEmptyStringRegexp);
+
+    const additionalErrors = new Map();
+    additionalErrors.set(externalError, carNumberAlreadyExistsException);
+
+    // functions
+    getErrorMessage = (element) => {
+        let message = null;
+
+        if(additionalErrors.has(element) && additionalErrors.get(element)){
+            if(element === externalError)
+                message = /*[[#{car.already.exists.exception.exception}]]*/ 'Car with such number already exists.';
+        } else {
+            if (element.validity.valueMissing)
+                message = /*[[#{required.error}]]*/ 'This field is required.';
+            else if (element.validity.typeMismatch)
+                message = /*[[#{invalid.type.error}]]*/ 'This field must match its type.';
+            else if (element.validity.patternMismatch)
+                message = /*[[#{invalid.structure.error}]]*/ 'This field must match its structure.';
+            else if (element.validity.rangeUnderflow || element.validity.rangeOverflow)
+                message = /*[[#{invalid.range.error}]]*/ 'Incorrect range of field';
+        }
+
+        return message;
+    }
+
+    // check errors on document start
+    const errorsMap = new Map();
+    errorsMap.set(carNumberAlreadyExistsException, externalError);
+    document.addEventListener('DOMContentLoaded', () => {
+        onStart(errorsMap);
+    });
+
+    // check errors by input
+    const inputArr = [nameInput, numberInput, pricePerDayInput];
+    const newInputArr = [newBrandInput, newColorInput]
+
+    inputArr.concat(newInputArr).forEach(element => {
+        element.addEventListener('input', function () {
+            onInput(element, getErrorMessage)
+        })
+    });
+
+    const forkTags = new Map();
+    forkTags.set(newBrandInput, brandSelect);
+    forkTags.set(newColorInput, colorSelect);
+
+    forkTags.forEach((select, input) => {
+        input.addEventListener('input', function(){
+            select.disabled = input.value !== '';
+        })
+    });
+
+    // check errors by submit
+    form.addEventListener('submit', function (event) {
+        let hasException = onSubmit(inputArr.concat(newInputArr), getErrorMessage);
+
+        if(hasException) {
+            event.preventDefault();
+        } else {
+            addHiddenInForm(form, 'segment', segmentSelect.value)
+
+            if(brandSelect.disabled === false) addHiddenInForm(form, 'brand', brandSelect.value);
+            else addHiddenInForm(form, 'brand', newBrandInput.value);
+
+            if(colorSelect.disabled === false) addHiddenInForm(form, 'color', colorSelect.value);
+            else addHiddenInForm(form, 'color', newColorInput.value);
+        }
+    });
+
+    const addHiddenInForm = (form, name, value) => {
+        const newChild = document.createElement('input')
+        newChild.setAttribute("type", "hidden");
+        newChild.setAttribute("name", name);
+        newChild.setAttribute("value", value);
+        form.appendChild(newChild);
+        return newChild;
+    }
+</script>
+
+</html>

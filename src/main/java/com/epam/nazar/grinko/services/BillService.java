@@ -60,7 +60,7 @@ public class BillService {
     public long getDriverPrice(CarDto carDto){
         double driverPrice = carDto.getPricePerDay() * constants.PERCENT_OF_CAR_PRICE();
         driverPrice = driverPrice > constants.MIN_DRIVER_PRICE() ? driverPrice : constants.MIN_DRIVER_PRICE();
-        driverPrice *= getSegmentMarkup(carDto.getSegment());
+        driverPrice *= getSegmentMarkup(CarSegment.valueOf(carDto.getSegment()));
         if(driverPrice % 10 != 0) driverPrice = ((driverPrice / 10) + 1) * 10;
         return (long) driverPrice;
     }

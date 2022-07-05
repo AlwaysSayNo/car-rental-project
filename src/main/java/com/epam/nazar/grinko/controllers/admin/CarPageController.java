@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("car-rental-service/admin/cars/{id}")
@@ -33,8 +35,14 @@ public class CarPageController {
     }
 
     @ModelAttribute("statuses")
-    private List<CarStatus> addStatusesAttribute(){
-        return Arrays.asList(CarStatus.NOT_RENTED, CarStatus.ON_HOLD);
+    private List<String> addStatusesAttribute(){
+        return getAvailableStatuses();
+    }
+
+    private List<String> getAvailableStatuses() {
+        return Stream.of(CarStatus.NOT_RENTED, CarStatus.ON_HOLD)
+                .map(CarStatus::name)
+                .collect(Collectors.toList());
     }
 
 }

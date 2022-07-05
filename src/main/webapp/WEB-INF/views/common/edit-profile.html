@@ -29,7 +29,7 @@
 <!-- body -->
 <div class="container d-flex justify-content-center mt-5" id="profileForm">
     <form class="col-5 border-2 border p-4 position-relative rounded" action="/car-rental-service/{role}/profile/edit" method="post" novalidate
-          th:method="PATCH" th:action="@{/car-rental-service/{role}/profile/edit(role=${roleValue})}" th:with="roleValue=${userRole}" th:object="${user}">
+          th:method="POST" th:action="@{/car-rental-service/{role}/profile/edit(role=${roleValue})}" th:with="roleValue=${userRole}" th:object="${user}">
         <h3 th:text="#{edit.profile}" class="bg-light px-3 position-absolute form-title"> Edit profile</h3>
         <div class="mb-3 mt-5">
             <label th:text="#{first.name}" class="form-label control-label" for="profileFirstName">First name</label>
@@ -125,7 +125,7 @@
     // check errors on document start
     const errorsMap = new Map();
     errorsMap.set(userAlreadyExistsException, externalError);
-    document.addEventListener('DOMContentLoaded', (event) => {
+    document.addEventListener('DOMContentLoaded', () => {
         onStart(errorsMap);
         profilePassword.value = '';
     });
@@ -134,7 +134,7 @@
     const elementsArr = [profileFirstName, profileLastName, profileEmail,
         profilePassword, profilePhoneNumber, externalError];
     elementsArr.forEach(element => {
-        element.addEventListener('input', function (event) {
+        element.addEventListener('input', function () {
             onInput(element, getErrorMessage)
         })
     });

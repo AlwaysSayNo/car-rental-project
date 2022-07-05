@@ -3,6 +3,7 @@ package com.epam.nazar.grinko.services.car;
 import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.CarBrand;
 import com.epam.nazar.grinko.domians.CarColor;
+import com.epam.nazar.grinko.domians.helpers.CarSegment;
 import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.dto.CarDto;
 import com.epam.nazar.grinko.repositories.CarRepository;
@@ -79,8 +80,8 @@ public class CarService {
 
         return new Car().setBrand(brand)
                 .setColor(color)
-                .setSegment(carDto.getSegment())
-                .setStatus(carDto.getStatus())
+                .setSegment(CarSegment.valueOf(carDto.getSegment()))
+                .setStatus(CarStatus.valueOf(carDto.getStatus()))
                 .setName(carDto.getName())
                 .setNumber(carDto.getNumber())
                 .setPricePerDay(carDto.getPricePerDay());
@@ -90,8 +91,8 @@ public class CarService {
         return new CarDto().setBrand(car.getBrand().getValue())
                 .setName(car.getName())
                 .setNumber(car.getNumber())
-                .setSegment(car.getSegment())
-                .setStatus(car.getStatus())
+                .setSegment(car.getSegment().name())
+                .setStatus(car.getStatus().name())
                 .setColor(car.getColor().getValue())
                 .setPricePerDay(car.getPricePerDay());
     }

@@ -15,12 +15,15 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/car-rental-service/admin/cars/{id}/edit")
@@ -36,36 +39,52 @@ public class CarEditController {
     public String showCarEditPage(@PathVariable("id") Long carId, Model model){
         CarDto carDto = carService.mapToDto(carService.getById(carId));
 
-        model.addAttribute("carDto", carDto);
-        model.addAttribute("carId", carId);
+        model.addAttribute("car", carDto);
+        model.addAttribute("id", carId);
 
-        return "admin/cars/edit-car-by-id";
+        return "admin/cars/edit-car";
     }
 
     @PostMapping()
-    public String saveCarChanges(@PathVariable("id") Long carId, @ModelAttribute("carDto") CarDto carDto,
+    public String saveCarChanges(@PathVariable("id") Long carId,
+                                 @Valid @ModelAttribute("carDto") CarDto carDto, BindingResult bindingResult,
                                  Model model){
-        Car car = carService.mapToObject(carDto);
+        CarDto oldCarDto = carService.mapToDto(carService.getById(carId));
 
-        if(existsAnotherWithNumber(car)){
-            model.addAttribute(ViewExceptionsConstants.CAR_NUMBER_ALREADY_EXISTS_EXCEPTION, true);
-            model.addAttribute("carDto", carDto);
-            model.addAttribute("carId", carId);
+        if(bindingResult.hasErrors()) {
+            log.info("CAR-EDIT FAILURE: invalid data.");
 
-            return "admin/cars/edit-car-by-id";
+            return "admin/cars/edit-car";
         }
 
-        carService.updateCarById(carId, car);
+        if(existsAnotherWithNumber(carDto.getNumber(), carId)){
+            log.info("CAR-EDIT FAILURE: carId={}, oldNumber={}, newNumber={}",
+                    carId, oldCarDto.getNumber(), carDto.getNumber());
+
+            model.addAttribute(ViewExceptionsConstants.CAR_NUMBER_ALREADY_EXISTS_EXCEPTION, true);
+            model.addAttribute("car", carDto);
+            return "admin/cars/edit-car";
+        }
+
+        carColorService.addColorIfExists(carDto.getColor());
+        carBrandService.addBrandIfNotExists((carDto.getBrand()));
+
+        Car newCar = carService.mapToObject(carDto).setId(carId);
+
+        carService.updateCarById(carId, newCar);
+        log.info("CAR-EDIT SUCCESS: carId={}, oldData={}, newData={}",
+                carId, oldCarDto, carDto);
+
         return "redirect:/car-rental-service/admin/cars";
     }
 
     @PostMapping("/change-status")
     public String changeCarStatus(@PathVariable("id") Long carId,
-                                  @ModelAttribute("statuses") ArrayList<CarStatus> statuses,
                                   @RequestParam("newStatus") String newStatus){
         CarStatus status = CarStatus.valueOf(newStatus);
         Car car = carService.getById(carId);
-        if(!getAvailableStatuses().contains(status) || car.getStatus().equals(status)) {
+
+        if(car.getStatus().equals(status)) {
             log.info("CAR-EDIT-STATUS FAILURE: oldStatus={}, newStatus={}", car.getStatus().name(), status.name());
             return "redirect:/car-rental-service/admin/cars/" + carId;
         }
@@ -89,38 +108,46 @@ public class CarEditController {
         Car car = carService.getById(carId);
         CarStatus status = car.getStatus();
 
-        if(!getAvailableStatuses().contains(status))
+        if(!getAvailableStatuses().contains(status.name()))
             throw new IllegalPathVariableException("Car with id " + carId + " cannot be modified");
     }
 
     @ModelAttribute("brands")
-    private List<CarBrand> addBrandsAttribute(){
-        return carBrandService.getAllCarBrands();
+    private List<String> addBrandsAttribute(){
+        return getAvailableBrands();
     }
 
     @ModelAttribute("colors")
-    private List<CarColor> addColorsAttribute(){
-        return carColorService.getAll();
+    private List<String> addColorsAttribute(){
+        return getAvailableColors();
     }
 
     @ModelAttribute("segments")
-    private List<CarSegment> addSegmentsAttribute(){
-        return Arrays.asList(CarSegment.values());
+    private List<String> addSegmentsAttribute(){
+        return Arrays.stream(CarSegment.values()).map(CarSegment::name).collect(Collectors.toList());
     }
 
-    @ModelAttribute("statuses")
-    private List<CarStatus> addStatusesAttribute(){
-        return getAvailableStatuses();
+    private List<String> getAvailableBrands(){
+        return carBrandService.getAll().stream()
+                .map(CarBrand::getValue)
+                .collect(Collectors.toList());
     }
 
-    private List<CarStatus> getAvailableStatuses() {
-        return Arrays.asList(CarStatus.NOT_RENTED, CarStatus.ON_HOLD);
+    private List<String> getAvailableColors(){
+        return carColorService.getAll().stream()
+                .map(CarColor::getValue)
+                .collect(Collectors.toList());
     }
 
+    private List<String> getAvailableStatuses() {
+        return Stream.of(CarStatus.NOT_RENTED, CarStatus.ON_HOLD)
+                .map(CarStatus::name)
+                .collect(Collectors.toList());
+    }
 
-    private boolean existsAnotherWithNumber(Car car){
-        Optional<Car> tmp = carService.getByNumber(car.getNumber());
-        return tmp.isPresent() && !car.getId().equals(tmp.get().getId());
+    private boolean existsAnotherWithNumber(String number, Long carId){
+        Optional<Car> tmp = carService.getByNumber(number);
+        return tmp.isPresent() && !carId.equals(tmp.get().getId());
     }
 
 }

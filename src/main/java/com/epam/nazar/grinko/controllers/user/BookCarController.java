@@ -73,7 +73,7 @@ public class BookCarController {
     public String processPayment(@PathVariable("id") Long carId, @ModelAttribute("billDto") BillDto billDto,
                                  @ModelAttribute("paymentDetailsDto") PaymentDetailsDto paymentDetailsDto){
         CarDto carDto = carService.mapToDto(carService.getById(carId));
-        carDto.setStatus(CarStatus.ON_PROCESSING);
+        carDto.setStatus(CarStatus.ON_PROCESSING.name());
 
         UserDto userDto = userService.mapToDto(userService.getById(carId));
 
