@@ -54,7 +54,8 @@ public class CarEditController {
         if(bindingResult.hasErrors()) {
             log.info("CAR-EDIT FAILURE: invalid data.");
 
-            return "admin/cars/edit-car";
+            String url = "/car-rental-service/admin/cars/" + carId + "/edit";
+            return "redirect:" + url;
         }
 
         if(existsAnotherWithNumber(carDto.getNumber(), carId)){
@@ -63,6 +64,7 @@ public class CarEditController {
 
             model.addAttribute(ViewExceptionsConstants.CAR_NUMBER_ALREADY_EXISTS_EXCEPTION, true);
             model.addAttribute("car", carDto);
+            model.addAttribute("id", carId);
             return "admin/cars/edit-car";
         }
 
