@@ -35,8 +35,8 @@ public class ManagerCreationController {
             return "redirect:/car-rental-service/admin/managers";
         }
 
-        userDto.setRole(UserRole.ROLE_MANAGER)
-                .setStatus(UserStatus.ACTIVE)
+        userDto.setRole(UserRole.ROLE_MANAGER.name())
+                .setStatus(UserStatus.ACTIVE.name())
                 .setPassword(userService.encodePassword(userDto.getPassword()));
         userService.save(userService.mapToObject(userDto));
 

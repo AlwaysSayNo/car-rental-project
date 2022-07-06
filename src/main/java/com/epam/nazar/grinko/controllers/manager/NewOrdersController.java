@@ -31,7 +31,7 @@ public class NewOrdersController {
     private final ManagerDecisionService decisionService;
     private final CancellationService cancellationService;
     private final JwtTokenProvider jwtTokenProvider;
-
+    //TODO сделать фильтрацию для заблокированного менеджера
     @GetMapping()
     public String showNewOrderPage(@PathVariable("id") Long orderId, Model model){
         OrderDto orderDto = orderService.mapToDto(orderService.getById(orderId));

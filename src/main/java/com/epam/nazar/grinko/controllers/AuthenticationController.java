@@ -78,8 +78,8 @@ public class AuthenticationController {
             return "sign-up";
         }
 
-        userDto.setRole(UserRole.ROLE_USER)
-                .setStatus(UserStatus.ACTIVE)
+        userDto.setRole(UserRole.ROLE_USER.name())
+                .setStatus(UserStatus.ACTIVE.name())
                 .setPassword(userService.encodePassword(userDto.getPassword()));
         User user = userService.mapToObject(userDto);
         userService.save(user);

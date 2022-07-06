@@ -83,7 +83,8 @@ public class CarEditController {
         Car car = carService.getById(carId);
 
         if(car.getStatus().equals(status)) {
-            log.info("CAR-EDIT-STATUS FAILURE: oldStatus={}, newStatus={}", car.getStatus().name(), status.name());
+            log.info("CAR-EDIT-STATUS FAILURE: carId={}, oldStatus={}, newStatus={}",
+                    carId, car.getStatus().name(), status.name());
             return "redirect:/car-rental-service/admin/cars/" + carId;
         }
 
@@ -97,6 +98,7 @@ public class CarEditController {
     @PostMapping("/delete")
     public String deleteCar(@PathVariable("id") Long carId){
         carService.deleteById(carId);
+        log.info("CAR-DELETE SUCCESS: carId={}", carId);
         return "redirect:/car-rental-service/admin/cars";
     }
 

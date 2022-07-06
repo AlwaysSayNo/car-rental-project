@@ -19,7 +19,7 @@ public class UserQueryManipulationService extends AbstractQueryManipulation<User
 
     protected UserQueryManipulationService(EntityManager em) {
         super(em, Arrays.asList("status", "role"),
-                Arrays.asList("email", "firstName", "lastName"), User.class);
+                Arrays.asList("id", "email", "firstName", "lastName"), User.class);
     }
 
     @Override

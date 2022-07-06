@@ -37,6 +37,7 @@ public class ActiveOrdersController {
     private final BreakdownService breakdownService;
     private final JwtTokenProvider jwtTokenProvider;
 
+    //TODO сделать фильтрацию для заблокированного менеджера
     @GetMapping()
     public String showActiveOrderPage(@PathVariable("id") Long orderId, Model model){
         OrderDto orderDto = orderService.mapToDto(orderService.getById(orderId));

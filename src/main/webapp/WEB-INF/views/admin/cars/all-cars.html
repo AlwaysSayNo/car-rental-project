@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Car list</title>
     <link th:href="@{/statics/images/icon.png}" rel="icon" type="image/x-icon" href="../../statics/images/icon.png">
-    <script type="text/javascript" th:src="@{/statics/js/utils/SortFilterForm.js}" src="../../statics/js/utils/SortFilterForm.js"></script>
-    <script type="text/javascript" th:src="@{/statics/js/utils/UrlManager.js}" src="../../statics/js/utils/UrlManager.js"></script>
+    <script th:src="@{/statics/js/utils/SortFilterForm.js}" type="text/javascript" src="../../statics/js/utils/SortFilterForm.js"></script>
+    <script th:src="@{/statics/js/utils/UrlManager.js}" type="text/javascript" src="../../statics/js/utils/UrlManager.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link th:href="@{/statics/css/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
     <link th:href="@{/statics/css/utils/links.css}" rel="stylesheet" href="../../statics/utils/links.css">
@@ -34,46 +34,21 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-7 d-flex align-items-center">
-            <h1 th:text="#{car.list}" class="big-text col-4">Car list</h1>
+            <h1 th:text="#{cars.list}" class="big-text col-4">Car list</h1>
             <div class="col-8 mx-2">
                 <button th:text="#{add.new.car}" class="btn btn-success h-50" type="submit" id="addNewCarButton">Add new</button>
             </div>
         </div>
         <form th:method="GET" th:action="@{/car-rental-service/admin/cars}" action="../all-cars.html" id="filterSortForm" class="col-5 d-flex align-items-center">
-
             <!-- filters -->
-            <select id="filterSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Filter">
-                <option value="none" selected
-                        th:text="#{filter}"
-                        th:selected="${filterBy} == 'none'">Filter
-                </option>
-                <optgroup th:each="filter : ${filtersMap.entrySet()}" th:with="key=${filter.key}" th:label="${filter.key}" label="optgroup">
-                    <option th:each="value : ${filter.value}"
-                            th:text="${filter.key} + ': ' + ${value}"
-                            th:value="${value}"
-                            th:selected="(${filterBy} == ${key}) and (${filterValue} == ${value})">Filter value
-                    </option>
-                </optgroup>
+            <select th:replace="/templates/filters :: filterSelect (${filtersMap}, ${filterBy}, ${filterValue})"
+                    id="filterSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Filter">
             </select>
-            <input type="hidden" name="filterBy" id="filterBy"/>
-            <input type="hidden" name="filterValue" id="filterValue"/>
 
             <!-- sorts -->
-            <select id="sortSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Sort">
-                <option value="none" selected
-                        th:text="#{sort}"
-                        th:selected="${sortBy} == 'none'">Sort
-                </option>
-                <optgroup th:each="sort : ${sortsMap.entrySet()}" th:with="key=${sort.key}" th:label="${sort.key}" label="optgroup">
-                    <option th:each="value : ${sort.value}"
-                            th:text="${key} + ' ' + (${value} == 'ASC' ? '🡅' : '🡇')"
-                            th:value="${value}"
-                            th:selected="(${sortBy} == ${key}) and (${direction} == ${value})">Filter value
-                    </option>
-                </optgroup>
+            <select th:replace="/templates/sorts :: sortSelect (${sortsMap}, ${sortBy}, ${direction})"
+                    id="sortSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Sort">
             </select>
-            <input type="hidden" name="sortBy" id="sortBy" />
-            <input type="hidden" name="direction" id="direction" />
 
             <button th:text="#{apply}" class="btn btn-outline-secondary w-100 h-50 mx-2" id="applyButton" type="submit">Apply</button>
         </form>

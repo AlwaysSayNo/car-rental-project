@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Managers list</title>
+
+    <link th:href="@{/statics/images/icon.png}" rel="icon" type="image/x-icon" href="../../statics/images/icon.png">
+    <script th:src="@{/statics/js/utils/SortFilterForm.js}" type="text/javascript" src="../../statics/js/utils/SortFilterForm.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link th:href="@{/statics/css/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
+    <link th:href="@{/statics/css/utils/links.css}" rel="stylesheet" href="../../statics/utils/links.css">
+    <style>
+        .big-text {
+            font-size: 3.5em !important;
+        }
+
+        .car-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<!-- header -->
+<header th:replace="/templates/headers :: inRoleHeader ('admin', 'managers')"></header>
+
+<!-- body -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-7 d-flex align-items-center">
+            <h1 th:text="#{managers.list}" class="big-text col-4">Managers</h1>
+            <div class="col-8 mx-2">
+                <button th:text="#{add.new.manager}" class="btn btn-success h-50" type="submit" id="addNewManagerButton">Add new</button>
+            </div>
+        </div>
+        <form th:method="GET" th:action="@{/car-rental-service/admin/managers}" action="../all-cars.html" id="filterSortForm" class="col-5 d-flex align-items-center">
+            <!-- filters -->
+            <select th:replace="/templates/filters :: filterSelect (${filtersMap}, ${filterBy}, ${filterValue})"
+                    id="filterSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Filter">
+            </select>
+
+            <!-- sorts -->
+            <select th:replace="/templates/sorts :: sortSelect (${sortsMap}, ${sortBy}, ${direction})"
+                    id="sortSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Sort">
+            </select>
+
+            <button th:text="#{apply}" class="btn btn-outline-secondary w-100 h-50 mx-2" id="applyButton" type="submit">Apply</button>
+        </form>
+    </div>
+</div>
+
+<!-- Manager List -->
+<form method="post" action="delete-manager" class="container mt-5" id="deleteChangeForm">
+    <div class="row p-2 border rounded-2 my-2"
+         th:each="manager, iterStat : ${managers}"
+         th:object="${manager}">
+        <div class="col-3 row align-items-center">
+            <span th:text="#{email} + ':'" class="col-3 fw-bold">Email:</span>
+            <span th:text="*{email}" class="col form-control">manager1@mail.com</span>
+        </div>
+
+        <div class="col-1 row align-items-center">
+            <span th:text="#{id} + ':'" class="col fw-bold">Id:</span>
+            <span th:text="${ids.get(iterStat.index)}" class="col form-control">1</span>
+        </div>
+
+        <div class="col-3 row align-items-center">
+            <span th:text="#{first.name} + ':'" class="col-5 fw-bold">First Name:</span>
+            <span th:text="*{firstName}" class="col form-control">Email:</span>
+        </div>
+
+        <div class="col-3 row align-items-center">
+            <span th:text="#{last.name} + ':'" class="col-5 fw-bold">Last Name:</span>
+            <span th:text="*{lastName}" class="col form-control">Email:</span>
+        </div>
+
+        <div class="col">
+            <select class="form-select btn btn-primary statusSelect " aria-label="Status select"
+                    th:href="@{/car-rental-service/admin/managers/{id}/edit(id=${ids.get(iterStat.index)})}">
+                <option th:each="status : ${statuses}"
+                        th:text="${status}"
+                        th:value="${status}"
+                        th:selected="${status} == *{status}">ACTIVE
+                </option>
+            </select>
+        </div>
+
+        <div class="col-1">
+            <button th:text="#{delete}" class="btn btn-danger w-100 deleteManagerButton" type="submit"
+                    th:href="@{/car-rental-service/admin/managers/{id}/edit(id=${ids.get(iterStat.index)})}">Delete
+            </button>
+        </div>
+
+        <div>
+            <a type="hidden" id="editHref" href="http://localhost:8080/car-rental-service/admin/managers/2/edit"
+               th:href="@{/car-rental-service/admin/managers/{id}/edit(id=${ids.get(iterStat.index)})}"></a>
+        </div>
+    </div>
+</form>
+
+<!-- Managers nav -->
+<div th:replace="/templates/paginations :: pagination (${pageNumbers}, ${itemStep}, ${totalPages}, ${page}, ${size})"></div>
+
+</body>
+<script th:inline="javascript">
+    const form = document.getElementById("deleteChangeForm");
+    const filterSelect = document.getElementById('filterSelect');
+    const sortSelect = document.getElementById('sortSelect');
+    const deleteButtonsArr = document.getElementsByClassName("deleteManagerButton");
+    const statusSelectsArr = document.getElementsByClassName("statusSelect");
+
+    document.getElementById("filterSortForm").addEventListener('submit', function (event) {
+        submitForm(this, event, filterSelect, sortSelect);
+    });
+
+    document.getElementsByClassName("addNewManagerButton").onclick = function() {
+        location.href = /*[[@{/car-rental-service/admin/managers/new}]]*/ "http://localhost:8080/car-rental-service/admin/managers/new";
+    };
+
+    Array.from(deleteButtonsArr).forEach((button) => {
+        button.onclick = function() {
+            form.method = 'post';
+            form.action = button.getAttribute("href") + '/delete';
+        }
+    });
+
+    Array.from(statusSelectsArr).forEach((select) => {
+        select.onchange = function() {
+            form.method = 'post';
+            form.action = select.getAttribute("href") + '/change-status';
+
+            addHiddenInForm(form, 'newStatus', select.value);
+            form.submit();
+        }
+    });
+</script>
+</html>

@@ -5,14 +5,19 @@
     <title>Filters</title>
 </head>
 <body>
-<div th:fragment="filter (id, filtersMap)">
-    <select th:id="${id}" th:with="filters=${filtersMap}" class="btn dropdown-toggle btn-outline-secondary w-100 h-50 mx-1" aria-label="Filter">
-        <optgroup th:each="filter : ${filters.instanceMap}" th:label="${filter.key}" th:value="${filter.key}" label="optgroup">
-            <option value="NONE" selected>Filter</option>
-            <option th:with="values=${filter.value}" th:each="value : ${values}" th:value="${value}">Filter value</option>
-        </optgroup>
-    </select>
-</div>
-
+<!-- filters -->
+<select th:fragment="filterSelect (filtersMap, filterBy, filterValue)" id="filterSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Filter">
+    <option value="none" selected
+            th:text="#{filter}"
+            th:selected="${filterBy} == 'none'">Filter
+    </option>
+    <optgroup th:each="filter : ${filtersMap.entrySet()}" th:with="key=${filter.key}" th:label="${filter.key}" label="optgroup">
+        <option th:each="value : ${filter.value}"
+                th:text="${filter.key} + ': ' + ${value}"
+                th:value="${value}"
+                th:selected="(${filterBy} == ${key}) and (${filterValue} == ${value})">Filter value
+        </option>
+    </optgroup>
+</select>
 </body>
 </html>

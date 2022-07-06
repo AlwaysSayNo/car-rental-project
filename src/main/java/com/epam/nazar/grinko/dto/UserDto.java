@@ -2,8 +2,6 @@ package com.epam.nazar.grinko.dto;
 
 import com.epam.nazar.grinko.constants.ErrorsMessagesConstants;
 import com.epam.nazar.grinko.constants.RegexpConstants;
-import com.epam.nazar.grinko.domians.helpers.UserStatus;
-import com.epam.nazar.grinko.domians.helpers.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,6 +31,6 @@ public class UserDto {
     @Pattern(regexp = RegexpConstants.LAST_NAME, message = ErrorsMessagesConstants.INVALID_STRUCTURE)
     private String lastName;
 
-    private UserStatus status;
-    private UserRole role;
+    private String status;
+    private String role;
 }

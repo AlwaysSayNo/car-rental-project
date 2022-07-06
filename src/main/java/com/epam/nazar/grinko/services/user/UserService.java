@@ -80,8 +80,8 @@ public class UserService {
                 .setPhoneNumber(userDto.getPhoneNumber())
                 .setFirstName(userDto.getFirstName())
                 .setLastName(userDto.getLastName())
-                .setStatus(userDto.getStatus())
-                .setRole(userDto.getRole());
+                .setStatus(UserStatus.valueOf(userDto.getStatus()))
+                .setRole(UserRole.valueOf(userDto.getRole()));
     }
 
     public UserDto mapToDto(User user){
@@ -90,8 +90,8 @@ public class UserService {
                 .setPhoneNumber(user.getPhoneNumber())
                 .setFirstName(user.getFirstName())
                 .setLastName(user.getLastName())
-                .setStatus(user.getStatus())
-                .setRole(user.getRole());
+                .setStatus(user.getStatus().name())
+                .setRole(user.getRole().name());
     }
 
     public UserQueryManipulationService getManipulationService() {

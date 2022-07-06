@@ -1,4 +1,4 @@
-submitForm = (form, event, filterSelect, sortSelect) => {
+const submitForm = (form, event, filterSelect, sortSelect) => {
     const none = 'none'
 
     const map = new Map();
@@ -6,10 +6,11 @@ submitForm = (form, event, filterSelect, sortSelect) => {
     map.set('optionValue', '');
 
 
-    const filterBy = form.querySelector('#filterBy');
-    const filterValue = form.querySelector('#filterValue');
+    const filterBy = addHiddenInForm(form, 'filterBy', '');
+    const filterValue = addHiddenInForm(form, 'filterValue', '');
     if(filterSelect.value !== none){
         getFromOptgroup(filterSelect, map);
+        
         filterBy.value = map.get('optgroupLabel');
         filterValue.value = map.get('optionValue');
     } else{
@@ -17,8 +18,8 @@ submitForm = (form, event, filterSelect, sortSelect) => {
         filterValue.disabled = true;
     }
 
-    const sortBy = form.querySelector('#sortBy');
-    const direction = form.querySelector('#direction');
+    const sortBy = addHiddenInForm(form, 'sortBy', '');
+    const direction = addHiddenInForm(form, 'direction', '');
     if(sortSelect.value !== none){
         getFromOptgroup(sortSelect, map);
 
@@ -31,7 +32,7 @@ submitForm = (form, event, filterSelect, sortSelect) => {
 
 }
 
-getFromOptgroup = (select, map) => {
+const getFromOptgroup = (select, map) => {
     const sortChildren = Array.prototype.slice.call(select.children);
 
     sortChildren.forEach(function (optgroup){
@@ -46,4 +47,13 @@ getFromOptgroup = (select, map) => {
             })
         }
     })
+}
+
+const addHiddenInForm = (form, name, value) => {
+    const newChild = document.createElement('input')
+    newChild.setAttribute("type", "hidden");
+    newChild.setAttribute("name", name);
+    newChild.setAttribute("value", value);
+    form.appendChild(newChild);
+    return newChild;
 }

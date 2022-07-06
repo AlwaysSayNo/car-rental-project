@@ -23,26 +23,6 @@ public class AdminController {
 
     private final UserService userService;
 
-    @GetMapping("/managers")
-    public String showAllManagers(@RequestParam(value = "sortBy", required = false) String sortBy,
-                                  @RequestParam(value = "direction", required = false) String direction,
-                                  @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-                                  @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
-                                  @RequestParam(value = "filterBy", required = false) String filterBy,
-                                  @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
-        PageRequest pageRequest = userService.getManipulationService().createRequest(page - 1, size, sortBy, direction);
-        Page<User> managers = userService.getUsersByRole(pageRequest, UserRole.ROLE_MANAGER, filterBy, filterValue);
-
-        Page<UserDto> managersDto = managers.map(userService::mapToDto);
-        List<Long> allId = managers.stream().map(User::getId).collect(Collectors.toList());
-
-        model.addAttribute("managers", managersDto);
-        model.addAttribute("ids", allId);
-
-        return "admin/managers/show-managers";
-    }
-
-
     @GetMapping("/registered-users")
     public String showAllRegistered(@RequestParam(value = "sortBy", required = false) String sortBy,
                                     @RequestParam(value = "direction", required = false) String direction,
