@@ -32,8 +32,4 @@ public class Breakdown {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_details_id")
-    private PaymentDetails paymentDetails;
-
 }

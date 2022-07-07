@@ -18,6 +18,4 @@ public class BreakdownDto {
 
     private OrderDto order;
 
-    private PaymentDetailsDto paymentDetails;
-
 }

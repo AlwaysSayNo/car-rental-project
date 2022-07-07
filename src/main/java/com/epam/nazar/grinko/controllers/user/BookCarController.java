@@ -82,7 +82,6 @@ public class BookCarController {
                 .setStatus(OrderStatus.UNDER_CONSIDERATION);
 
         billDto.setOrder(orderDto)
-                .setPaymentDetails(paymentDetailsDto)
                 .setStatus(BillStatus.PAID);
 
         billService.addBill(billService.mapToObject(billDto));

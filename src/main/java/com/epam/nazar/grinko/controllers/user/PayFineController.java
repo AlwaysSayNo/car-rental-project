@@ -46,7 +46,7 @@ public class PayFineController {
     public String evaluatePayFine(HttpServletRequest request, @ModelAttribute("paymentDetails") PaymentDetailsDto paymentDetailsDto,
                                   @PathVariable("id") Long carId){
         Order order = getRepairOrderByFields(request, carId).orElseThrow(IllegalPathVariableException::new);
-        breakdownService.payFine(order, paymentDetailsDto);
+        breakdownService.payFine(order);
 
         return "redirect:/car-rental-service/user/cars";
     }

@@ -15,7 +15,6 @@ import java.util.Calendar;
 public class BillDto {
 
     private OrderDto order;
-    private PaymentDetailsDto paymentDetails;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @MinDateToday
     private Calendar startDate;

@@ -23,10 +23,6 @@ public class Bill {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_details_id")
-    private PaymentDetails paymentDetails;
-
     @Column(name = "start_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Calendar startDate;

@@ -21,7 +21,6 @@ public class BillService {
 
     private final BillRepository billRepository;
     private final OrderService orderService;
-    private final PaymentDetailsService paymentDetailsService;
     private final BillConstants constants;
 
     public void addBill(Bill bill){
@@ -35,7 +34,6 @@ public class BillService {
 
     public Bill mapToObject(BillDto billDto){
         return new Bill().setOrder(orderService.mapToObject(billDto.getOrder()))
-                .setPaymentDetails(paymentDetailsService.mapToObject(billDto.getPaymentDetails()))
                 .setStartDate(billDto.getStartDate())
                 .setExpirationDate(billDto.getExpirationDate())
                 .setCarPrice(billDto.getCarPrice())
@@ -47,7 +45,6 @@ public class BillService {
 
     public BillDto mapToDto(Bill bill){
         return new BillDto().setOrder(orderService.mapToDto(bill.getOrder()))
-                .setPaymentDetails(paymentDetailsService.mapToDto(bill.getPaymentDetails()))
                 .setStartDate(bill.getStartDate())
                 .setExpirationDate(bill.getExpirationDate())
                 .setCarPrice(bill.getCarPrice())
