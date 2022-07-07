@@ -11,8 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
-import java.util.Calendar;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @ComponentScan("com.epam.nazar.grinko")
@@ -30,6 +29,10 @@ public class BillService {
 
     public Optional<Bill> getByOrderId(Long orderId){
         return billRepository.findDistinctByOrderId(orderId);
+    }
+
+    public Bill getBillsById(Long id){
+        return billRepository.getBillsById(id);
     }
 
     public Bill mapToObject(BillDto billDto){

@@ -23,9 +23,11 @@ INSERT INTO cars (number, car_brand_id, name, car_color_id, price_per_day, segme
 INSERT INTO cars (number, car_brand_id, name, car_color_id, price_per_day, segment, status) VALUES ('DD 2222 DD', 4, 'i30', 4, 300, 'C', 'NOT_RENTED');
 
 # USERS (password=user)
-INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('user1@gmail.com', 'User', 'One', '$2a$12$yvdjbqbVG7XU3zMYR5jGvetqy6dn8IfAEYs7m6UKYoZGG/HRzFYMa', '+380 50 111 11 11', 'ROLE_USER', 'ACTIVE');
-INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('user2@gmail.com', 'User', 'Two', '$2a$12$kViX0LO6nQgmOSeWFOtjE.EUGXs3MNaaxCXM3nxhBcUHXssmCi1ey', '+380 50 222 22 22', 'ROLE_USER', 'ACTIVE');
+INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('user1@gmail.com', 'User', 'One', '$2a$12$yvdjbqbVG7XU3zMYR5jGvetqy6dn8IfAEYs7m6UKYoZGG/HRzFYMa', '+380 50 111 11 11', 'ROLE_USER', 'ON_HOLD');
+INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('user2@gmail.com', 'User', 'Two', '$2a$12$kViX0LO6nQgmOSeWFOtjE.EUGXs3MNaaxCXM3nxhBcUHXssmCi1ey', '+380 50 222 22 22', 'ROLE_USER', 'ON_HOLD');
 INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('user3@gmail.com', 'User', 'Three', '$2a$12$kViX0LO6nQgmOSeWFOtjE.EUGXs3MNaaxCXM3nxhBcUHXssmCi1ey', '+380 50 333 33 33', 'ROLE_USER', 'ON_HOLD');
+INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('user4@gmail.com', 'User', 'Four', '$2a$12$kViX0LO6nQgmOSeWFOtjE.EUGXs3MNaaxCXM3nxhBcUHXssmCi1ey', '+380 50 333 33 33', 'ROLE_USER', 'ON_HOLD');
+INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('user5@gmail.com', 'User', 'Five', '$2a$12$kViX0LO6nQgmOSeWFOtjE.EUGXs3MNaaxCXM3nxhBcUHXssmCi1ey', '+380 50 333 33 33', 'ROLE_USER', 'ACTIVE');
 
 # MANAGER (password=manager)
 INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('manager1@gmail.com', 'Manager', 'One', '$2a$12$Jutrx0iYEyOUtFoWiq/c3OnW39COjtxCpzN3hdgpg3gqPf1EGjaHi', '+380 95 111 11 11', 'ROLE_MANAGER', 'ACTIVE');
@@ -37,8 +39,8 @@ INSERT INTO users (email, first_name, last_name, password, phone_number, role, s
 # ORDER
 INSERT INTO orders (user_id, car_id, status) VALUE (1, 2, 'UNDER_CONSIDERATION');
 INSERT INTO orders (user_id, car_id, status) VALUE (2, 6, 'UNDER_CONSIDERATION');
-INSERT INTO orders (user_id, car_id, status) VALUE (1, 7, 'IN_USE');
-INSERT INTO orders (user_id, car_id, status) VALUE (2, 5, 'REPAIR_PAYMENT');
+INSERT INTO orders (user_id, car_id, status) VALUE (3, 7, 'UNDER_CONSIDERATION');
+INSERT INTO orders (user_id, car_id, status) VALUE (4, 5, 'UNDER_CONSIDERATION');
 
 # BILL
 INSERT INTO bills (order_id, start_date, expiration_date, car_price, with_driver, driver_price, total_price, status) VALUE (1, '2022-02-11', '2022-02-24', 100, false, 0, 100, 'PAID');

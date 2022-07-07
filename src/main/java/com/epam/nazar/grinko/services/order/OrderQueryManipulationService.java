@@ -28,7 +28,7 @@ public class OrderQueryManipulationService extends AbstractQueryManipulation<Ord
     private final CarColorService colorService;
 
     public OrderQueryManipulationService(EntityManager em, CarBrandService brandService, CarColorService colorService){
-        super(em, Arrays.asList("segment", "brand", "color", "status"),
+        super(em, Arrays.asList("segment", "brand", "status"),
                 Arrays.asList("user_firstName", "user_email", "car_name"), Order.class);
         this.brandService = brandService;
         this.colorService = colorService;

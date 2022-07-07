@@ -84,6 +84,7 @@ public class BookCarController {
         billDto.setOrder(orderDto)
                 .setStatus(BillStatus.PAID);
 
+        //TODO fignya
         billService.addBill(billService.mapToObject(billDto));
 
         return "redirect:/car-rental-service/registered-user/active-orders";

@@ -1,25 +1,126 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>All new orders</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New orders list</title>
+    <link th:href="@{/statics/images/icon.png}" rel="icon" type="image/x-icon" href="../../statics/images/icon.png">
+    <script th:src="@{/statics/js/utils/SortFilterForm.js}" type="text/javascript" src="../../statics/js/utils/SortFilterForm.js"></script>
+    <script th:src="@{/statics/js/utils/UrlManager.js}" type="text/javascript" src="../../statics/js/utils/UrlManager.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link th:href="@{/statics/css/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
+    <link th:href="@{/statics/css/utils/links.css}" rel="stylesheet" href="../../statics/utils/links.css">
+    <style>
+
+        .big-text {
+            font-size: 3.5em !important;
+        }
+
+        .car-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-light">
 
-<div th:each="order : ${orders}">
-    <div th:with="user=${order.user}, car=${order.car}">
-        <div th:text="'STATUS:' + ${order.status.name()}"></div>
+<!-- header -->
+<header th:replace="templates/headers :: inRoleHeader ('manager', 'new-orders')" class="container d-flex flex-row-reverse mt-4 border-bottom"></header>
 
-        <div th:text="'USER: '"></div>
-        <div th:text="${user.email}">email</div>
-        <div th:text="${user.phoneNumber}">email</div>
+<!-- body -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-7 d-flex align-items-center">
+            <h1 th:text="#{new.orders.list}" class="big-text w-100">New orders</h1>
+        </div>
+        <form th:method="GET" th:action="@{/car-rental-service/manager/new-orders}" action="../all-cars.html" id="filterSortForm" class="col-5 d-flex align-items-center">
+            <!-- filters -->
+            <select th:replace="/templates/filters :: filterSelect (${filtersMap}, ${filterBy}, ${filterValue})"
+                    id="filterSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Filter">
+            </select>
 
-        <div th:text="'CAR:' "></div>
-        <div th:text="${car.brand}"></div>
-        <div th:text="${car.name}"></div>
-        <div th:text="${car.number}"></div>
+            <!-- sorts -->
+            <select th:replace="/templates/sorts :: sortSelect (${sortsMap}, ${sortBy}, ${direction})"
+                    id="sortSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Sort">
+            </select>
+
+            <button th:text="#{apply}" class="btn btn-outline-secondary w-100 h-50 mx-2" id="applyButton" type="submit">Apply</button>
+        </form>
     </div>
 </div>
 
+<!-- NewOrdersList List -->
+<div id="ordersList" class="container mt-5">
+    <div class="row">
+        <div th:each="order, iterStat : ${orders}" class="order-info col-lg-6 col-md-9 px-3 py-1">
+            <div class="row border rounded-2 p-3"
+                 th:object="${order}"
+                 th:with="bill=${bills.get(iterStat.index)}">
+                <div class="col-3 px-2 d-flex align-items-center">
+                    <div class="car-icon">
+                        <img th:src="@{/statics/images/car.png}" th:alt="*{car.brand} + ' ' + *{car.name}" alt="car">
+                    </div>
+                </div>
+                <div class="col-9">
+                    <div class="row">
+                        <div class="row my-2">
+                            <span th:text="#{email} + ':'" class="col-4 fw-bold">Email:</span>
+                            <span th:text="*{user.email}" class="col-8">user1@gmail.com</span>
+                        </div>
+                        <div class="row my-2">
+                            <span th:text="#{number} + ':'" class="col-4 fw-bold">Number:</span>
+                            <span th:text="*{car.number}" class="col-8 text-uppercase">aa 111 aa</span>
+                        </div>
+                        <div class="row">
+                            <span th:text="#{rent.between}" class="col-4 fw-bold">Rent between</span>
+                            <div th:with="start=${bill.startDate}" class="m-0 col">
+                                <span class="col" type="text" aria-label="Start date"
+                                       th:text="${#calendars.format(start, 'yyyy-MM-dd')}" disabled>
+                                </span>
+                            </div>
+                            <span th:text="#{rent.between.to}" class="col-auto fw-bold text-center">and</span>
+                            <div th:with="expiration=${bill.expirationDate}" class="m-0 col">
+                                <span class="col" type="text" aria-label="Expiration date"
+                                       th:text="${#calendars.format(expiration, 'yyyy-MM-dd')}" disabled>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-9">
+                            <div class="row my-2">
+                                <span th:text="#{price.per.day} + ':'" class="col-5 fw-bold">Price:</span>
+                                <span th:text="${bill.totalPrice}" class="col-7 fw-bold text-success">300$</span>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="row">
+                                <a href="#" class="my-2"
+                                   th:text="#{process} + ' >>'"
+                                   th:with="orderIndex=${iterStat.index}"
+                                   th:href="@{/car-rental-service/manager/new-orders/{id}(id=${ids.get(orderIndex)})}">Process >></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NewOrdersList nav -->
+    <div th:replace="/templates/paginations :: pagination (${pageNumbers}, ${itemStep}, ${totalPages}, ${page}, ${size})"></div>
+</div>
 </body>
+<script th:inline="javascript">
+
+    // variables
+    const form = document.getElementById('filterSortForm');
+    const filterSelect = document.getElementById('filterSelect');
+    const sortSelect = document.getElementById('sortSelect');
+
+    form.addEventListener('submit', function (event) {
+        submitForm(this, event, filterSelect, sortSelect);
+    });
+</script>
 </html>

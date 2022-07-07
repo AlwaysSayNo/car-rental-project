@@ -38,7 +38,7 @@ public class ManagerEditController {
         if(manager.getStatus().equals(status) || !getAvailableStatuses().contains(newStatus)) {
             log.info("MANAGER-EDIT-STATUS FAILURE: managerId={}, oldStatus={}, newStatus={}",
                     managerId, manager.getStatus().name(), newStatus);
-            return "redirect:/car-rental-service/admin/cars/" + managerId;
+            return "redirect:/car-rental-service/admin/managers/";
         }
 
         userService.updateUserStatusById(status, managerId);
@@ -58,7 +58,7 @@ public class ManagerEditController {
     }
 
     private List<String> getAvailableStatuses(){
-        return Arrays.stream(new UserStatus[]{UserStatus.ACTIVE, UserStatus.ON_HOLD})
+        return Arrays.stream(new UserStatus[]{UserStatus.ACTIVE, UserStatus.BANNED})
                 .map(UserStatus::name)
                 .collect(Collectors.toList());
     }

@@ -10,5 +10,6 @@ import java.util.Optional;
 public interface BillRepository extends JpaRepository<Bill, Long> {
 
     Optional<Bill> findDistinctByOrderId(Long orderId);
+    Bill getBillsById(Long id);
 
 }
