@@ -34,19 +34,32 @@
         </h3>
         <div class="mb-3 mt-5">
             <label th:text="#{first.name}" class="form-label control-label" for="addManagerFirstName">First name</label>
-            <input th:field="*{firstName}" class="form-control validate rounded-0" id="addManagerFirstName" type="text">
+            <input th:field="*{firstName}" class="form-control rounded-0" id="addManagerFirstName" type="text" required>
+            <span class="error" aria-live="polite"></span>
         </div>
         <div class="mb-3 mt-5">
             <label th:text="#{last.name}" class="form-label control-label" for="addManagerLastName">Last name</label>
-            <input th:field="*{lastName}" class="form-control validate rounded-0" id="addManagerLastName" type="text">
+            <input th:field="*{lastName}" class="form-control rounded-0" id="addManagerLastName" type="text" required>
+            <span class="error" aria-live="polite"></span>
         </div>
         <div class="mb-3 mt-5">
             <label th:text="#{email}" class="form-label control-label" for="addManagerEmail">Mail</label>
-            <input th:field="*{email}" class="form-control validate rounded-0" id="addManagerEmail" type="email">
+            <input th:field="*{email}" class="form-control rounded-0" id="addManagerEmail" type="email" required>
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <div class="mb-3 mt-5">
+            <label th:text="#{password}" class="form-label control-label" for="addManagerPassword">Password</label>
+            <input th:field="*{password}" class="form-control rounded-0" id="addManagerPassword" type="password" required>
+            <span class="error" aria-live="polite"></span>
         </div>
         <div class="mb-3 mt-5">
             <label th:text="#{phone.number}" class="form-label control-label" for="addManagerPhoneNumber">Phone number</label>
-            <input th:field="*{phoneNumber}" class="form-control validate rounded-0" id="addManagerPhoneNumber" type="tel">
+            <input th:field="*{phoneNumber}" class="form-control rounded-0" id="addManagerPhoneNumber" type="tel" required>
+            <span class="error" aria-live="polite"></span>
+        </div>
+        <div>
+            <input type="hidden" id="externalError" value="1">
+            <span class="error" aria-live="polite"></span>
         </div>
         <button th:text="#{apply}" class="btn btn-success w-100 mt-5 rounded-0 fw-bold" type="submit">Edit</button>
     </form>

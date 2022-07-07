@@ -51,7 +51,7 @@ public class ManagerCreationController {
             model.addAttribute(ViewExceptionsConstants.USER_ALREADY_EXISTS_EXCEPTION, true);
             model.addAttribute("manager", userDto);
 
-            return "redirect:/car-rental-service/admin/managers";
+            return "admin/managers/add-manager";
         }
 
         userDto.setRole(UserRole.ROLE_MANAGER.name())

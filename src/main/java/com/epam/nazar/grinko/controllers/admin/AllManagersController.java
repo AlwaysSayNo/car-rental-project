@@ -92,6 +92,8 @@ public class AllManagersController {
     }
 
     private List<String> getAvailableStatuses(){
-        return Arrays.stream(UserStatus.values()).map(UserStatus::name).collect(Collectors.toList());
+        return Arrays.stream(new UserStatus[]{UserStatus.ACTIVE, UserStatus.ON_HOLD})
+                .map(UserStatus::name)
+                .collect(Collectors.toList());
     }
 }
