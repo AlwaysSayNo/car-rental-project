@@ -2,7 +2,6 @@ package com.epam.nazar.grinko.domians;
 
 import com.epam.nazar.grinko.domians.helpers.CarSegment;
 import com.epam.nazar.grinko.domians.helpers.CarStatus;
-import com.epam.nazar.grinko.domians.CarColor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -22,7 +21,7 @@ public class Car {
     private Long id;
 
     @ManyToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "car_brands_id")
+    @JoinColumn(name = "car_brand_id")
     private CarBrand brand;
 
     @Column(name = "name", nullable = false)

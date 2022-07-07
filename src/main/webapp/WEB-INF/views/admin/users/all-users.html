@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Managers list</title>
+    <title>Users list</title>
 
     <link th:href="@{/statics/images/icon.png}" rel="icon" type="image/x-icon" href="../../statics/images/icon.png">
     <script th:src="@{/statics/js/utils/SortFilterForm.js}" type="text/javascript" src="../../statics/js/utils/SortFilterForm.js"></script>
@@ -25,18 +25,13 @@
 </head>
 <body class="bg-light">
 <!-- header -->
-<header th:replace="/templates/headers :: inRoleHeader ('admin', 'managers')"></header>
+<header th:replace="/templates/headers :: inRoleHeader ('admin', 'users')"></header>
 
 <!-- body -->
 <div class="container mt-5">
     <div class="row">
-        <div class="col-7 d-flex align-items-center">
-            <h1 th:text="#{managers.list}" class="big-text col-5">Managers</h1>
-            <div class="col-7 mx-2">
-                <button th:text="#{add.new.manager}" class="btn btn-success h-50" type="button" id="addNewManagerButton">Add new</button>
-            </div>
-        </div>
-        <form th:method="GET" th:action="@{/car-rental-service/admin/managers}" action="../all-cars.html" id="filterSortForm" class="col-5 d-flex align-items-center">
+        <h1 th:text="#{users.list}" class="big-text col-7">Users</h1>
+        <form th:method="GET" th:action="@{/car-rental-service/admin/registered-users}" action="../all-users.html" id="filterSortForm" class="col-5 d-flex align-items-center">
             <!-- filters -->
             <select th:replace="/templates/filters :: filterSelect (${filtersMap}, ${filterBy}, ${filterValue})"
                     id="filterSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Filter">
@@ -52,14 +47,14 @@
     </div>
 </div>
 
-<!-- Manager List -->
-<form method="post" action="delete-manager" class="container mt-5" id="deleteChangeForm">
+<!-- Users List -->
+<form method="post" action="delete-registered-users" class="container mt-5" id="deleteChangeForm">
     <div class="row p-2 border rounded-2 my-2"
-         th:each="manager, iterStat : ${managers}"
-         th:object="${manager}">
+         th:each="user, iterStat : ${users}"
+         th:object="${user}">
         <div class="col-3 row align-items-center">
             <span th:text="#{email} + ':'" class="col-3 fw-bold">Email:</span>
-            <span th:text="*{email}" class="col form-control">manager1@mail.com</span>
+            <span th:text="*{email}" class="col form-control">user1@mail.com</span>
         </div>
 
         <div class="col-1 row align-items-center">
@@ -78,10 +73,20 @@
         </div>
 
         <div class="col">
+            <select class="form-select btn btn-primary statusSelect " aria-label="Status select" disabled
+                    th:if="*{status} == 'ON_HOLD'"
+                    th:href="@{/car-rental-service/admin/registered-users/{id}/edit(id=${ids.get(iterStat.index)})}">
+                <option selected
+                        th:text="*{status}"
+                        th:value="*{status}">ACTIVE
+                </option>
+            </select>
             <select class="form-select btn btn-primary statusSelect " aria-label="Status select"
-                    th:href="@{/car-rental-service/admin/managers/{id}/edit(id=${ids.get(iterStat.index)})}">
+                    th:unless="*{status} == 'ON_HOLD'"
+                    th:href="@{/car-rental-service/admin/registered-users/{id}/edit(id=${ids.get(iterStat.index)})}">
                 <option th:each="status : ${statuses}"
                         th:text="${status}"
+                        th:unless="${status} == 'ON_HOLD'"
                         th:value="${status}"
                         th:selected="${status} == *{status}">ACTIVE
                 </option>
@@ -89,19 +94,19 @@
         </div>
 
         <div class="col-1">
-            <button th:text="#{delete}" class="btn btn-danger w-100 deleteManagerButton" type="submit"
-                    th:href="@{/car-rental-service/admin/managers/{id}/edit(id=${ids.get(iterStat.index)})}">Delete
+            <button th:text="#{delete}" class="btn btn-danger w-100 deleteUserButton" type="submit"
+                    th:href="@{/car-rental-service/admin/registered-users/{id}/edit(id=${ids.get(iterStat.index)})}">Delete
             </button>
         </div>
 
         <div>
-            <a type="hidden" id="editHref" href="http://localhost:8080/car-rental-service/admin/managers/2/edit"
-               th:href="@{/car-rental-service/admin/managers/{id}/edit(id=${ids.get(iterStat.index)})}"></a>
+            <a type="hidden" id="editHref" href="http://localhost:8080/car-rental-service/admin/registered-users/2/edit"
+               th:href="@{/car-rental-service/admin/registered-users/{id}/edit(id=${ids.get(iterStat.index)})}"></a>
         </div>
     </div>
 </form>
 
-<!-- Managers nav -->
+<!-- Users nav -->
 <div th:replace="/templates/paginations :: pagination (${pageNumbers}, ${itemStep}, ${totalPages}, ${page}, ${size})"></div>
 
 </body>
@@ -109,16 +114,12 @@
     const form = document.getElementById("deleteChangeForm");
     const filterSelect = document.getElementById('filterSelect');
     const sortSelect = document.getElementById('sortSelect');
-    const deleteButtonsArr = document.getElementsByClassName("deleteManagerButton");
+    const deleteButtonsArr = document.getElementsByClassName("deleteUserButton");
     const statusSelectsArr = document.getElementsByClassName("statusSelect");
 
     document.getElementById("filterSortForm").addEventListener('submit', function (event) {
         submitForm(this, event, filterSelect, sortSelect);
     });
-
-    document.getElementById("addNewManagerButton").onclick = function() {
-        location.href = /*[[@{/car-rental-service/admin/managers/new}]]*/ "http://localhost:8080/car-rental-service/admin/managers/new";
-    };
 
     Array.from(deleteButtonsArr).forEach((button) => {
         button.onclick = function() {

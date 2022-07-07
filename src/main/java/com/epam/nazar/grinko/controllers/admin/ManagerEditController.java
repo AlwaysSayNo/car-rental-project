@@ -1,8 +1,6 @@
 package com.epam.nazar.grinko.controllers.admin;
 
-import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.User;
-import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.domians.helpers.UserRole;
 import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
@@ -12,13 +10,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("car-rental-service/admin/managers/{id}/edit")
 @AllArgsConstructor
 @Slf4j
-public class EditManagerController {
+public class ManagerEditController {
 
     private final UserService userService;
 
@@ -35,7 +35,7 @@ public class EditManagerController {
         UserStatus status = UserStatus.valueOf(newStatus);
         User manager = userService.getById(managerId);
 
-        if(manager.getStatus().equals(status)) {
+        if(manager.getStatus().equals(status) || !getAvailableStatuses().contains(newStatus)) {
             log.info("MANAGER-EDIT-STATUS FAILURE: managerId={}, oldStatus={}, newStatus={}",
                     managerId, manager.getStatus().name(), newStatus);
             return "redirect:/car-rental-service/admin/cars/" + managerId;
@@ -55,6 +55,12 @@ public class EditManagerController {
 
         if(!user.getRole().equals(UserRole.ROLE_MANAGER))
             throw new IllegalPathVariableException("User with id " + managerId + " is not manager");
+    }
+
+    private List<String> getAvailableStatuses(){
+        return Arrays.stream(new UserStatus[]{UserStatus.ACTIVE, UserStatus.ON_HOLD})
+                .map(UserStatus::name)
+                .collect(Collectors.toList());
     }
 
 }

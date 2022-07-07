@@ -37,13 +37,13 @@ public class AllCarsController {
     private final CarColorService colorService;
 
     @GetMapping()
-    public String showAllCarsPage(@RequestParam(value = "sortBy", required = false) String sortBy,
+    public String showAllCars(@RequestParam(value = "sortBy", required = false) String sortBy,
                                   @RequestParam(value = "direction", required = false) String direction,
                                   @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
                                   @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
                                   @RequestParam(value = "filterBy", required = false) String filterBy,
                                   @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
-        log.info("ADMIN showAllCarsPage: sortBy={}, direction={}, filterBy={}, filterValue={}, page={}, size={}",
+        log.info("ADMIN showAllCars: sortBy={}, direction={}, filterBy={}, filterValue={}, page={}, size={}",
                 sortBy, direction, filterBy, filterValue, page, size);
 
         PageRequest pageRequest = carService.getManipulationService().createRequest(page - 1, size, sortBy, direction);

@@ -56,7 +56,7 @@
             <a th:text="#{cars}" th:if="${#strings.equals(linkSelected, 'cars')}" class="nav-link disabled">Cars</a>
             <a th:text="#{managers}" th:unless="${#strings.equals(linkSelected, 'managers')}" th:href="@{/car-rental-service/admin/managers}" class="nav-link" href="#">Managers</a>
             <a th:text="#{managers}" th:if="${#strings.equals(linkSelected, 'managers')}" class="nav-link disabled">Managers</a>
-            <a th:text="#{users}" th:unless="${#strings.equals(linkSelected, 'users')}" th:href="@{/car-rental-service/admin/users}" class="nav-link" href="#">Users</a>
+            <a th:text="#{users}" th:unless="${#strings.equals(linkSelected, 'users')}" th:href="@{/car-rental-service/admin/registered-users}" class="nav-link" href="#">Users</a>
             <a th:text="#{users}" th:if="${#strings.equals(linkSelected, 'users')}" class="nav-link disabled">Users</a>
         </div>
     </nav>

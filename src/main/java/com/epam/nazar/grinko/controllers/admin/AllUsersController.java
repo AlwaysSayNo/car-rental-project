@@ -1,5 +1,6 @@
 package com.epam.nazar.grinko.controllers.admin;
 
+
 import com.epam.nazar.grinko.domians.User;
 import com.epam.nazar.grinko.domians.helpers.UserRole;
 import com.epam.nazar.grinko.domians.helpers.UserStatus;
@@ -26,37 +27,37 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("car-rental-service/admin/managers")
+@RequestMapping("car-rental-service/admin/registered-users")
 @AllArgsConstructor
 @Slf4j
-public class AllManagersController {
+public class AllUsersController {
 
     private final UserService userService;
 
     @GetMapping()
-    public String showAllManagers(@RequestParam(value = "sortBy", required = false) String sortBy,
-                                  @RequestParam(value = "direction", required = false) String direction,
-                                  @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-                                  @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
-                                  @RequestParam(value = "filterBy", required = false) String filterBy,
-                                  @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
-        log.info("ADMIN showAllManagersPage: sortBy={}, direction={}, filterBy={}, filterValue={}, page={}, size={}",
+    public String showAllRegistered(@RequestParam(value = "sortBy", required = false) String sortBy,
+                                    @RequestParam(value = "direction", required = false) String direction,
+                                    @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                    @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
+                                    @RequestParam(value = "filterBy", required = false) String filterBy,
+                                    @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
+        log.info("ADMIN showAllRegistered: sortBy={}, direction={}, filterBy={}, filterValue={}, page={}, size={}",
                 sortBy, direction, filterBy, filterValue, page, size);
 
         PageRequest pageRequest = userService.getManipulationService().createRequest(page - 1, size, sortBy, direction);
-        Page<User> managers = userService.getUsersByRole(pageRequest, UserRole.ROLE_MANAGER, filterBy, filterValue);
+        Page<User> users = userService.getUsersByRole(pageRequest, UserRole.ROLE_USER, filterBy, filterValue);
 
-        Page<UserDto> managersDto = managers.map(userService::mapToDto);
-        List<Long> allId = managers.stream().map(User::getId).collect(Collectors.toList());
+        Page<UserDto> usersDto = users.map(userService::mapToDto);
+        List<Long> allId = users.stream().map(User::getId).collect(Collectors.toList());
 
-        model.addAttribute("managers", managersDto);
+        model.addAttribute("users", usersDto);
         model.addAttribute("ids", allId);
 
-        PaginationPresetEngine.updateModelForPagination(model, managersDto, page, size);
+        PaginationPresetEngine.updateModelForPagination(model, usersDto, page, size);
         SortPresetEngine.updateModelForSorting(model, sortBy, direction);
         FilterPresetEngine.updateModelForFiltering(model, filterBy, filterValue);
 
-        return "admin/managers/all-managers";
+        return "admin/users/all-users";
     }
 
     @ModelAttribute("statuses")
@@ -88,8 +89,9 @@ public class AllManagersController {
     }
 
     private List<String> getAvailableStatuses(){
-        return Arrays.stream(new UserStatus[]{UserStatus.ACTIVE, UserStatus.BANNED})
+        return Arrays.stream(UserStatus.values())
                 .map(UserStatus::name)
                 .collect(Collectors.toList());
     }
+
 }
