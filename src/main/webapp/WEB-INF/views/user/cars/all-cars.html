@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Car list</title>
+    <link th:href="@{/statics/images/icon.png}" rel="icon" type="image/x-icon" href="../../statics/images/icon.png">
+    <script th:src="@{/statics/js/utils/SortFilterForm.js}" type="text/javascript" src="../../statics/js/utils/SortFilterForm.js"></script>
+    <script th:src="@{/statics/js/utils/UrlManager.js}" type="text/javascript" src="../../statics/js/utils/UrlManager.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link th:href="@{/statics/css/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
+    <link th:href="@{/statics/css/utils/links.css}" rel="stylesheet" href="../../statics/utils/links.css">
+    <style>
+        .big-text {
+            font-size: 3.5em !important;
+        }
+
+        .car-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+
+        select option {
+            padding-left: 0; !important;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<!-- header -->
+<header th:replace="templates/headers :: inRoleHeader ('user', 'cars')"></header>
+
+<!-- body -->
+<div class="container mt-5">
+    <div class="row">
+        <h1 th:text="#{cars.list}" class="big-text col">Cars</h1>
+        <form th:method="GET" th:action="@{/car-rental-service/user/cars}" action="../all-cars.html" id="filterSortForm" class="col-5 d-flex align-items-center">
+            <!-- filters -->
+            <select th:replace="/templates/filters :: filterSelect (${filtersMap}, ${filterBy}, ${filterValue})"
+                    id="filterSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Filter">
+            </select>
+
+            <!-- sorts -->
+            <select th:replace="/templates/sorts :: sortSelect (${sortsMap}, ${sortBy}, ${direction})"
+                    id="sortSelect" class="form-select border-secondary bg-light w-100 h-50 mx-1" aria-label="Sort">
+            </select>
+
+            <button th:text="#{apply}" class="btn btn-outline-secondary w-100 h-50 mx-2" id="applyButton" type="submit">Apply</button>
+        </form>
+    </div>
+</div>
+
+<!-- Car List -->
+<div id="carList" class="container mt-5">
+    <div class="row">
+
+        <div th:each="car, iterStat : ${cars}" class="car-info col-lg-6 col-md-9 px-3 py-1">
+            <div class="row border rounded-2 p-3" th:object="${car}">
+                <div class="col-3 px-2 d-flex align-items-center">
+                    <div class="car-icon">
+                        <img th:src="@{/statics/images/car.png}" th:alt="*{brand} + ' ' + *{name}" alt="car">
+                    </div>
+                </div>
+                <div class="col-9">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="row my-2">
+                                <span th:text="#{brand} + ':'" class="col-6 fw-bold">Brand:</span>
+                                <span th:text="*{brand}" class="col-6 text-uppercase">BMW</span>
+                            </div>
+                            <div class="row my-2">
+                                <span th:text="#{name} + ':'" class="col-6 fw-bold">Name:</span>
+                                <span th:text="*{name}" class="col-6 text-uppercase">A6</span>
+                            </div>
+                            <div class="row my-2">
+                                <span th:text="#{segment} + ':'" class="col-6 fw-bold">Segment:</span>
+                                <span th:text="*{segment}" class="col-6">A</span>
+                            </div>
+                            <div class="row my-2">
+                                <span th:text="#{color} + ':'" class="col-6 fw-bold">Color:</span>
+                                <span th:text="*{color}" class="col-6">RED</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="row my-2">
+                                <span th:text="#{price.per.day} + ':'" class="col-6 fw-bold">Price per day:</span>
+                                <span th:text="*{pricePerDay} + '$'" class="col-4 fw-bold text-success">$300</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="row text-center">
+                                <a class="my-2" href="#"
+                                   th:text="#{see.more} + ' >>'" th:href="@{/car-rental-service/user/cars/{id}(id=${ids.get(iterStat.index)})}">See more >>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CarList nav -->
+    <div th:replace="/templates/paginations :: pagination (${pageNumbers}, ${itemStep}, ${totalPages}, ${page}, ${size})"></div>
+</div>
+
+</body>
+<script th:inline="javascript">
+
+    // variables
+    const form = document.getElementById('filterSortForm');
+    const filterSelect = document.getElementById('filterSelect');
+    const sortSelect = document.getElementById('sortSelect');
+
+    form.addEventListener('submit', function (event) {
+        submitForm(this, event, filterSelect, sortSelect);
+    });
+
+</script>
+</html>

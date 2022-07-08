@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping("car-rental-service/registered-user/active-order/{id}")
+@RequestMapping("car-rental-service/user/active-order/{id}")
 @AllArgsConstructor
 public class ActiveOrderPageController {
 

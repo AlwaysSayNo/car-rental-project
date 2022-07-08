@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("car-rental-service/registered-user")
+@RequestMapping("car-rental-service/user")
 @AllArgsConstructor
 public class RegisteredUserController {
 
@@ -30,25 +30,6 @@ public class RegisteredUserController {
     private final UserService userService;
     private final OrderService orderService;
     private final JwtTokenProvider jwtTokenProvider;
-
-    @GetMapping("/cars")
-    public String showAllCarsPage(@RequestParam(value = "sortBy", required = false) String sortBy,
-                                  @RequestParam(value = "direction", required = false) String direction,
-                                  @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-                                  @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
-                                  @RequestParam(value = "filterBy", required = false) String filterBy,
-                                  @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
-        PageRequest pageRequest = carService.getManipulationService().createRequest(page - 1, size, sortBy, direction);
-        Page<Car> cars = carService.getByStatus(pageRequest, CarStatus.NOT_RENTED, filterBy, filterValue);
-
-        List<CarDto> allCarDto = cars.stream().map(carService::mapToDto).collect(Collectors.toList());
-        List<Long> allId = cars.stream().map(Car::getId).collect(Collectors.toList());
-
-        model.addAttribute("cars", allCarDto);
-        model.addAttribute("ids", allId);
-
-        return "user/show-cars";
-    }
 
     @GetMapping("/active-orders")
     public String showActiveOrdersPage(Model model, HttpServletRequest request){

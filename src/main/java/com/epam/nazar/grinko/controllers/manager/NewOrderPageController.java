@@ -28,7 +28,7 @@ import javax.validation.Valid;
 @RequestMapping("/car-rental-service/manager/new-orders/{id}")
 @AllArgsConstructor
 @Slf4j
-public class NewOrdersController {
+public class NewOrderPageController {
 
     private final UserService userService;
     private final CarService carService;

@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@RequestMapping("car-rental-service/registered-user/cars/{id}")
+@RequestMapping("car-rental-service/user/cars/{id}")
 @AllArgsConstructor
 public class BookCarController {
 
@@ -55,7 +55,7 @@ public class BookCarController {
         billDto.setTotalPrice(billService.getTotalPrice(billDto));
 
         redirectAttributes.addFlashAttribute("billDto", billDto);
-        String url = "/car-rental-service/registered-user/cars/" + carId + "/book/payment";
+        String url = "/car-rental-service/user/cars/" + carId + "/book/payment";
 
         return "redirect:" + url;
     }
@@ -89,7 +89,7 @@ public class BookCarController {
         orderService.save(bill.getOrder());
         billService.addBill(bill);
 
-        return "redirect:/car-rental-service/registered-user/active-orders";
+        return "redirect:/car-rental-service/user/active-orders";
     }
 
     @ModelAttribute

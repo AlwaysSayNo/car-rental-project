@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/car-rental-service/registered-user/active-orders/{id}/pay-fine")
+@RequestMapping("/car-rental-service/user/active-orders/{id}/pay-fine")
 @AllArgsConstructor
 public class PayFineController {
 
