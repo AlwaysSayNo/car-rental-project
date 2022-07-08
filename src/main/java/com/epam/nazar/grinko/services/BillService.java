@@ -61,7 +61,7 @@ public class BillService {
                 .setStatus(bill.getStatus());
     }
 
-    public long getDriverPrice(CarDto carDto){
+    public Long getDriverPrice(CarDto carDto){
         double driverPrice = carDto.getPricePerDay() * constants.PERCENT_OF_CAR_PRICE();
         driverPrice = driverPrice > constants.MIN_DRIVER_PRICE() ? driverPrice : constants.MIN_DRIVER_PRICE();
         driverPrice *= getSegmentMarkup(CarSegment.valueOf(carDto.getSegment()));
