@@ -1,8 +1,6 @@
 package com.epam.nazar.grinko.controllers.user;
 
-import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.Order;
-import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import com.epam.nazar.grinko.dto.*;
 import com.epam.nazar.grinko.exceptions.IllegalJwtContentException;
@@ -11,8 +9,6 @@ import com.epam.nazar.grinko.services.car.CarService;
 import com.epam.nazar.grinko.services.order.OrderService;
 import com.epam.nazar.grinko.services.user.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("car-rental-service/user")
+@RequestMapping("/car-rental-service/user")
 @AllArgsConstructor
 public class RegisteredUserController {
 
@@ -47,7 +43,7 @@ public class RegisteredUserController {
         model.addAttribute("orders", ordersDto);
         model.addAttribute("ids", ids);
 
-        return "user/show-active-orders";
+        return "/user/active-orders/all-active-orders";
     }
 
     @GetMapping("/orders-history")
@@ -66,7 +62,7 @@ public class RegisteredUserController {
         model.addAttribute("orders", ordersDto);
         model.addAttribute("ids", ids);
 
-        return "user/show-orders-history";
+        return "/user/orders-history/all-orders-history";
     }
 
 }

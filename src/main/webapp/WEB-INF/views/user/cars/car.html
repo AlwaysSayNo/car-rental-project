@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Car</title>
+    <link th:href="@{/statics/images/icon.png}" rel="icon" type="image/x-icon" href="../../statics/images/icon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link th:href="@{/statics/css/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
+    <link th:href="@{/statics/css/utils/links.css}" rel="stylesheet" href="../../statics/utils/links.css">
+    <style>
+        #learnMore {
+            width: 40em;
+        }
+
+        .car-icon {
+            width: 10em;
+            height: 4em;
+        }
+
+        .car-icon img{
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<!-- header -->
+<header th:replace="/templates/headers :: inRoleHeader ('user', 'none')"></header>
+
+<!-- body -->
+<div class="container mt-5 ">
+    <form method="get" action="/car-rental-service/user/cars/2/book"
+          th:method="GET" th:action="@{/car-rental-service/user/cars/{id}/book(id=${id})}">
+        <div class="m-auto p-4 border border-2 rounded-2" id="learnMore" th:object="${car}">
+            <div id="learnMoreHeader" class="row">
+                <div class="col-6">
+                    <div class="car-icon">
+                        <img th:src="@{/statics/images/car.png}" th:alt="*{brand} + ' ' + *{name}" alt="car">
+                    </div>
+                </div>
+            </div>
+            <div id="learnMoreBody" class="mt-5">
+                <div class="row my-2">
+                    <span th:text="#{brand} + ':'" class="col-6 fw-bold">Brand:</span>
+                    <span th:text="*{brand}" class="col-6 text-uppercase">BMW</span>
+                </div>
+                <div class="row my-2">
+                    <span th:text="#{number} + ':'" class="col-6 fw-bold">Number:</span>
+                    <span th:text="*{number}" class="col-6 text-uppercase">AA 1111 AA</span>
+                </div>
+                <div class="row my-2">
+                    <span th:text="#{name} + ':'" class="col-6 fw-bold">Name:</span>
+                    <span th:text="*{name}" class="col-6 text-uppercase">x6</span>
+                </div>
+                <div class="row my-2">
+                    <span th:text="#{segment} + ':'" class="col-6 fw-bold">Segment:</span>
+                    <span th:text="*{segment}" class="col-6 text-uppercase">s</span>
+                </div>
+                <div class="row my-2">
+                    <span th:text="#{color} + ':'" class="col-6 fw-bold">Color:</span>
+                    <span th:text="*{color}" class="col-6 text-uppercase">RED</span>
+                </div>
+                <div class="row my-2 mt-5">
+                    <span th:text="#{price.per.day} + ':'" class="col-6 fw-bold">Price per day:</span>
+                    <span th:text="*{pricePerDay} + '$'" class="col-6 fw-bold text-success">300$</span>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center mt-5">
+                <div class="col-3">
+                    <button class="btn btn-success w-100 py-2" id="rentButton" type="submit"
+                            th:text="#{book}">Book
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

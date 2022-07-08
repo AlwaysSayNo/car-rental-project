@@ -48,7 +48,7 @@ public class HistoryOrderPageController {
             model.addAttribute("cancellation", cancellationService.mapToDto(order.getCancellation()));
         }
 
-        return "user/show-active-orders";
+        return "/user/orders-history/order-history";
     }
 
 

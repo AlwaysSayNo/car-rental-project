@@ -18,15 +18,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Controller
-@RequestMapping("car-rental-service/admin/cars/{id}")
+@RequestMapping("/car-rental-service/admin/cars/{id}")
 @AllArgsConstructor
 @Slf4j
-public class CarPageController {
+public class CarAdminPageController {
 
     private final CarService carService;
 
     @GetMapping()
-    public String showPage(@PathVariable("id") Long id, Model model){
+    public String showCarPage(@PathVariable("id") Long id, Model model){
         log.info("ADMIN showPage: carId={}", id);
         CarDto carDto = carService.mapToDto(carService.getById(id));
         model.addAttribute("car", carDto);

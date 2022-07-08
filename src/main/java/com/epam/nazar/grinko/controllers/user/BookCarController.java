@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@RequestMapping("car-rental-service/user/cars/{id}")
+@RequestMapping("/car-rental-service/user/cars/{id}/book")
 @AllArgsConstructor
 public class BookCarController {
 
@@ -35,7 +35,7 @@ public class BookCarController {
     private final OrderService orderService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @GetMapping("/book")
+    @GetMapping()
         public String showBookPage(@PathVariable("id") Long carId, Model model){
         CarDto carDto = carService.mapToDto(carService.getById(carId));
         BillDto billDto = new BillDto()
@@ -45,10 +45,10 @@ public class BookCarController {
         model.addAttribute("carDto", carDto);
         model.addAttribute("billDto", billDto);
 
-        return "user/book-form";
+        return "user/cars/book-form";
     }
 
-    @PostMapping("/book")
+    @PostMapping()
     public String calculateBill(@PathVariable("id") Long carId, @ModelAttribute("billDto") BillDto billDto,
                                 RedirectAttributes redirectAttributes){
         if(!billDto.isWithDriver()) billDto.setDriverPrice(0);
@@ -60,7 +60,7 @@ public class BookCarController {
         return "redirect:" + url;
     }
 
-    @GetMapping("/book/payment")
+    @GetMapping("/payment")
     public String showPaymentRequisitesPage(@PathVariable("id") Long carId, Model model){
         BillDto billDto = (BillDto) model.getAttribute("billDto");
 

@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("car-rental-service/user")
+@RequestMapping("/car-rental-service/user")
 @AllArgsConstructor
 @Slf4j
 public class AllActiveCarsController {

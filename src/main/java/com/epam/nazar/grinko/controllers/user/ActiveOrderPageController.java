@@ -44,7 +44,7 @@ public class ActiveOrderPageController {
         if(order.getStatus().equals(OrderStatus.REPAIR_PAYMENT))
             model.addAttribute("breakdown", breakdownService.mapToDto(order.getBreakdown()));
 
-        return "user/show-active-orders";
+        return "/user/active-orders/active-order";
     }
 
 
