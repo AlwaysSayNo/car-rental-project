@@ -28,7 +28,6 @@ public class NewOrdersController {
     private final CarService carService;
     private final OrderService orderService;
     private final BillService billService;
-    private final ManagerDecisionService decisionService;
     private final CancellationService cancellationService;
     private final JwtTokenProvider jwtTokenProvider;
     //TODO сделать фильтрацию для заблокированного менеджера
@@ -73,12 +72,6 @@ public class NewOrdersController {
 
         String email = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
         User manager = userService.getByEmail(email).orElseThrow(IllegalArgumentException::new);
-
-        ManagerDecision decision = new ManagerDecision()
-                .setManager(manager)
-                .setOrder(orderService.getById(orderId));
-
-        decisionService.save(decision);
 
         return "redirect:/car-rental-service/manager/new-orders";
     }

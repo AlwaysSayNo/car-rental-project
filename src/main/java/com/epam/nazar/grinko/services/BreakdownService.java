@@ -34,7 +34,6 @@ public class BreakdownService {
     }
 
     public Breakdown mapToObject(BreakdownDto breakdownDto){
-
         return new Breakdown().setPrice(breakdownDto.getPrice())
                 .setMessage(breakdownDto.getMessage())
                 .setStatus(breakdownDto.getStatus())

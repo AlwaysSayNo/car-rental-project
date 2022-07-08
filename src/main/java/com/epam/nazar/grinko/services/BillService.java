@@ -23,7 +23,6 @@ public class BillService {
     private final BillConstants constants;
 
     public void addBill(Bill bill){
-        orderService.save(bill.getOrder());
         billRepository.save(bill);
     }
 

@@ -46,7 +46,7 @@ public class Car {
     private CarStatus status;
 
 
-    @OneToMany(mappedBy = "car", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "car", fetch = FetchType.EAGER, orphanRemoval=true)
     private Collection<Order> orders;
 
 }

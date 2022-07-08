@@ -4,9 +4,10 @@ import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Getter
 @Setter
@@ -32,16 +33,16 @@ public class Order {
     private OrderStatus status;
 
 
-    @OneToOne(optional = false, mappedBy = "order")
+    @OneToOne(optional = false, mappedBy = "order", orphanRemoval=true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Bill bill;
 
-    @OneToOne(optional = false, mappedBy = "order")
+    @OneToOne(optional = false, mappedBy = "order", orphanRemoval=true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Breakdown breakdown;
 
-    @OneToOne(optional = false, mappedBy = "order")
+    @OneToOne(optional = false, mappedBy = "order", orphanRemoval=true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Cancellation cancellation;
-
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
-    private Collection<ManagerDecision> decisions;
 
 }

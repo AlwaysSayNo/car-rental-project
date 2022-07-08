@@ -97,6 +97,7 @@ public class CarEditController {
         return "redirect:/car-rental-service/admin/cars";
     }
 
+    //TODO save delete
     @PostMapping("/delete")
     public String deleteCar(@PathVariable("id") Long carId){
         carService.deleteById(carId);

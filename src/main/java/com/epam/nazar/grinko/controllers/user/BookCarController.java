@@ -1,5 +1,6 @@
 package com.epam.nazar.grinko.controllers.user;
 
+import com.epam.nazar.grinko.domians.Bill;
 import com.epam.nazar.grinko.domians.Car;
 import com.epam.nazar.grinko.domians.Order;
 import com.epam.nazar.grinko.domians.User;
@@ -84,8 +85,9 @@ public class BookCarController {
         billDto.setOrder(orderDto)
                 .setStatus(BillStatus.PAID);
 
-        //TODO fignya
-        billService.addBill(billService.mapToObject(billDto));
+        Bill bill = billService.mapToObject(billDto);
+        orderService.save(bill.getOrder());
+        billService.addBill(bill);
 
         return "redirect:/car-rental-service/registered-user/active-orders";
     }

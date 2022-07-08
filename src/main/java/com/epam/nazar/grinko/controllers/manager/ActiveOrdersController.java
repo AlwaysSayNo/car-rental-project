@@ -9,7 +9,6 @@ import com.epam.nazar.grinko.dto.BillDto;
 import com.epam.nazar.grinko.dto.BreakdownDto;
 import com.epam.nazar.grinko.dto.OrderDto;
 import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
-import com.epam.nazar.grinko.exceptions.JwtAuthenticationException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
 import com.epam.nazar.grinko.services.*;
 import com.epam.nazar.grinko.services.car.CarService;
@@ -21,8 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.List;
 
 @Controller
 @RequestMapping("car-rental-service/manager/active-orders/{id}")
@@ -33,7 +30,6 @@ public class ActiveOrdersController {
     private final CarService carService;
     private final OrderService orderService;
     private final BillService billService;
-    private final ManagerDecisionService decisionService;
     private final BreakdownService breakdownService;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -69,30 +65,8 @@ public class ActiveOrdersController {
 
         String email = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
         User manager = userService.getByEmail(email).orElseThrow(IllegalArgumentException::new);
-        ManagerDecision decision = new ManagerDecision()
-                .setManager(manager)
-                .setOrder(order);
-        decisionService.save(decision);
 
         return "redirect:/car-rental-service/manager/active-orders";
     }
-
-
-    @ModelAttribute
-    private void checkRequestValidity(@PathVariable("id") Long orderId, HttpServletRequest request){
-        Order order = orderService.getById(orderId);
-
-        List<ManagerDecision> decisions = decisionService.getDecisionsByOrderId(orderId);
-
-        String email = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
-        Long managerId = userService.getUserIdByEmail(email).orElseThrow(JwtAuthenticationException::new);
-
-        List<OrderStatus> availableStatuses = Arrays.asList(OrderStatus.IN_USE, OrderStatus.REPAIR_PAYMENT);
-
-        if(decisions.isEmpty() || !decisions.get(0).getManager().getId().equals(managerId)
-                || !availableStatuses.contains(order.getStatus()))
-            throw new IllegalPathVariableException();
-    }
-
 
 }

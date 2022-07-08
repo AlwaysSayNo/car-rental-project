@@ -22,6 +22,7 @@ public class ManagerEditController {
 
     private final UserService userService;
 
+    //TODO save delete
     @PostMapping("/delete")
     public String deleteManager(@PathVariable("id") Long managerId){
         userService.deleteById(managerId);
