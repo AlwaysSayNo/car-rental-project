@@ -39,7 +39,7 @@ public class PayFineController {
         model.addAttribute("breakdown", breakdownDto);
         model.addAttribute("paymentDetails", new PaymentDetailsDto());
 
-        return "user/pay-fine-form";
+        return "user/active-orders/pay-fine-form";
     }
 
     @PostMapping()
