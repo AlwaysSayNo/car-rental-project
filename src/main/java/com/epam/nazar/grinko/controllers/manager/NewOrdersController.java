@@ -1,8 +1,10 @@
 package com.epam.nazar.grinko.controllers.manager;
 
 import com.epam.nazar.grinko.domians.*;
+import com.epam.nazar.grinko.domians.helpers.BillStatus;
 import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
+import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.dto.BillDto;
 import com.epam.nazar.grinko.dto.CancellationDto;
 import com.epam.nazar.grinko.dto.OrderDto;
@@ -13,15 +15,19 @@ import com.epam.nazar.grinko.services.car.CarService;
 import com.epam.nazar.grinko.services.order.OrderService;
 import com.epam.nazar.grinko.services.user.UserService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @Controller
-@RequestMapping("car-rental-service/manager/new-orders/{id}")
+@RequestMapping("/car-rental-service/manager/new-orders/{id}")
 @AllArgsConstructor
+@Slf4j
 public class NewOrdersController {
 
     private final UserService userService;
@@ -30,7 +36,7 @@ public class NewOrdersController {
     private final BillService billService;
     private final CancellationService cancellationService;
     private final JwtTokenProvider jwtTokenProvider;
-    //TODO сделать фильтрацию для заблокированного менеджера
+
     @GetMapping()
     public String showNewOrderPage(@PathVariable("id") Long orderId, Model model){
         OrderDto orderDto = orderService.mapToDto(orderService.getById(orderId));
@@ -40,47 +46,72 @@ public class NewOrdersController {
         model.addAttribute("order", orderDto);
         model.addAttribute("cancellation", new CancellationDto());
         model.addAttribute("bill", billDto);
-        return "manager/new-orders/show-new-order";
+        model.addAttribute("id", orderId);
+
+        return "manager/new-orders/new-order";
     }
 
     @PostMapping()
-    public String handleNewOrder(@PathVariable("id") Long orderId, @RequestParam(value = "status") String orderStatus,
-                                 @ModelAttribute("order") OrderDto order, HttpServletRequest request, Model model){
+    public String handleNewOrder(@PathVariable("id") Long orderId, @RequestParam(value = "orderStatus") String orderStatus,
+                                 @ModelAttribute("cancellation") CancellationDto cancellationDto,
+                                 BindingResult bindingResult){
         OrderStatus status = OrderStatus.valueOf(orderStatus);
-        Car car = carService.getByNumber(order.getCar().getNumber()).orElseThrow(IllegalPathVariableException::new);
+        Order order = orderService.getById(orderId);
+        Car car = order.getCar();
+
         switch (status) {
             case IN_USE: {
                 carService.updateCarStatusById(car.getId(), CarStatus.RENTED);
+
+                log.info("MANAGER ACCEPTING-ORDER-SUCCESS.");
                 break;
             }
             case CANCELED: {
+                if(bindingResult.hasErrors()) {
+                    String url = "car-rental-service/manager/new-orders/" + orderId;
+
+                    log.info("MANAGER CANCELLATION-ORDER-FAILURE: invalid data.");
+                    return "redirect:/" + url;
+                }
+
                 carService.updateCarStatusById(car.getId(), CarStatus.NOT_RENTED);
+                billService.updateStatusById(order.getBill().getId(), BillStatus.CANCELED);
 
-                CancellationDto cancellationDto = (CancellationDto) model.getAttribute("cancellation");
-                if (cancellationDto == null) throw new NullPointerException();
 
-                Cancellation cancellation = cancellationService.mapToObject(cancellationDto);
+                Cancellation cancellation = new Cancellation().setMessage(cancellationDto.getMessage())
+                        .setOrder(order);
                 cancellationService.save(cancellation);
                 break;
             }
             default: {
+                log.info("MANAGER ORDER-HANDLE-FAILURE: status={}", orderStatus);
                 throw new IllegalArgumentException();
             }
         }
 
         orderService.updateOrderStatus(status, orderId);
-
-        String email = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
-        User manager = userService.getByEmail(email).orElseThrow(IllegalArgumentException::new);
+        userService.updateUserStatusById(UserStatus.ACTIVE, order.getUser().getId());
 
         return "redirect:/car-rental-service/manager/new-orders";
     }
 
     @ModelAttribute
-    public void checkRequestValidity(@PathVariable("id") Long orderId) {
+    public void checkRequestValidity(@PathVariable("id") Long orderId, HttpServletRequest request) {
+        String email = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
+        User manager = userService.getByEmail(email).orElseThrow(IllegalArgumentException::new);
+
+        if(!UserStatus.ACTIVE.equals(manager.getStatus()))
+            throw new IllegalStateException("Manager with status " + manager.getStatus().name() + "can`t handle orders.");
+
         Order order = orderService.getById(orderId);
 
-        if(!order.getStatus().equals(OrderStatus.UNDER_CONSIDERATION))
+        log.info("!OrderStatus.UNDER_CONSIDERATION.equals(order.getStatus()) == {}",
+                !OrderStatus.UNDER_CONSIDERATION.equals(order.getStatus()));
+
+
+        log.info("order.getStatus() == {}",
+                order.getStatus());
+        if(!OrderStatus.UNDER_CONSIDERATION.equals(order.getStatus()))
             throw new IllegalPathVariableException("Order with id " + orderId + " is not new");
     }
 

@@ -46,13 +46,13 @@ INSERT INTO orders (user_id, car_id, status) VALUE (4, 5, 'UNDER_CONSIDERATION')
 INSERT INTO bills (order_id, start_date, expiration_date, car_price, with_driver, driver_price, total_price, status) VALUE (1, '2022-02-11', '2022-02-24', 100, false, 0, 100, 'PAID');
 INSERT INTO bills (order_id, start_date, expiration_date, car_price, with_driver, driver_price, total_price, status) VALUE (2, '2022-07-11', '2022-07-14', 100, false, 0, 100, 'PAID');
 INSERT INTO bills (order_id, start_date, expiration_date, car_price, with_driver, driver_price, total_price, status) VALUE (3, '2022-03-12', '2022-05-12', 100, false, 0, 100, 'PAID');
-INSERT INTO bills (order_id, start_date, expiration_date, car_price, with_driver, driver_price, total_price, status) VALUE (4, '2022-08-11', '2022-09-12', 100, false, 0, 100, 'PAID');
+INSERT INTO bills (order_id, start_date, expiration_date, car_price, with_driver, driver_price, total_price, status) VALUE (4, '2022-08-11', '2022-09-12', 100, true, 100, 100, 'PAID');
 
 # BREAKDOWN
-INSERT INTO breakdowns (message, price, status, order_id) VALUE ("message", 200, 'NOT_PAID', 1);
+# INSERT INTO breakdowns (message, price, status, order_id) VALUE ("message", 200, 'NOT_PAID', 1);
 
 # CANCELLATION
-INSERT INTO cancellations (message, order_id) VALUE ("message", 1);
+# INSERT INTO cancellations (message, order_id) VALUE ("message", 1);
 
 # BREAKDOWN
-INSERT INTO cancellations (message, order_id) VALUE ("message", 1);
+# INSERT INTO cancellations (message, order_id) VALUE ("message", 1);

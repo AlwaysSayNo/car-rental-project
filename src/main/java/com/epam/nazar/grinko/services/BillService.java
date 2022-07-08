@@ -2,6 +2,7 @@ package com.epam.nazar.grinko.services;
 
 import com.epam.nazar.grinko.constants.BillConstants;
 import com.epam.nazar.grinko.domians.Bill;
+import com.epam.nazar.grinko.domians.helpers.BillStatus;
 import com.epam.nazar.grinko.domians.helpers.CarSegment;
 import com.epam.nazar.grinko.dto.BillDto;
 import com.epam.nazar.grinko.dto.CarDto;
@@ -32,6 +33,10 @@ public class BillService {
 
     public Bill getBillsById(Long id){
         return billRepository.getBillsById(id);
+    }
+
+    public void updateStatusById(Long id, BillStatus status){
+        billRepository.updateStatusById(id, status);
     }
 
     public Bill mapToObject(BillDto billDto){

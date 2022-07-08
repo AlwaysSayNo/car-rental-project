@@ -37,11 +37,11 @@ public class Order {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Bill bill;
 
-    @OneToOne(optional = false, mappedBy = "order", orphanRemoval=true)
+    @OneToOne(mappedBy = "order", orphanRemoval=true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Breakdown breakdown;
 
-    @OneToOne(optional = false, mappedBy = "order", orphanRemoval=true)
+    @OneToOne(mappedBy = "order", orphanRemoval=true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Cancellation cancellation;
 
