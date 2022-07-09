@@ -1,10 +1,152 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Order history</title>
+    <link th:href="@{/statics/images/icon.png}" rel="icon" type="image/x-icon" href="../../statics/images/icon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link th:href="@{/statics/css/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
+    <link th:href="@{/statics/css/utils/links.css}" rel="stylesheet" href="../../statics/utils/links.css">
+    <style>
+        .bill-content {
+            width: 50%;
+        }
+
+        .car-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+
+        textarea {
+            resize: none;
+            height: 5em;
+        }
+    </style>
 </head>
-<body>
+<body class="bg-light">
+<!-- header -->
+<header th:replace="/templates/headers :: inRoleHeader ('user', 'none')"></header>
+
+<!-- body -->
+<div class="container">
+    <div class="row">
+        <div class="col-6 border-end border-2 p-4" th:object="${order.user}">
+            <h2 th:text="#{user}" class="title text-center">User</h2>
+            <div class="row">
+                <span th:text="#{email} + ':'" class="col-6 fw-bold">Email:</span>
+                <span th:text="*{email}" class="col-6" aria-label="Email" readonly>user1@gmail.com</span>
+            </div>
+            <div class="row">
+                <span th:text="#{phone.number} + ':'" class="col-6 fw-bold">Phone number:</span>
+                <span th:text="*{phoneNumber}" class="col-6 fw-bold" aria-label="Phone number" readonly>+380 50 111 11 11</span>
+            </div>
+            <div class="row">
+                <span th:text="#{first.name} + ':'" class="col-6 fw-bold">First name:</span>
+                <span th:text="*{firstName}" class="col-6" aria-label="First name" readonly>Name</span>
+            </div>
+            <div class="row">
+                <span th:text="#{last.name} + ':'" class="col-6 fw-bold">Last name:</span>
+                <span th:text="*{lastName}" class="col-6" aria-label="Last name" readonly>Last</span>
+            </div>
+        </div>
+        <div class="col-6 p-4" th:object="${order.car}">
+            <h2 th:text="#{car}" class="title text-center">Car</h2>
+            <div class="row mb-3">
+                <div class="car-icon col-3">
+                    <img th:src="@{/statics/images/car.png}" th:alt="*{brand} + ' ' + *{name}" alt="car">
+                </div>
+            </div>
+            <div class="row">
+                <span th:text="#{brand} + ':'" class="col-6 fw-bold">Brand:</span>
+                <span th:text="*{brand}" class="col-6 text-uppercase" aria-label="Brand" readonly>bmw</span>
+            </div>
+            <div class="row">
+                <span th:text="#{name} + ':'" class="col-6 fw-bold">Name:</span>
+                <span th:text="*{name}" class="col-6 text-uppercase" aria-label="Name" readonly>x6</span>
+            </div>
+            <div class="row">
+                <span th:text="#{segment} + ':'" class="col-6 fw-bold">Segment:</span>
+                <span th:text="*{segment}" class="col-6 text-uppercase" aria-label="Segment" readonly>s</span>
+            </div>
+            <div class="row">
+                <span th:text="#{price.per.day} + ':'" class="col-6 fw-bold">Price per day:</span>
+                <span th:text="*{pricePerDay} + '$'" class="col-6 fw-bold text-success" aria-label="Price per day" readonly>$300</span>
+            </div>
+        </div>
+    </div>
+    <div class="border-top border-2 p-4">
+        <div class="row d-flex flex-row-reverse">
+            <h3  th:text="${order.status}" class="col-4 text-center text-uppercase">repair</h3>
+            <h3 th:text="#{bill}" class="col-4 text-center">Bill</h3>
+        </div>
+        <div class="bill-content m-auto" th:object="${bill}">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="billCheck" disabled
+                       th:checked="*{withDriver}">
+                <label th:text="#{with.driver}" class="form-check-label fw-bold" for="billCheck">With driver</label>
+            </div>
+            <div class="row" th:if="*{withDriver} == true">
+                <span th:text="#{driver.price} + ':'" class="col-4 fw-bold">Driver per day:</span>
+                <span th:text="*{driverPrice}" class="col-8 fw-bold text-success" aria-label="Driver price" readonly>$300</span>
+            </div>
+            <div class="row">
+                <span th:text="#{rent.auto} + ':'" class="col-4 fw-bold">Rent auto</span>
+                <div class="date col-4">
+                    <span th:text="#{from} + ':'" class="col fw-bold">from:</span>
+                    <span class="col" type="date" aria-label="Start date" readonly
+                          th:with="start=*{startDate}"
+                          th:text="${#calendars.format(start, 'yyyy-MM-dd')}">
+                    </span>
+                </div>
+                <div class="date col-4">
+                    <span th:text="#{to} + ':'" class="col fw-bold">to:</span>
+                    <span class="col" type="date" aria-label="Expiration date" readonly
+                          th:with="expiration=*{expirationDate}"
+                          th:text="${#calendars.format(expiration, 'yyyy-MM-dd')}">
+                    </span>
+                </div>
+            </div>
+            <div class="row total mt-5">
+                <span th:text="#{total.price} + ':'" class="col-4 fw-bold">Total price:</span>
+                <span th:text="*{totalPrice} + '$'" class="col-8 fw-bold text-success">$1600</span>
+            </div>
+        </div>
+    </div>
+    <div th:switch="${order.status}">
+        <div th:case="'CANCELED'">
+            <div class="border-top border-2 p-4">
+                <div class="bill-content m-auto" th:object="${cancellation}">
+                    <div class="row total">
+                        <span th:text="#{description}" class="col-4 fw-bold">Description:</span>
+                        <textarea class="col-8 rounded-2 border-secondary" aria-label="Breakdown description" disabled
+                                  th:text="*{message}"> Message
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:case="'ENDED_WITH_BREAKDOWN'">
+            <div class="border-top border-2 p-4">
+                <div class="bill-content m-auto" th:object="${breakdown}">
+                    <div class="row">
+                        <span th:text="#{payment.price}" class="col-4 fw-bold">Price:</span>
+                        <span class="col-8 fw-bold text-success">$1600</span>
+                    </div>
+                    <div class="row total mt-5">
+                        <span th:text="#{description}" class="col-4 fw-bold">Description:</span>
+                        <textarea class="col-8 rounded-2 border-secondary" aria-label="Breakdown description" disabled
+                                  th:text="*{message}"> Message
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 
 </body>
 </html>

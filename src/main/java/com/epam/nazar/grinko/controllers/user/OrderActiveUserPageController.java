@@ -6,7 +6,8 @@ import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
 import com.epam.nazar.grinko.exceptions.JwtAuthenticationException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
-import com.epam.nazar.grinko.services.*;
+import com.epam.nazar.grinko.services.BillService;
+import com.epam.nazar.grinko.services.BreakdownService;
 import com.epam.nazar.grinko.services.order.OrderService;
 import com.epam.nazar.grinko.services.user.UserService;
 import lombok.AllArgsConstructor;
@@ -22,33 +23,29 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping("car-rental-service/user/orders-history/{id}")
+@RequestMapping("car-rental-service/user/active-orders/{id}")
 @AllArgsConstructor
-public class HistoryOrderPageController {
+public class OrderActiveUserPageController {
 
     private final UserService userService;
     private final OrderService orderService;
     private final BillService billService;
     private final BreakdownService breakdownService;
-    private final CancellationService cancellationService;
     private final JwtTokenProvider jwtTokenProvider;
 
     @GetMapping()
-    public String showHistoryOrderPage(@PathVariable("id") Long orderId, Model model){
+    public String showActiveOrderPage(@PathVariable("id") Long orderId, Model model){
         Order order = orderService.getById(orderId);
         Bill bill = order.getBill();
 
         model.addAttribute("order", orderService.mapToDto(order));
         model.addAttribute("bill", billService.mapToDto(bill));
+        model.addAttribute("id", orderId);
 
-        if(order.getStatus().equals(OrderStatus.ENDED_WITH_BREAKDOWN)){
+        if(OrderStatus.REPAIR_PAYMENT.equals(order.getStatus()))
             model.addAttribute("breakdown", breakdownService.mapToDto(order.getBreakdown()));
-        }
-        else if(order.getStatus().equals(OrderStatus.CANCELED)){
-            model.addAttribute("cancellation", cancellationService.mapToDto(order.getCancellation()));
-        }
 
-        return "/user/orders-history/order-history";
+        return "/user/active-orders/active-order";
     }
 
 
@@ -58,11 +55,11 @@ public class HistoryOrderPageController {
         String email = jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request));
         Long userId = userService.getUserIdByEmail(email).orElseThrow(JwtAuthenticationException::new);
 
-        List<OrderStatus> availableStatuses = Arrays.asList(OrderStatus.CANCELED, OrderStatus.ENDED_SUCCESSFULLY,
-                OrderStatus.ENDED_WITH_BREAKDOWN);
+        List<OrderStatus> availableStatuses = Arrays.asList(OrderStatus.UNDER_CONSIDERATION,
+                OrderStatus.IN_USE, OrderStatus.REPAIR_PAYMENT);
 
         if(!order.getUser().getId().equals(userId) || !availableStatuses.contains(order.getStatus()))
-            throw new IllegalPathVariableException();
+            throw new IllegalPathVariableException("Order with id " + orderId + " is not available");
     }
 
 }

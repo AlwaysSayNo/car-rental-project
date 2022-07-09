@@ -23,7 +23,7 @@ INSERT INTO cars (number, car_brand_id, name, car_color_id, price_per_day, segme
 INSERT INTO cars (number, car_brand_id, name, car_color_id, price_per_day, segment, status) VALUES ('DD 2222 DD', 4, 'i30', 4, 300, 'C', 'NOT_RENTED');
 
 # USERS (password=user)
-INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('user1@gmail.com', 'User', 'One', '$2a$12$yvdjbqbVG7XU3zMYR5jGvetqy6dn8IfAEYs7m6UKYoZGG/HRzFYMa', '+380 50 111 11 11', 'ROLE_USER', 'ON_HOLD');
+INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('user1@gmail.com', 'User', 'One', '$2a$12$yvdjbqbVG7XU3zMYR5jGvetqy6dn8IfAEYs7m6UKYoZGG/HRzFYMa', '+380 50 111 11 11', 'ROLE_USER', 'ACTIVE');
 INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('user2@gmail.com', 'User', 'Two', '$2a$12$kViX0LO6nQgmOSeWFOtjE.EUGXs3MNaaxCXM3nxhBcUHXssmCi1ey', '+380 50 222 22 22', 'ROLE_USER', 'ON_HOLD');
 INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('user3@gmail.com', 'User', 'Three', '$2a$12$kViX0LO6nQgmOSeWFOtjE.EUGXs3MNaaxCXM3nxhBcUHXssmCi1ey', '+380 50 333 33 33', 'ROLE_USER', 'ON_HOLD');
 INSERT INTO users (email, first_name, last_name, password, phone_number, role, status) VALUE ('user4@gmail.com', 'User', 'Four', '$2a$12$kViX0LO6nQgmOSeWFOtjE.EUGXs3MNaaxCXM3nxhBcUHXssmCi1ey', '+380 50 333 33 33', 'ROLE_USER', 'ON_HOLD');
@@ -54,4 +54,7 @@ INSERT INTO bills (order_id, start_date, expiration_date, car_price, with_driver
 INSERT INTO breakdowns (message, price, status, order_id) VALUE ("message", 200, 'NOT_PAID', 5);
 
 # CANCELLATION
+# INSERT INTO cancellations (message, order_id) VALUE ("message", 1);
+
+# BREAKDOWN
 # INSERT INTO cancellations (message, order_id) VALUE ("message", 1);
