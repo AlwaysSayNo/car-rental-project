@@ -30,22 +30,22 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/car-rental-service/user")
+@RequestMapping("/car-rental-service/user/cars")
 @AllArgsConstructor
 @Slf4j
-public class AllActiveCarsController {
+public class AllAvailableCarsController {
 
     private final CarService carService;
     private final CarBrandService brandService;
     private final CarColorService colorService;
 
-    @GetMapping("/cars")
+    @GetMapping()
     public String showAllCars(@RequestParam(value = "sortBy", required = false) String sortBy,
-                                  @RequestParam(value = "direction", required = false) String direction,
-                                  @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-                                  @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
-                                  @RequestParam(value = "filterBy", required = false) String filterBy,
-                                  @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
+                              @RequestParam(value = "direction", required = false) String direction,
+                              @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                              @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
+                              @RequestParam(value = "filterBy", required = false) String filterBy,
+                              @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
         log.info("USER showAllCars: sortBy={}, direction={}, filterBy={}, filterValue={}, page={}, size={}",
                 sortBy, direction, filterBy, filterValue, page, size);
 

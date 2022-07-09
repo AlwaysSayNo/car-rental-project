@@ -140,7 +140,7 @@ public class CarBookController {
         ).orElseThrow(IllegalPathVariableException::new);
 
         List<Order> orderList = orderService.getAllByUserIdAndStatus(user.getId(),
-                OrderStatus.IN_USE, OrderStatus.REPAIR_PAYMENT, OrderStatus.UNDER_CONSIDERATION);
+                Arrays.asList(OrderStatus.IN_USE, OrderStatus.REPAIR_PAYMENT, OrderStatus.UNDER_CONSIDERATION));
 
         if(bookConstants.MAX_BOOK_AMOUNT() <= orderList.size()) {
             log.info("USER-CAR-BOOK FAILURE: user`s orders amount {} already !< {}",

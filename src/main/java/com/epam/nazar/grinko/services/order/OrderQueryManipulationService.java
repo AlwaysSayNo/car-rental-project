@@ -1,8 +1,6 @@
 package com.epam.nazar.grinko.services.order;
 
-import com.epam.nazar.grinko.domians.Car;
-import com.epam.nazar.grinko.domians.CarBrand;
-import com.epam.nazar.grinko.domians.CarColor;
+import com.epam.nazar.grinko.domians.*;
 import com.epam.nazar.grinko.domians.Order;
 import com.epam.nazar.grinko.domians.helpers.CarSegment;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
@@ -28,7 +26,7 @@ public class OrderQueryManipulationService extends AbstractQueryManipulation<Ord
     private final CarColorService colorService;
 
     public OrderQueryManipulationService(EntityManager em, CarBrandService brandService, CarColorService colorService){
-        super(em, Arrays.asList("segment", "brand", "status"),
+        super(em, Arrays.asList("segment", "color", "brand", "status", "user_id"),
                 Arrays.asList("user_firstName", "user_email", "car_name"), Order.class);
         this.brandService = brandService;
         this.colorService = colorService;
@@ -39,6 +37,7 @@ public class OrderQueryManipulationService extends AbstractQueryManipulation<Ord
         List<Predicate> predicates = new ArrayList<>();
 
         Join<Order, Car> carJoin = root.join("car");
+        Join<Order, User> userJoin = root.join("user");
 
         if(!filter.isEmpty()) {
             filter.forEach((filterBy, value) -> {
@@ -68,6 +67,12 @@ public class OrderQueryManipulationService extends AbstractQueryManipulation<Ord
                                 .collect(Collectors.toList());
                         predicates.add(root.get("status").in(statuses));
                         break;
+                    case "user_id":
+                        List<Long> ids = value.stream()
+                                .map(Long::valueOf)
+                                .collect(Collectors.toList());
+                        predicates.add(userJoin.get("id").in(ids));
+                        break;
                     default:
                         throw new IllegalArgumentException();
                 }
@@ -82,6 +87,7 @@ public class OrderQueryManipulationService extends AbstractQueryManipulation<Ord
         Root<Order> root = countQuery.from(Order.class);
 
         Join<Order, Car> carJoin = root.join("car");
+        Join<Order, User> userJoin = root.join("user");
 
         countQuery.select(builder.count(root));
         if(!predicates.isEmpty()) countQuery.where(builder.and(predicates.toArray(new Predicate[0])));

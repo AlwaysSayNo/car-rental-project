@@ -35,8 +35,21 @@ public class OrderService {
         return orderRepository.getById(id);
     }
 
-    public List<Order> getAllByUserIdAndStatus(Long userId, OrderStatus... status){
-        return orderRepository.findAllByUser_IdAndStatusIsIn(userId, Arrays.asList(status));
+    public Page<Order> getAllByUserIdAndStatus(PageRequest request, Long userId, List<OrderStatus> statuses,
+                                               String filterBy, String filterValue){
+        Map<String, List<String>> byIdAndStatuses = new HashMap<>();
+
+        Utility.safetyAdd(byIdAndStatuses, "user_id", userId.toString());
+        statuses.stream().map(Objects::toString).forEach(
+                statusName -> Utility.safetyAdd(byIdAndStatuses, "status", statusName)
+        );
+        Utility.safetyAdd(byIdAndStatuses, filterBy, filterValue);
+
+        return manipulationService.evaluateQuery(request, byIdAndStatuses);
+    }
+
+    public List<Order> getAllByUserIdAndStatus(Long userId, List<OrderStatus> statuses){
+        return orderRepository.findAllByUser_IdAndStatusIsIn(userId, statuses);
     }
 
     public Page<Order> getOrdersWithStatus(PageRequest request, OrderStatus status, String filterBy, String filterValue) {

@@ -9,11 +9,14 @@ import com.epam.nazar.grinko.services.car.CarService;
 import com.epam.nazar.grinko.services.order.OrderService;
 import com.epam.nazar.grinko.services.user.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,41 +25,29 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class RegisteredUserController {
 
-    private final CarService carService;
     private final UserService userService;
     private final OrderService orderService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @GetMapping("/active-orders")
-    public String showActiveOrdersPage(Model model, HttpServletRequest request){
-        Long id = userService.getUserIdByEmail(jwtTokenProvider.getUsername(
-                jwtTokenProvider.resolveToken(request))
-        ).orElseThrow(IllegalJwtContentException::new);
-
-        List<Order> orders = orderService.getAllByUserIdAndStatus(
-                id, OrderStatus.IN_USE, OrderStatus.REPAIR_PAYMENT
-        );
-
-        List<OrderDto> ordersDto = orders.stream().map(orderService::mapToDto).collect(Collectors.toList());
-        List<Long> ids = orders.stream().map(Order::getId).collect(Collectors.toList());
-
-        model.addAttribute("orders", ordersDto);
-        model.addAttribute("ids", ids);
-
-        return "/user/active-orders/all-active-orders";
-    }
-
     @GetMapping("/orders-history")
-    public String showHistoryPage(Model model, HttpServletRequest request){
-        Long id = userService.getUserIdByEmail(jwtTokenProvider.getUsername(
-                jwtTokenProvider.resolveToken(request))
+    public String showHistoryPage(@RequestParam(value = "sortBy", required = false) String sortBy,
+                                  @RequestParam(value = "direction", required = false) String direction,
+                                  @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                  @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
+                                  @RequestParam(value = "filterBy", required = false) String filterBy,
+                                  @RequestParam(value = "filterValue", required = false) String filterValue,
+                                  Model model, HttpServletRequest servletRequest){
+        Long userId = userService.getUserIdByEmail(jwtTokenProvider.getUsername(
+                jwtTokenProvider.resolveToken(servletRequest))
         ).orElseThrow(IllegalJwtContentException::new);
 
-        List<Order> orders = orderService.getAllByUserIdAndStatus(
-                id, OrderStatus.CANCELED, OrderStatus.ENDED_SUCCESSFULLY, OrderStatus.ENDED_WITH_BREAKDOWN
-        );
+        List<OrderStatus> availableStatuses = Arrays.asList(
+                OrderStatus.CANCELED, OrderStatus.ENDED_SUCCESSFULLY, OrderStatus.ENDED_WITH_BREAKDOWN);
 
-        List<OrderDto> ordersDto = orders.stream().map(orderService::mapToDto).collect(Collectors.toList());
+        PageRequest request = orderService.getManipulationService().createRequest(page - 1, size, sortBy, direction);
+        Page<Order> orders = orderService.getAllByUserIdAndStatus(request, userId, availableStatuses, filterBy, filterValue);
+
+        Page<OrderDto> ordersDto = orders.map(orderService::mapToDto);
         List<Long> ids = orders.stream().map(Order::getId).collect(Collectors.toList());
 
         model.addAttribute("orders", ordersDto);

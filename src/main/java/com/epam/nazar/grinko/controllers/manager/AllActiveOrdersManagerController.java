@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @RequestMapping("car-rental-service/manager/active-orders")
 @AllArgsConstructor
 @Slf4j
-public class AllActiveOrdersController {
+public class AllActiveOrdersManagerController {
 
     private final OrderService orderService;
     private final CarBrandService brandService;
