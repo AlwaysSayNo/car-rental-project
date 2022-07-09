@@ -3,7 +3,6 @@ package com.epam.nazar.grinko.controllers.user;
 import com.epam.nazar.grinko.domians.Order;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import com.epam.nazar.grinko.dto.BreakdownDto;
-import com.epam.nazar.grinko.dto.PaymentDetailsDto;
 import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
 import com.epam.nazar.grinko.exceptions.IllegalJwtContentException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
@@ -37,14 +36,12 @@ public class PayFineController {
         );
 
         model.addAttribute("breakdown", breakdownDto);
-        model.addAttribute("paymentDetails", new PaymentDetailsDto());
 
         return "user/active-orders/pay-fine-form";
     }
 
     @PostMapping()
-    public String evaluatePayFine(HttpServletRequest request, @ModelAttribute("paymentDetails") PaymentDetailsDto paymentDetailsDto,
-                                  @PathVariable("id") Long carId){
+    public String evaluatePayFine(HttpServletRequest request, @PathVariable("id") Long carId){
         Order order = getRepairOrderByFields(request, carId).orElseThrow(IllegalPathVariableException::new);
         breakdownService.payFine(order);
 

@@ -21,7 +21,7 @@ public class CarUserPageController {
 
     @GetMapping()
     public String showCarPage(@PathVariable("id") Long id, Model model){
-        log.info("ADMIN showPage: carId={}", id);
+        log.info("USER showPage: carId={}", id);
         CarDto carDto = carService.mapToDto(carService.getById(id));
 
         if(!CarStatus.NOT_RENTED.name().equals(carDto.getStatus())) {

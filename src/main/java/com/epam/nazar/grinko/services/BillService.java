@@ -23,7 +23,7 @@ public class BillService {
     private final OrderService orderService;
     private final BillConstants constants;
 
-    public void addBill(Bill bill){
+    public void save(Bill bill){
         billRepository.save(bill);
     }
 

@@ -46,7 +46,7 @@ public class AllActiveCarsController {
                                   @RequestParam(value = "size", required = false, defaultValue = "8") Integer size,
                                   @RequestParam(value = "filterBy", required = false) String filterBy,
                                   @RequestParam(value = "filterValue", required = false) String filterValue, Model model){
-        log.info("MANAGER showAllCars: sortBy={}, direction={}, filterBy={}, filterValue={}, page={}, size={}",
+        log.info("USER showAllCars: sortBy={}, direction={}, filterBy={}, filterValue={}, page={}, size={}",
                 sortBy, direction, filterBy, filterValue, page, size);
 
         PageRequest pageRequest = carService.getManipulationService().createRequest(page - 1, size, sortBy, direction);

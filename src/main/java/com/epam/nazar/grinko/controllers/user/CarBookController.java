@@ -10,6 +10,7 @@ import com.epam.nazar.grinko.domians.helpers.CarStatus;
 import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import com.epam.nazar.grinko.domians.helpers.UserStatus;
 import com.epam.nazar.grinko.dto.*;
+import com.epam.nazar.grinko.exceptions.IllegalJwtContentException;
 import com.epam.nazar.grinko.exceptions.IllegalPathVariableException;
 import com.epam.nazar.grinko.exceptions.OrdersOverflowException;
 import com.epam.nazar.grinko.securities.jwt.JwtTokenProvider;
@@ -89,29 +90,35 @@ public class CarBookController {
         BillDto billDto = (BillDto) model.getAttribute("bill");
 
         model.addAttribute("bill", billDto);
-        model.addAttribute("paymentDetailsDto", new PaymentDetailsDto());
+        model.addAttribute("id", carId);
 
-        return "/user/payment-form";
+        return "/user/cars/payment-form";
     }
 
     @PostMapping("/payment")
-    public String processPayment(@PathVariable("id") Long carId, @ModelAttribute("billDto") BillDto billDto,
-                                 @ModelAttribute("paymentDetailsDto") PaymentDetailsDto paymentDetailsDto){
-        CarDto carDto = carService.mapToDto(carService.getById(carId));
-        carDto.setStatus(CarStatus.ON_PROCESSING.name());
+    public String processPayment(@PathVariable("id") Long carId,
+                                 @ModelAttribute("bill") BillDto billDto,
+                                 HttpServletRequest request){
+        Long userId = userService.getUserIdByEmail(
+                jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(request))
+        ).orElseThrow(IllegalJwtContentException::new);
 
-        UserDto userDto = userService.mapToDto(userService.getById(carId));
+        Car car = carService.getById(carId);
+        car.setStatus(CarStatus.ON_PROCESSING);
 
-        OrderDto orderDto = new OrderDto().setCar(carDto)
-                .setUser(userDto)
+        User user = userService.getById(userId);
+
+        Order order = new Order().setCar(car)
+                .setUser(user)
                 .setStatus(OrderStatus.UNDER_CONSIDERATION);
 
-        billDto.setOrder(orderDto)
-                .setStatus(BillStatus.PAID);
+        billDto.setStatus(BillStatus.PAID);
+        Bill bill = localMap(billDto).setOrder(order);
 
-        Bill bill = billService.mapToObject(billDto);
-        orderService.save(bill.getOrder());
-        billService.addBill(bill);
+        billService.save(bill);
+
+        log.info("USER-PAYMENT SUCCESS: userId={}, carId={}, newBill={}, newOrder={}",
+                userId, carId, billDto, order);
 
         return "redirect:/car-rental-service/user/active-orders";
     }
@@ -147,15 +154,6 @@ public class CarBookController {
         }
     }
 
-    private boolean hasNoneDateErrors(BillDto billDto, BindingResult bindingResult){
-        List<String> additionalErrors = bindingResult.getFieldErrors().stream().map(FieldError::getField).filter(field -> {
-            List<String> fields = Arrays.asList("startDate", "expirationDate");
-            return !fields.contains(field);
-        }).collect(Collectors.toList());
-
-        return additionalErrors.size() > 0;
-    }
-
     private boolean hasDateErrors(BillDto billDto, BindingResult bindingResult){
         List<String> additionalErrors = bindingResult.getFieldErrors().stream().map(FieldError::getField).filter(field -> {
             List<String> fields = Arrays.asList("startDate", "expirationDate");
@@ -163,6 +161,16 @@ public class CarBookController {
         }).collect(Collectors.toList());
 
         return additionalErrors.size() > 0;
+    }
+
+    private Bill localMap(BillDto billDto){
+        return new Bill().setStartDate(billDto.getStartDate())
+                .setExpirationDate(billDto.getExpirationDate())
+                .setCarPrice(billDto.getCarPrice())
+                .setDriverPrice(billDto.getDriverPrice())
+                .setTotalPrice(billDto.getTotalPrice())
+                .setWithDriver(billDto.isWithDriver())
+                .setStatus(billDto.getStatus());
     }
 
 }

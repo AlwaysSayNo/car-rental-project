@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pay car</title>
+    <link th:href="@{/statics/images/icon.png}" rel="icon" type="image/x-icon" href="../../statics/images/icon.png">
+    <script th:src="@{/statics/js/utils/ErrorManager.js}" type="text/javascript" src="../../statics/js/utils/ErrorManager.js"></script>
+    <script th:src="@{/statics/js/utils/AddHidden.js}" type="text/javascript" src="../../statics/js/utils/AddHidden.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link th:href="@{/statics/css/utils/error.css}" rel="stylesheet" href="../../statics/utils/error.css">
+    <link th:href="@{/statics/css/utils/language.css}" rel="stylesheet" href="../../statics/utils/language.css">
+    <link th:href="@{/statics/css/utils/links.css}" rel="stylesheet" href="../../statics/utils/links.css">
+    <style>
+        .language img {
+            width: 1.5em;
+            height: 1em;
+        }
+    </style>
+</head>
+<body class="bg-light">
+<!-- header -->
+<header th:replace="/templates/headers :: inRoleHeader ('user', 'none')"></header>
+
+<!-- body -->
+<div class="container d-flex justify-content-center mt-5" id="signInForm">
+    <form class="col-5 border-2 border p-4 position-relative rounded" action="/car-rental-service/user/cars/2/book/payment" method="post"
+          th:action="@{/car-rental-service/user/cars/{id}/book/payment(id=${id})}"
+          th:method="POST"
+          th:object="${bill}">
+        <div class="row justify-content-center">
+            <h3 th:text="#{total.price} + ':'" class="col-4">Total price:</h3>
+            <h3 th:text="${bill.totalPrice} + '$'" class="col-3 text-success">300$</h3>
+        </div>
+        <div>
+            <input th:field="*{startDate}" type="hidden">
+            <input th:field="*{expirationDate}" type="hidden">
+            <input th:field="*{carPrice}" type="hidden">
+            <input th:field="*{driverPrice}" type="hidden">
+            <input th:field="*{totalPrice}" type="hidden">
+            <input th:field="*{withDriver}" type="hidden">
+        </div>
+        <button class="btn btn-success w-100 mt-5 rounded-0" type="submit">Book</button>
+    </form>
+</div>
+
+</body>
+</html>

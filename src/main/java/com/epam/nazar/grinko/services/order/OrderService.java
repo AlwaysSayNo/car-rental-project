@@ -27,9 +27,7 @@ public class OrderService {
     private final UserService userService;
     private final CarService carService;
 
-    //?
     public void save(Order order){
-        carService.updateCarStatusById(order.getCar().getId(), order.getCar().getStatus());
         orderRepository.save(order);
     }
 
