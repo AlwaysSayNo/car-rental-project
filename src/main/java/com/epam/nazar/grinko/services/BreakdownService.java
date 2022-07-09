@@ -44,17 +44,15 @@ public class BreakdownService {
         breakdownRepository.save(breakdown);
     }
 
-    public void updateBreakdownStatus(BreakdownStatus status, Long id){
-        breakdownRepository.updateBreakdownStatusById(status, id);
+    public void updateBreakdownStatus(Long id, BreakdownStatus status){
+        breakdownRepository.updateBreakdownStatusById(id, status);
     }
 
     public void payFine(Order order){
         Breakdown breakdown = order.getBreakdown();
 
-        updateBreakdownStatus(BreakdownStatus.PAID, breakdown.getId());
-
+        updateBreakdownStatus(breakdown.getId(), BreakdownStatus.PAID);
         orderService.updateOrderStatus(OrderStatus.ENDED_WITH_BREAKDOWN, order.getId());
-
         userService.updateUserStatusById(UserStatus.ACTIVE, order.getUser().getId());
     }
 

@@ -11,11 +11,8 @@ import lombok.experimental.Accessors;
 public class BreakdownDto {
     
     private Long price;
-
     private String message;
-
     private BreakdownStatus status;
-
     private OrderDto order;
 
 }

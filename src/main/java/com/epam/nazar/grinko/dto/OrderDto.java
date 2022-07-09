@@ -1,6 +1,5 @@
 package com.epam.nazar.grinko.dto;
 
-import com.epam.nazar.grinko.domians.helpers.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,6 +17,6 @@ public class OrderDto {
     private CarDto car;
     @Valid
     private UserDto user;
-    private OrderStatus status;
+    private String status;
 
 }

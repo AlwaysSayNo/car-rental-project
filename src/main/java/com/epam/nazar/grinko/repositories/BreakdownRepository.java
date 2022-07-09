@@ -21,7 +21,7 @@ public interface BreakdownRepository extends JpaRepository<Breakdown, Long> {
     @Transactional
     @Modifying
     @Query(UPDATE_BREAKDOWN_STATUS_BY_ID)
-    void updateBreakdownStatusById(@Param("status") BreakdownStatus status,
-                                   @Param("id") long id);
+    void updateBreakdownStatusById(@Param("id") Long id,
+                                   @Param("status") BreakdownStatus status);
 
 }

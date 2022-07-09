@@ -111,13 +111,13 @@ public class OrderService {
 
         return new Order().setCar(car)
                 .setUser(user)
-                .setStatus(orderDto.getStatus());
+                .setStatus(OrderStatus.valueOf(orderDto.getStatus()));
     }
 
     public OrderDto mapToDto(Order order){
         return new OrderDto().setCar(carService.mapToDto(order.getCar()))
                 .setUser(userService.mapToDto(order.getUser()))
-                .setStatus(order.getStatus());
+                .setStatus(order.getStatus().name());
     }
 
     public OrderQueryManipulationService getManipulationService() {

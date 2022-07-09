@@ -23,9 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping("car-rental-service/user/active-order/{id}")
+@RequestMapping("car-rental-service/user/active-orders/{id}")
 @AllArgsConstructor
-public class ActiveOrderPageController {
+public class ActiveOrderUserPageController {
 
     private final UserService userService;
     private final OrderService orderService;
@@ -40,6 +40,7 @@ public class ActiveOrderPageController {
 
         model.addAttribute("order", orderService.mapToDto(order));
         model.addAttribute("bill", billService.mapToDto(bill));
+        model.addAttribute("id", orderId);
 
         if(order.getStatus().equals(OrderStatus.REPAIR_PAYMENT))
             model.addAttribute("breakdown", breakdownService.mapToDto(order.getBreakdown()));
@@ -58,7 +59,7 @@ public class ActiveOrderPageController {
                 OrderStatus.IN_USE, OrderStatus.REPAIR_PAYMENT);
 
         if(!order.getUser().getId().equals(userId) || !availableStatuses.contains(order.getStatus()))
-            throw new IllegalPathVariableException();
+            throw new IllegalPathVariableException("Order with id " + orderId + " is not available");
     }
 
 }
